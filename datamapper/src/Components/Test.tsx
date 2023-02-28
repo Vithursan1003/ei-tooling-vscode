@@ -9,7 +9,7 @@ const Test = () => {
     var model = new DiagramModel();
 
     var node1= new DefaultNodeModel({
-        name:'Input',
+        name:'Inuuput',
     });
     node1.setPosition(100,100);
     //let port1= node1.addOutPort('Out');
