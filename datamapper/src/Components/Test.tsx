@@ -1,36 +1,32 @@
-import React from 'react'
-import createEngine, {DiagramModel} from "@projectstorm/react-diagrams";
-import { DefaultLinkModel, DefaultNodeModel } from '@projectstorm/react-diagrams-defaults';
+import * as React from 'react';
+import createEngine, { DiagramModel, DefaultNodeModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
+import { DefaultState } from './DefaultState';
+import './test.css';
 
-const Test = () => {
+export default () => {
+	const engine = createEngine();
+	const model = new DiagramModel();
 
-    var engine = createEngine();
-    var model = new DiagramModel();
 
-    var node1= new DefaultNodeModel({
-        name:'Input',
-    });
-    node1.setPosition(100,100);
-    //let port1= node1.addOutPort('Out');
+	const node1 = new DefaultNodeModel('Node 1', 'rgb(0,192,255)');
+	node1.addOutPort('Out');
+	node1.setPosition(100, 100);
 
-    var node2= new DefaultNodeModel({
-        name:'Output',
-       
-    });
-    node2.setPosition(200,100);
-    //let port2= node2.addInPort();
+	const node2 = new DefaultNodeModel('Node 2', 'rgb(192,255,0)');
+	node2.addInPort('In');
+	node2.setPosition(400, 100);
 
-    //let link1 = port1.link<DefaultLinkModel>(port2);
-    model.addAll(node1,node2);
-    engine.setModel(model);
+	model.addAll(node1, node2);
 
-  return (
-    <>
-     <div>Test</div>
-    <CanvasWidget engine={engine} className='canvas'/>
-    </>
-  )
-}
+	engine.setModel(model);
 
-export default Test
+	// Use this custom "DefaultState" instead of the actual default state we get with the engine
+	engine.getStateMachine().pushState(new DefaultState());
+
+	return (
+		<>
+			<CanvasWidget className="canvas" engine={engine} />
+		</>
+	);
+};
