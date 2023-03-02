@@ -1,38 +1,26 @@
-import React from 'react'
-import createEngine, { DiagramModel } from "@projectstorm/react-diagrams";
-import { DefaultNodeModel } from '@projectstorm/react-diagrams-defaults';
+import createEngine, { DiagramModel, DefaultNodeModel} from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
+import Upload from './FileUpload/Upload';
 
-const Test = () => {
+export default function Test(){
+	const engine = createEngine();
+	const model = new DiagramModel();
 
-	var engine = createEngine();
-	var model = new DiagramModel();
+	const node1 = new DefaultNodeModel('Input', 'rgb(0,192,255)');
+	node1.addOutPort(<Upload title="Input"/>);
+	node1.setPosition(300, 100);
 
-	var node1 = new DefaultNodeModel({
-		name: 'Input',
-		color :'rgb(0,192,255)'
-	});
-	node1.setPosition(100, 100);
-	//let port1= node1.addOutPort('Out');
+	const node2 = new DefaultNodeModel('Output', 'rgb(192,255,0)');
+	node2.addInPort(<Upload title ="Output"/>);
+	node2.setPosition(700, 100);
 
-	var node2 = new DefaultNodeModel({
-		name: 'Output',
-		color: 'rgb(192,255,0)'
-	});
-	node2.setPosition(200, 100);
-	//let port2= node2.addInPort();
-
-	//let link1 = port1.link<DefaultLinkModel>(port2);
 	model.addAll(node1, node2);
+
 	engine.setModel(model);
 
 	return (
-		<>
-			<div className='container'>
-				<CanvasWidget engine={engine} className='canvas' />
-			</div>
-		</>
-	)
-}
-
-export default Test
+		<div className='container'>
+			<CanvasWidget  className="canvas" engine={engine} />
+		</div>
+	);
+};
