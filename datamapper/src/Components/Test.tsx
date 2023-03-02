@@ -3,7 +3,7 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import './test.css';
 import UploadForm  from './FileUpload/UploadForm';
 
-export default () => {
+export default function Test(){
 	const engine = createEngine();
 	const model = new DiagramModel();
 
