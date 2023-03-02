@@ -1,10 +1,9 @@
 import React from 'react';
-import { FileUpload } from '@mui/icons-material';
+import {UploadFileRounded} from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import Modal from 'react-bootstrap/Modal';
 import { DataUsageOutlined } from '@mui/icons-material';
 import UploadForm from './UploadForm';
-
 
 interface Props {
   title: string;
@@ -13,7 +12,7 @@ interface Props {
 const Upload = (props: Props) => {
 
   const [open, setOpen] = React.useState(false);
-
+  let title = props.title;
   const headerStyle = {
     height: '40px',
     color: 'white',
@@ -34,8 +33,8 @@ const Upload = (props: Props) => {
 
   return (
     <>
-      <IconButton onClick={handleClick}><FileUpload /></IconButton>
-      Load {props.title}
+      <IconButton onClick={handleClick}><UploadFileRounded /></IconButton>
+      <a onClick={handleClick}>Load {props.title} file</a>
       
       <Modal show={open} onHide={handleClose} centered >
         <Modal.Header closeButton closeVariant='white' style={headerStyle}>
@@ -43,7 +42,7 @@ const Upload = (props: Props) => {
           <div style={{ paddingLeft: '15px' }}>Load {props.title}</div>
         </Modal.Header>
         <Modal.Body style={{ fontSize: '11px' }}>
-          <UploadForm/>
+          <UploadForm title={title}/>
         </Modal.Body>
       </Modal>
     </>

@@ -4,7 +4,11 @@ import FormSelect from 'react-bootstrap/esm/FormSelect';
 import Form from 'react-bootstrap/Form';
 import axios from "axios";
 
-const UploadForm = () => {
+interface Props {
+  title: string;
+}
+
+const UploadForm = (props: Props) => {
 
   let fileReader: FileReader;
   const data = ['Resource Type', 'XML', 'JSON', 'XSD', 'CSV', 'JSON SCHEMA', 'CONNECTOR'];
@@ -34,10 +38,11 @@ const UploadForm = () => {
     //   fileReader.readAsText(file);
     // }
 
+    
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
-
+      formData.append ('filename',props.title);
       axios.post(`http://localhost:5000/input/upload`, formData)
         .then(response => {
           console.log(response.data)
