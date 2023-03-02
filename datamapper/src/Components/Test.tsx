@@ -4,7 +4,7 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import SelectOption  from './SelectOption/SelectOption';
 
 const myComponentStyle = {
-	fontSize: '10px',
+	fontSize: '1px',
 	alignItems: 'left',
 	margin: 'auto',
  }
