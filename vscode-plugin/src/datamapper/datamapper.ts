@@ -1,4 +1,4 @@
-import { Disposable, Webview, WebviewPanel, window, ViewColumn } from "vscode";
+import { Disposable, Webview, WebviewPanel, window, ViewColumn, Uri } from "vscode";
 
 
 export default class dataMapper {
@@ -67,7 +67,7 @@ export default class dataMapper {
         // const stylePathArray = ["webview-ui", "build", "assets", "index.css"];
 
         // const stylesUri = webview.asWebviewUri(Uri.joinPath(extensionUri, ...stylePathArray));
-
+        
         // // The CSS file from the React build output
         // const stylesUri = getUri(webview, extensionUri, [
         //   "webview-ui",
@@ -78,7 +78,7 @@ export default class dataMapper {
         // ]);
         // The JS file from the React build output
         // const scriptUri = getUri(webview, extensionUri, [
-        //   "webview-ui",
+        //   "webviews",
         //   "build",
         //   "static",
         //   "js",
