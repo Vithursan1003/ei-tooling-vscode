@@ -14,13 +14,13 @@ export default function Test(){
 
 	const model = new DiagramModel();
 
-	const node1 = new DefaultNodeModel('Input', 'rgb(0,0,255)');
+	const node1 = new DefaultNodeModel ('input', 'rgb(255,255,255)');
 	node1.addOutPort(<SelectOption />);
 	//Keep This part for later purposes
 	//node1.addPort(new DefaultPortModel(false, 'out-1', 'Out thick'));
 	node1.setPosition(100, 100);
 
-	const node2 = new DefaultNodeModel('Output', 'rgb(0,255,0)');
+	const node2 = new DefaultNodeModel('Output', 'rgb(255,255,255)');
 	node2.addInPort(<SelectOption />);
 	//Keep This part for later purposes
 	//node2.addPort(new DefaultPortModel(true, 'out-1', 'Out thick'));
