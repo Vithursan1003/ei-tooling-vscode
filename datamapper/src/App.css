@@ -5,21 +5,12 @@ body {
   background-color: white;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .canvas{
   height: 500px;
   width: 100%;
 }
 
-/* .container {
+.container {
   margin: 0 auto;
   text-align: center;
 }
@@ -27,4 +18,4 @@ body {
 .container.node{
   font-size: 20px;
   color: blueviolet;
-} */
+}

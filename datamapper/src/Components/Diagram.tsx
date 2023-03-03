@@ -1,24 +1,23 @@
 import createEngine, { DiagramModel, DefaultNodeModel} from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import Upload from './FileUpload/Upload';
-import './test.css';
 import CreateRootNode from './CreateRoot/CreateRootNode';
 
-export default function Test(){
+export default function Diagram(){
 	const engine = createEngine();
 	const model = new DiagramModel();
 
-	const node1 = new DefaultNodeModel('Input', 'rgb(0,192,255)');
-	node1.addOutPort(<Upload title="Input"/>);
-	node1.addOutPort(<CreateRootNode/>);
-	node1.setPosition(100, 100);
+	const Input = new DefaultNodeModel('Input', 'rgb(0,192,255)');
+	Input.addOutPort(<Upload title="Input"/>);
+	Input.addOutPort(<CreateRootNode/>);
+	Input.setPosition(100, 100);
 
-	const node2 = new DefaultNodeModel('Output', 'rgb(192,255,0)');
-	node2.addInPort(<Upload title ="Output"/>);
-	node2.addInPort(<CreateRootNode/>);
-	node2.setPosition(400, 100);
+	const Output = new DefaultNodeModel('Output', 'rgb(192,255,0)');
+	Output.addInPort(<Upload title ="Output"/>);
+	Output.addInPort(<CreateRootNode/>);
+	Output.setPosition(400, 100);
 
-	model.addAll(node1, node2);
+	model.addAll(Input,Output);
 	engine.setModel(model);
 
 	return (

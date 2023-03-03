@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.11",
+    "@mui/styles": "^5.11.11",
     "@projectstorm/react-canvas-core": "^7.0.0",
     "@projectstorm/react-diagrams": "^7.0.1",
     "@projectstorm/react-diagrams-core": "^7.0.0",

@@ -1,9 +1,8 @@
 import React from 'react';
-import {UploadFileRounded} from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
-import Modal from 'react-bootstrap/Modal';
-import { DataUsageOutlined } from '@mui/icons-material';
+import { Close, DataUsageRounded, UploadFileRounded } from '@mui/icons-material';
 import UploadForm from './UploadForm';
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { uploadStyles } from './styles';
 
 interface Props {
   title: string;
@@ -13,21 +12,13 @@ const Upload = (props: Props) => {
 
   const [open, setOpen] = React.useState(false);
   let title = props.title;
-  const headerStyle = {
-    height: '40px',
-    color: 'white',
-    backgroundColor: '#187bcd',
-    fontFamily: 'Asap',
-    fontWeight: '700',
-    fontSize: '14px',
-    paddingLeft: '30px'
-  }
-
+  const classes = uploadStyles();
+  
   const handleClick = () => {
     setOpen(true);
   }
 
-  const handleClose = () =>{
+  const handleClose = () => {
     setOpen(false);
   }
 
@@ -35,16 +26,14 @@ const Upload = (props: Props) => {
     <>
       <IconButton onClick={handleClick}><UploadFileRounded /></IconButton>
       <a onClick={handleClick}>Load {props.title} file</a>
-      
-      <Modal show={open} onHide={handleClose} centered >
-        <Modal.Header closeButton closeVariant='white' style={headerStyle}>
-          <DataUsageOutlined fontSize='small' />
-          <div style={{ paddingLeft: '15px' }}>Load {props.title}</div>
-        </Modal.Header>
-        <Modal.Body style={{ fontSize: '11px' }}>
-          <UploadForm title={title}/>
-        </Modal.Body>
-      </Modal>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle className={classes.dialogHeader} >
+          Load {props.title}
+          <IconButton onClick={handleClose} className={classes.closeButton}> <Close /></IconButton>
+        </DialogTitle>
+        <DialogContent><UploadForm title={title} /></DialogContent>
+      </Dialog>
     </>
   )
 }
