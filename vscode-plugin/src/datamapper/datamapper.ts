@@ -1,4 +1,4 @@
-import { Disposable, Webview, WebviewPanel, window, ViewColumn } from "vscode";
+import { Disposable, Webview, WebviewPanel, window, ViewColumn, Uri } from "vscode";
 
 
 export default class dataMapper {
@@ -67,7 +67,7 @@ export default class dataMapper {
         // const stylePathArray = ["webview-ui", "build", "assets", "index.css"];
 
         // const stylesUri = webview.asWebviewUri(Uri.joinPath(extensionUri, ...stylePathArray));
-
+        
         // // The CSS file from the React build output
         // const stylesUri = getUri(webview, extensionUri, [
         //   "webview-ui",
@@ -78,7 +78,7 @@ export default class dataMapper {
         // ]);
         // The JS file from the React build output
         // const scriptUri = getUri(webview, extensionUri, [
-        //   "webview-ui",
+        //   "webviews",
         //   "build",
         //   "static",
         //   "js",
@@ -93,13 +93,13 @@ export default class dataMapper {
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
             <meta name="theme-color" content="#000000">
-            <link rel="stylesheet" type="text/css" href="https://file%2B.vscode-resource.vscode-cdn.net/c%3A/Hana/Projects/DataMapper/ei-tooling-vscode/vscode-plugin/webviews/build/static/css/main.6a1eaa5e.css">
+            <link rel="stylesheet" type="text/css" href="https://file%2B.vscode-resource.vscode-cdn.net/c%3A/Hana/Projects/DataMapper/ei-tooling-vscode/vscode-plugin/webviews/build/static/css/main.abe46c0d.css">
             <title>Data Mapper View</title>
           </head>
           <body>
             <noscript>You need to enable JavaScript to run this app.</noscript>
             <div id="root"></div>
-            <script src="https://file%2B.vscode-resource.vscode-cdn.net/c%3A/Hana/Projects/DataMapper/ei-tooling-vscode/vscode-plugin/webviews/build/static/js/main.05f01d44.js"></script>
+            <script src="https://file%2B.vscode-resource.vscode-cdn.net/c%3A/Hana/Projects/DataMapper/ei-tooling-vscode/vscode-plugin/webviews/build/static/js/main.26dd8894.js"></script>
           </body>
         </html>
       `;
