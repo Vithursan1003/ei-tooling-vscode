@@ -1,10 +1,12 @@
 import "./App.css";
-import Diagram from "./Components/Diagram";
+import Canvas from "./Components/Canvas";
+import Test from "./Components/Test";
+
 
 function App() {
   return (
     <div>
-      <Diagram/>
+      <Canvas/>
     </div>
   );
 }

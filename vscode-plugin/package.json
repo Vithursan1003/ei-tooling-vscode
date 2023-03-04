@@ -370,6 +370,7 @@
 		"vscode": "^1.1.37"
 	},
 	"dependencies": {
+		"@types/vscode-webview": "^1.57.1",
 		"adm-zip": "^0.5.9",
 		"archiver": "^3.0.0",
 		"axios": "^0.26.1",

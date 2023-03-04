@@ -51,5 +51,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/to-json-schema": "^0.2.1",
+    "json-to-json-schema": "^0.0.4"
   }
 }

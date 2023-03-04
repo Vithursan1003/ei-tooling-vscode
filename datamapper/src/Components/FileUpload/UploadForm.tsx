@@ -1,7 +1,8 @@
-import { Button, FormControl, FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { Button, FormControl, FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material'
 import React from 'react'
 import axios from "axios";
 import { uploadStyles } from './styles';
+
 
 interface Props {
   title: string;
@@ -10,10 +11,11 @@ interface Props {
 const UploadForm = (props: Props) => {
 
   const classes = uploadStyles();
-  let fileReader: FileReader;
+
   const data = ['XML', 'JSON', 'XSD', 'CSV', 'JSON SCHEMA', 'CONNECTOR'];
 
   const [type, setType] = React.useState("JSON SCHEMA");
+  const [fileName, setFileName] = React.useState(props.title);
   const [file, setFile] = React.useState<File | null>(null);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +29,14 @@ const UploadForm = (props: Props) => {
     setType(e.target.value)
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFileName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileName(e.target.value);
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    var name = fileName + "_" + props.title + "_schema";
+
     // if(file){
     //   fileReader = new FileReader();
     //   fileReader.onloadend = () => {
@@ -42,16 +50,38 @@ const UploadForm = (props: Props) => {
 
 
     if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('filename', props.title);
-      axios.post(`http://localhost:5000/input/upload`, formData)
-        .then(response => {
-          console.log(response.data)
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      var fileContent;
+      try {
+        // let fileReader = new FileReader();
+        // fileReader.readAsText(file, 'utf-8');
+
+        // fileReader.onloadend = async (e) => {
+        //   fileContent = fileReader.result;
+        //   if (fileContent !== null && typeof fileContent === 'string') {
+        //     const jsonContent = JSON.parse(fileContent);
+  
+        //     console.log(jsonContent);
+        //   }
+
+        //   const res = await axios.post(`http://localhost:5000/createFile`, {
+        //     filecontent: fileContent,
+        //     filename: name
+        //   })
+        //   console.log(res.data);
+        // }
+        // const formData = new FormData();
+        // formData.append('file', file);
+        // formData.append('filecontent',"This is content");
+        // formData.append('filename', fileName + "_" + props.title + "_schema");
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('filename', fileName + "_" + props.title );
+        const res = await axios.post(`http://localhost:5000/input/upload`, formData)
+        console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -68,10 +98,14 @@ const UploadForm = (props: Props) => {
           </Select>
         </FormControl>
 
-        <InputLabel className={classes.Label}>Select from file system : </InputLabel>
-        <input className={classes.FileInput && classes.Label} type="file" name='img' onChange={handleFile} required />
+        <InputLabel className={classes.Label}>Input File name : </InputLabel>
+        <TextField className={classes.TextField}
+          name='fileName' onChange={handleFileName} size="small" />
 
-        <Button className={classes.saveButton} type="submit" variant='contained'>Save</Button>
+        <InputLabel className={classes.Label}>Select from file system : </InputLabel>
+        <input className={classes.Label} type="file" name='file' onChange={handleFile} />
+
+        <Button className={classes.saveButton} type="submit" variant='contained' disabled={!file}>Save</Button>
       </form>
     </>
   )

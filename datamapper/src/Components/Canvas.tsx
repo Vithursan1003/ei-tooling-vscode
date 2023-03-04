@@ -3,7 +3,7 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import Upload from './FileUpload/Upload';
 import CreateRootNode from './CreateRoot/CreateRootNode';
 
-export default function Diagram(){
+export default function Canvas(){
 	const engine = createEngine();
 	const model = new DiagramModel();
 
@@ -21,7 +21,7 @@ export default function Diagram(){
 	engine.setModel(model);
 
 	return (
-		<div className='container'>
+		<div>
 			<CanvasWidget  className="canvas" engine={engine} />
 		</div>
 	);
