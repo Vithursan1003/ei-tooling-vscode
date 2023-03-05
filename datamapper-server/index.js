@@ -1,51 +1,3 @@
-// const express = require('express');
-// const multer = require('multer');
-// const cors = require('cors');
-// const fs = require('fs');
-
-// const app = express();
-// app.use(cors());
-// app.use(express.json());
-
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads/');
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, `${file.originalname}`)
-//     },
-// });
-// const upload = multer({ storage });
-
-
-
-// app.post('/input/upload', upload.single('file'), (req, res) => {
-
-//         const req.file = req.file;
-
-//         // fs.rename(req.file.path, req.file.path.replace(req.file.originalname, req.body.filename), (err) => {
-//         //     if (err) {
-//         //       return res.json({error: err.message});
-//         //     }  
-//         //     fs.readFile(req.file, 'utf8', (err, data) => {
-//         //       if (err) throw err;
-//         //       console.log(data);
-//         //     }); 
-//         //     res.json({success: true, message: `File ${req.body.filename} uploaded successfully`});
-//         //   });
-//         fs.readFile(req.file, 'utf8', (err, data) => {
-//           if (err) throw err;
-        
-//           // Do something with the file contents
-//           console.log(data);
-//           console.log("File read successfully");
-//         });
-// });
-
-// app.listen(5000, () => {
-//     console.log("server running");
-// })
-
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
@@ -53,6 +5,7 @@ const app = express();
 const mime = require('mime');
 const toJsonSchema = require('to-json-schema');
 var convert = require('xml-js');
+const path = require('path')
 
 // Define storage for the uploaded files
 const storage = multer.diskStorage({
@@ -68,30 +21,40 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //JSON to Schema
-function JSONtoJSONCHEMA(contents,type, filename){
-
+function JSONtoJSONCHEMA(contents, filename) {
   const schema = toJsonSchema(contents);
-  const schemaString = JSON.stringify(schema, null, 2);
+  CREATENEWFILE(schema, filename);
+}
+
+//convert xml to json
+function XMLTOJSON(contents, filename) {
+  var xml = contents;
+  var result1 = convert.xml2json(xml, { compact: true, spaces: 4 });
+  JSONtoJSONCHEMA(result1, filename);
+}
+
+//convert xsd to jsonschema
+function XSDTOJSONSchema(data, filename) {
+  const XML_SCHEMA = data;
+  const Xsd2JsonSchema = require('xsd2jsonschema').Xsd2JsonSchema;
+  const xs2js = new Xsd2JsonSchema();
+  const convertedSchemas = xs2js.processAllSchemas({
+    schemas: { 'hello_world.xsd': XML_SCHEMA }
+  });
+  const jsonSchema = convertedSchemas['hello_world.xsd'].getJsonSchema();
+  CREATENEWFILE(jsonSchema, filename);
+}
+
+//create JSON schema file
+function CREATENEWFILE(contents, filename) {
+  const schemaString = JSON.stringify(contents, null, 2);
   fs.writeFile(`created/${filename}_schema.json`, schemaString, err => {
     if (err) {
       console.error(err);
       return;
     }
-    console.log(schema);
     console.log('File created successfully!');
   })
-
- 
-}
-
-//convert xml to json
-function XMLTOJSON(contents,type, filename){
-  var xml = contents;
-var result1 = convert.xml2json(xml, {compact: true, spaces: 4});
-var result2 = convert.xml2json(xml, {compact: false, spaces: 4});
-// console.log(result1, '\n', result2);
-
-JSONtoJSONCHEMA(result1,type, filename);
 }
 
 // Route for handling file upload and read
@@ -99,14 +62,26 @@ app.post('/input/upload', upload.single('file'), (req, res) => {
   const filePath = req.file.path;
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) throw err;
-    const fileType = mime.getType(req.file.path);
+    const fileExtension = path.extname(req.file.path);
+    console.log(fileExtension);
 
+    switch (fileExtension) {
+      case '.xml':
+        XMLTOJSON(data, req.body.filename);
+        break;
+      case '.json':
+        JSONtoJSONCHEMA(data, req.body.filename);
+        break;
+      case '.xsd':
+        XSDTOJSONSchema(data, req.body.filename);
+        break;
+    }
 
-    XMLTOJSON(data,fileType, req.body.filename);
-
-    fs.rename(req.file.path, req.file.path.replace(req.file.originalname, req.body.filename), (err) => { (err) => {
-      if (err) throw err;  
-  }});
+    fs.rename(req.file.path, req.file.path.replace(req.file.originalname, req.body.filename), (err) => {
+      (err) => {
+        if (err) throw err;
+      }
+    });
     res.send('File uploaded and read successfully');
   });
 });
