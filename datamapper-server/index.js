@@ -52,6 +52,7 @@ const fs = require('fs');
 const app = express();
 const mime = require('mime');
 const toJsonSchema = require('to-json-schema');
+var convert = require('xml-js');
 
 // Define storage for the uploaded files
 const storage = multer.diskStorage({
@@ -66,21 +67,31 @@ const storage = multer.diskStorage({
 // Create multer middleware
 const upload = multer({ storage: storage });
 
-function processFileContents(contents,type, filename){
-  console.log(type);
-  console.log(contents);
-  const xsd = contents;
+//JSON to Schema
+function JSONtoJSONCHEMA(contents,type, filename){
 
   const schema = toJsonSchema(contents);
-  fs.writeFile(`created/${filename}_schema.json`, contents, err => {
+  const schemaString = JSON.stringify(schema, null, 2);
+  fs.writeFile(`created/${filename}_schema.json`, schemaString, err => {
     if (err) {
       console.error(err);
       return;
     }
+    console.log(schema);
     console.log('File created successfully!');
   })
 
-  console.log(schema);
+ 
+}
+
+//convert xml to json
+function XMLTOJSON(contents,type, filename){
+  var xml = contents;
+var result1 = convert.xml2json(xml, {compact: true, spaces: 4});
+var result2 = convert.xml2json(xml, {compact: false, spaces: 4});
+// console.log(result1, '\n', result2);
+
+JSONtoJSONCHEMA(result1,type, filename);
 }
 
 // Route for handling file upload and read
@@ -89,7 +100,9 @@ app.post('/input/upload', upload.single('file'), (req, res) => {
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) throw err;
     const fileType = mime.getType(req.file.path);
-    processFileContents(data,fileType, req.body.filename);
+
+
+    XMLTOJSON(data,fileType, req.body.filename);
 
     fs.rename(req.file.path, req.file.path.replace(req.file.originalname, req.body.filename), (err) => { (err) => {
       if (err) throw err;  
