@@ -51,6 +51,7 @@ const multer = require('multer');
 const fs = require('fs');
 const app = express();
 const mime = require('mime');
+const toJsonSchema = require('to-json-schema');
 
 // Define storage for the uploaded files
 const storage = multer.diskStorage({
@@ -65,12 +66,30 @@ const storage = multer.diskStorage({
 // Create multer middleware
 const upload = multer({ storage: storage });
 
+function processFileContents(contents,type, filename){
+  console.log(type);
+  console.log(contents);
+  const xsd = contents;
+
+  const schema = toJsonSchema(contents);
+  fs.writeFile(`created/${filename}_schema.json`, contents, err => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log('File created successfully!');
+  })
+
+  console.log(schema);
+}
+
 // Route for handling file upload and read
 app.post('/input/upload', upload.single('file'), (req, res) => {
   const filePath = req.file.path;
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) throw err;
     const fileType = mime.getType(req.file.path);
+    processFileContents(data,fileType, req.body.filename);
 
     fs.rename(req.file.path, req.file.path.replace(req.file.originalname, req.body.filename), (err) => { (err) => {
       if (err) throw err;  
