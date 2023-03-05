@@ -6,6 +6,8 @@ const mime = require('mime');
 const toJsonSchema = require('to-json-schema');
 var convert = require('xml-js');
 const path = require('path')
+const csvtojson = require('csvtojson');
+
 
 // Define storage for the uploaded files
 const storage = multer.diskStorage({
@@ -23,6 +25,7 @@ const upload = multer({ storage: storage });
 //JSON to Schema
 function JSONtoJSONCHEMA(contents, filename) {
   const schema = toJsonSchema(contents);
+  console.log(schema);
   CREATENEWFILE(schema, filename);
 }
 
@@ -43,6 +46,20 @@ function XSDTOJSONSchema(data, filename) {
   });
   const jsonSchema = convertedSchemas['hello_world.xsd'].getJsonSchema();
   CREATENEWFILE(jsonSchema, filename);
+}
+
+//convert csv to json
+async function CSVTOJSON(contents, filename) {
+  const csvFilePath=contents
+  const csv=require('csvtojson')
+  csv()
+  .fromFile(csvFilePath)
+  .then((jsonObj)=>{
+      JSONtoJSONCHEMA(jsonObj, filename);
+  })
+   
+  // Async / await usage
+  const jsonArray=await csv().fromFile(csvFilePath);
 }
 
 //create JSON schema file
@@ -75,14 +92,15 @@ app.post('/input/upload', upload.single('file'), (req, res) => {
       case '.xsd':
         XSDTOJSONSchema(data, req.body.filename);
         break;
+      case '.csv':
+        CSVTOJSON(filePath, req.body.filename);
+        break;
     }
-
-    fs.rename(req.file.path, req.file.path.replace(req.file.originalname, req.body.filename), (err) => {
-      (err) => {
-        if (err) throw err;
-      }
-    });
-    res.send('File uploaded and read successfully');
+    // fs.rename(`uploads/${req.file.originalname}`, `uploads/${req.body.filename}`, (err) => {
+    //   if (err) throw err;
+  
+    //   //console.log(`File renamed to ${newFileName}`);
+    // });
   });
 });
 
