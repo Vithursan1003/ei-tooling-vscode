@@ -35,45 +35,9 @@ const UploadForm = (props: Props) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    var name = fileName + "_" + props.title + "_schema";
-
-    // if(file){
-    //   fileReader = new FileReader();
-    //   fileReader.onloadend = () => {
-    //     const content = fileReader.result;
-    //     console.log(content);
-    //     // localStorage.setItem(props.title, content);
-    //     // localStorage.setItem(props.title + "Type", type);
-    //   }
-    //   fileReader.readAsText(file);
-    // }
-
 
     if (file) {
-      var fileContent;
       try {
-        // let fileReader = new FileReader();
-        // fileReader.readAsText(file, 'utf-8');
-
-        // fileReader.onloadend = async (e) => {
-        //   fileContent = fileReader.result;
-        //   if (fileContent !== null && typeof fileContent === 'string') {
-        //     const jsonContent = JSON.parse(fileContent);
-  
-        //     console.log(jsonContent);
-        //   }
-
-        //   const res = await axios.post(`http://localhost:5000/createFile`, {
-        //     filecontent: fileContent,
-        //     filename: name
-        //   })
-        //   console.log(res.data);
-        // }
-        // const formData = new FormData();
-        // formData.append('file', file);
-        // formData.append('filecontent',"This is content");
-        // formData.append('filename', fileName + "_" + props.title + "_schema");
-
         const formData = new FormData();
         formData.append('file', file);
         formData.append('filename', fileName + "_" + props.title );

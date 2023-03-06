@@ -18,27 +18,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// app.post('/createFile', (req, res) => {
-//     const data = req.body.filecontent;
-//     const name = req.body.filename;
-//     fs.writeFile(`${name}.json`, data, (err) => {
-//         if (err) {
-//             console.error(err);
-//             res.status(500).send({ error: 'failed to create file' });
-//         } else {
-//             res.send({ message: 'file created successfully' });
-//         }
-//     });
-// });
-
 
 app.post('/input/upload', upload.single('file'), (req, res) => {
 
     try {
         const file = req.file;
-        //fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname, req.body.filename));
+        fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname, req.body.filename));
 
-        fs.readFile(`uploads/${req.file.filename}`, (err, buff) => {
+        fs.readFile(`uploads/${req.body.filename}`, (err, buff) => {
             if (err) {
                 console.error(err);
                 return;
@@ -59,7 +46,7 @@ app.post('/input/upload', upload.single('file'), (req, res) => {
         })
 
         try {
-            fs.unlinkSync(`uploads/${req.file.filename}`);
+            fs.unlinkSync(`uploads/${req.body.filename}`);
             console.log("Delete File successfully.");
         } catch (error) {
             console.log(error);

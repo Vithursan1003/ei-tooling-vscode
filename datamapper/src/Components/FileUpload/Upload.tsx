@@ -1,5 +1,5 @@
 import React from 'react';
-import { Close, DataUsageRounded, UploadFileRounded } from '@mui/icons-material';
+import { Close,  UploadFileRounded } from '@mui/icons-material';
 import UploadForm from './UploadForm';
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { uploadStyles } from './styles';
