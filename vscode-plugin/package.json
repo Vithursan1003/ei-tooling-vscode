@@ -361,16 +361,15 @@
 		"@types/fs-extra": "^4.0.8",
 		"@types/md5": "^2.1.33",
 		"@types/mocha": "^2.2.42",
-		"@types/node": "^8.10.25",
+		"@types/node": "^8.10.66",
 		"@types/xml2js": "^0.4.3",
 		"@types/xmldom": "^0.1.29",
 		"tslint": "^5.12.1",
-		"typescript": "^3.3.1",
+		"typescript": "^3.9.10",
 		"vsce": "^1.36.2",
 		"vscode": "^1.1.37"
 	},
 	"dependencies": {
-		"@types/vscode-webview": "^1.57.1",
 		"adm-zip": "^0.5.9",
 		"archiver": "^3.0.0",
 		"axios": "^0.26.1",
@@ -386,6 +385,7 @@
 		"node-downloader-helper": "^2.1.1",
 		"vscode-extension-telemetry-wrapper": "^0.3.9",
 		"vscode-languageclient": "^4.1.4",
+		"webpack": "^5.75.0",
 		"xml2js": "^0.4.19",
 		"xmldom": "^0.1.27"
 	}
