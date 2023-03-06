@@ -251,7 +251,7 @@ function registerSynapseCommands(context: ExtensionContext) {
     }));
     context.subscriptions.push(commands.registerCommand("wso2ei.datamapper.view", async () => {
         window.showInformationMessage("DataMapper Graphical View");
-        await dataMapper.render();
+        await dataMapper.render(context.extensionPath);
     }));
     
 }

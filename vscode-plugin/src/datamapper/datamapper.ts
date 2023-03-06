@@ -1,3 +1,4 @@
+import { readdirSync } from "fs";
 import { join } from "path";
 import { Disposable, Webview, WebviewPanel, window, ViewColumn, Uri } from "vscode";
 
@@ -6,9 +7,11 @@ export default class dataMapper {
     public static currentPanel: dataMapper | undefined;
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
+    private readonly _extensionPath: string;
 
-    private constructor(panel: WebviewPanel) {
+    private constructor(panel: WebviewPanel, extensionPath: string) {
         this._panel = panel;
+        this._extensionPath = extensionPath;
 
         // Set an event listener to listen for when the panel is disposed (i.e. when the user closes
         // the panel or when the panel is closed programmatically)
@@ -21,10 +24,10 @@ export default class dataMapper {
         this._setWebviewMessageListener(this._panel.webview);
 
         //refreshing the webview
-        this._panel.webview.postMessage({type : 'refresh'});
+        this._panel.webview.postMessage({ type: 'refresh' });
     }
 
-    public static render() {
+    public static render(extensionPath: string) {
         if (dataMapper.currentPanel) {
             // If the webview panel already exists reveal it
             dataMapper.currentPanel._panel.reveal(ViewColumn.One);
@@ -44,7 +47,7 @@ export default class dataMapper {
                 }
             );
 
-            dataMapper.currentPanel = new dataMapper(panel);
+            dataMapper.currentPanel = new dataMapper(panel, extensionPath);
         }
     }
 
@@ -63,31 +66,23 @@ export default class dataMapper {
         }
     }
 
-    private _getWebviewContent(webview: Webview) {
+    private _getWebviewContent(webview: any) {
 
-        // const stylePathArray = ["webview-ui", "build", "assets", "index.css"];
+        const buildPath = join(this._extensionPath, 'webviews', 'build', 'static');
 
-        // const stylesUri = webview.asWebviewUri(Uri.joinPath(extensionUri, ...stylePathArray));
-        
-        // // The CSS file from the React build output
-        // const stylesUri = getUri(webview, extensionUri, [
-        //   "webview-ui",
-        //   "build",
-        //   "static",
-        //   "css",
-        //   "main.css",
-        // ]);
-        // The JS file from the React build output
-        // const scriptUri = getUri(webview, extensionUri, [
-        //   "webviews",
-        //   "build",
-        //   "static",
-        //   "js",
-        //   "main.js",
-        // ]);
+        const cssFile = readdirSync(join(buildPath,'css')).find(file => file.endsWith('.css'));
+        const jsFile = readdirSync(join(buildPath,'js')).filter(file => file.startsWith('main.') && file.endsWith('.js'))[0];
 
-        
+        if (!cssFile || !jsFile) {
+            throw new Error('Could not find CSS or JS file in build directory');
+          }
 
+        const stylesUri = Uri.file(join(buildPath, 'css', cssFile)).with({ scheme: 'file' });
+        const scriptUri = Uri.file(join(buildPath, 'js', jsFile)).with({ scheme: 'file' });
+
+        const styles = webview.asWebviewUri(stylesUri);
+        const script = webview.asWebviewUri(scriptUri);
+    
         // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
         return /*html*/ `
         <!DOCTYPE html>
@@ -96,13 +91,15 @@ export default class dataMapper {
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
             <meta name="theme-color" content="#000000">
-            <link rel="stylesheet" type="text/css" href="https://file%2B.vscode-resource.vscode-cdn.net/c%3A/Hana/Projects/DataMapper/ei-tooling-vscode/vscode-plugin/webviews/build/static/css/main.b3bc63c5.css">
+            <link rel="stylesheet" type="text/css" href="${styles}">
             <title>Data Mapper View</title>
           </head>
           <body>
             <noscript>You need to enable JavaScript to run this app.</noscript>
-            <div id="root"></div>
-            <script src="https://file%2B.vscode-resource.vscode-cdn.net/c%3A/Hana/Projects/DataMapper/ei-tooling-vscode/vscode-plugin/webviews/build/static/js/main.103835fd.js"></script>
+            <div id="root">
+            <h1>${styles}</h1>
+            </div>
+            <script src="${script}"></script>
           </body>
         </html>
       `;
@@ -121,10 +118,10 @@ export default class dataMapper {
                             window.showInformationMessage(text);
                             break;
                         }
-                    // case "reload": {
-                    //     webview.html = this._getWebviewContent(this._panel.webview);
-                    //     break;
-                    // }
+                        // case "reload": {
+                        //     webview.html = this._getWebviewContent(this._panel.webview);
+                        //     break;
+                        // }
 
                         return;
                     // Add more switch case statements here as more webview message commands
