@@ -2,7 +2,8 @@ const path = require('path');
 
 module.exports = {
   entry: './src/extension.ts',
-  mode: 'production',
+  watch: false,
+  mode :'development',
   target: 'node',
   output: {
     filename: 'extension.js',
