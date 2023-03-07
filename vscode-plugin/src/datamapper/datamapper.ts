@@ -114,25 +114,22 @@ export default class dataMapper {
                 const command = message.command;
                 const text = message.text;
 
-                if(command === "hello"){
-                    window.showInformationMessage(text);
-                }
-                // switch (command) {
-                //     case "hello":
-                //         // Code that should run in response to the hello message command
-                //         {
-                //             window.showErrorMessage(text);
-                //             break;
-                //         }
-                //         // case "reload": {
-                //         //     webview.html = this._getWebviewContent(this._panel.webview);
-                //         //     break;
-                //         // }
-
-                //         return;
-                //     // Add more switch case statements here as more webview message commands
-                //     // are created within the webview context (i.e. inside media/main.js)
+                // if(command === "success_alert"){
+                //     window.showInformationMessage(text);
                 // }
+                switch (command) {
+                    case "success_alert":
+                        {
+                            window.showInformationMessage(text);
+                            break;
+                        }
+                    case "fail_alert":
+                        {
+                            window.showErrorMessage(text);
+                            break;
+                        }
+                        return;
+                }
             },
             undefined,
             this._disposables
