@@ -1,13 +1,12 @@
 import React from 'react'
 import { NodeModel } from '@projectstorm/react-diagrams';
-import Upload from '../FileUpload/Upload';
+import Upload from '../../FileUpload/Upload';
 
 export class InputsNodeModel extends NodeModel {
     icon: any;
     onClick: any;
     name: any;
     color: any;
-    element: {};
 
     constructor(options: any = {}) {
         super({
@@ -18,7 +17,6 @@ export class InputsNodeModel extends NodeModel {
         this.color = options.color || undefined;
         this.icon = options.icon || null;
         this.onClick = options.onClick || null;
-        this.element = options.element || undefined;
     }
     
     setIcon(icon: any) {

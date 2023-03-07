@@ -43,8 +43,10 @@ const UploadForm = (props: Props) => {
         formData.append('filename', fileName + "_" + props.title );
         const res = await axios.post(`http://localhost:5000/input/upload`, formData)
         console.log(res.data);
+        tsvscode.postMessage({command:'success_alert', text : 'File Uploaded Successfully'})
       } catch (error) {
         console.log(error);
+        tsvscode.postMessage({command:'fail_alert', text : 'Error, Cant upload file'})
       }
     }
   };

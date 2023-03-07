@@ -1,39 +1,54 @@
 import React from 'react';
-import { Close,  UploadFileRounded } from '@mui/icons-material';
-import UploadForm from './UploadForm';
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import { uploadStyles } from './styles';
+import createEngine, { DiagramModel, DefaultNodeModel } from '@projectstorm/react-diagrams';
+import { CanvasWidget } from '@projectstorm/react-canvas-core';
+import { InputsNodeFactory } from '../Nodes/InputNodes/InputsNodeFactory';
+import { InputsNodeModel } from '../Nodes/InputNodes/InputsNodeModel';
+import UploadModal from './UploadModal';
 
-interface Props {
-  title: string;
-}
-
-const Upload = (props: Props) => {
-
-  const [open, setOpen] = React.useState(false);
-  let title = props.title;
+const Upload = () => {
   const classes = uploadStyles();
-  
-  const handleClick = () => {
-    setOpen(true);
+  const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState('');
+  const handleClose = (value: boolean ) => {
+    setOpen(value);
   }
 
-  const handleClose = () => {
-    setOpen(false);
-  }
+  const engine = createEngine();
+  engine.getNodeFactories().registerFactory(new InputsNodeFactory());
+  const model = new DiagramModel();
+
+  const InputBox = new InputsNodeModel({
+    name: 'Input',
+    color: 'grey',
+    icon: <Add color='disabled' />,
+    onClick: () => {
+      setTitle('Input');
+      setOpen(true);
+    }
+  })
+
+  InputBox.setPosition(100, 100);
+
+  const OutputBox = new InputsNodeModel({
+    name: 'Output',
+    color: 'grey',
+    icon: <Add color='disabled' />,
+    onClick: () => {
+      setTitle('Output');
+      setOpen(true);
+    }
+  })
+  OutputBox.setPosition(400, 100);
+
+  model.addAll(InputBox, OutputBox);
+  engine.setModel(model);
 
   return (
     <>
-      <IconButton onClick={handleClick}><UploadFileRounded /></IconButton>
-      <a onClick={handleClick}>Load {props.title} file</a>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle className={classes.dialogHeader} >
-          Load {props.title}
-          <IconButton onClick={handleClose} className={classes.closeButton}> <Close /></IconButton>
-        </DialogTitle>
-        <DialogContent><UploadForm title={title} /></DialogContent>
-      </Dialog>
+      <CanvasWidget className={classes.canvas} engine={engine} />
+      <UploadModal title={title} modalOpen={open} modalClose={handleClose}/>
     </>
   )
 }
