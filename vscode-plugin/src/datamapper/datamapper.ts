@@ -1,7 +1,7 @@
 import { readdirSync } from "fs";
 import { join } from "path";
 import { Disposable, Webview, WebviewPanel, window, ViewColumn, Uri } from "vscode";
-
+import * as vscode from 'vscode';
 
 export default class dataMapper {
     public static currentPanel: dataMapper | undefined;
@@ -21,7 +21,7 @@ export default class dataMapper {
         this._panel.webview.html = this._getWebviewContent(this._panel.webview);
 
         // Set an event listener to listen for messages passed from the webview context
-        this._setWebviewMessageListener(this._panel.webview);
+        this._setWebviewMessageListener();
 
         //refreshing the webview
         this._panel.webview.postMessage({ type: 'refresh' });
@@ -70,19 +70,22 @@ export default class dataMapper {
 
         const buildPath = join(this._extensionPath, 'webviews', 'build', 'static');
 
-        const cssFile = readdirSync(join(buildPath,'css')).find(file => file.endsWith('.css'));
-        const jsFile = readdirSync(join(buildPath,'js')).filter(file => file.startsWith('main.') && file.endsWith('.js'))[0];
+        const cssFile = readdirSync(join(buildPath, 'css')).find(file => file.endsWith('.css'));
+        const jsFile = readdirSync(join(buildPath, 'js')).filter(file => file.startsWith('main.') && file.endsWith('.js'))[0];
 
         if (!cssFile || !jsFile) {
             throw new Error('Could not find CSS or JS file in build directory');
-          }
+        }
 
         const stylesUri = Uri.file(join(buildPath, 'css', cssFile)).with({ scheme: 'file' });
         const scriptUri = Uri.file(join(buildPath, 'js', jsFile)).with({ scheme: 'file' });
 
         const styles = webview.asWebviewUri(stylesUri);
         const script = webview.asWebviewUri(scriptUri);
-    
+
+        this._panel.webview.postMessage({ vscode })
+
+        //<meta http-equiv="Content-Security-Policy" content="default-src 'none'; frame-src vscode-resource: https: http:; script-src vscode-resource: https: http: 'unsafe-inline';">
         // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
         return /*html*/ `
         <!DOCTYPE html>
@@ -96,37 +99,40 @@ export default class dataMapper {
           </head>
           <body>
             <noscript>You need to enable JavaScript to run this app.</noscript>
-            <div id="root">
-            <h1>${styles}</h1>
-            </div>
+            <div id="root"></div>
+          
+            <script> window.vscode = acquireVsCodeApi();</script>
             <script src="${script}"></script>
           </body>
         </html>
       `;
     }
 
-    private _setWebviewMessageListener(webview: Webview) {
-        webview.onDidReceiveMessage(
+    private _setWebviewMessageListener() {
+        this._panel.webview.onDidReceiveMessage(
             (message: any) => {
                 const command = message.command;
                 const text = message.text;
 
-                switch (command) {
-                    case "hello":
-                        // Code that should run in response to the hello message command
-                        {
-                            window.showInformationMessage(text);
-                            break;
-                        }
-                        // case "reload": {
-                        //     webview.html = this._getWebviewContent(this._panel.webview);
-                        //     break;
-                        // }
-
-                        return;
-                    // Add more switch case statements here as more webview message commands
-                    // are created within the webview context (i.e. inside media/main.js)
+                if(command === "hello"){
+                    window.showInformationMessage(text);
                 }
+                // switch (command) {
+                //     case "hello":
+                //         // Code that should run in response to the hello message command
+                //         {
+                //             window.showErrorMessage(text);
+                //             break;
+                //         }
+                //         // case "reload": {
+                //         //     webview.html = this._getWebviewContent(this._panel.webview);
+                //         //     break;
+                //         // }
+
+                //         return;
+                //     // Add more switch case statements here as more webview message commands
+                //     // are created within the webview context (i.e. inside media/main.js)
+                // }
             },
             undefined,
             this._disposables

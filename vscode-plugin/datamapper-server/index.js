@@ -41,22 +41,56 @@ app.post('/input/upload', upload.single('file'), (req, res) => {
                     return;
                 } else {
                     console.log("success");
+
+                    try {
+                        // Get the active workspace folder;
+
+                        const workspacePath =
+                            console.log(workspacePath);
+
+                        // Construct the file path in the workspace folder
+                        const fileName = `${req.body.filename}_schema.json`;
+
+                        // Write the file to disk
+                        fs.promises.writeFile(workspacePath, "fileContent");
+                    } catch (err) {
+                        console.error(`Failed to upload file: ${err}`);
+                    }
+
+                    // try {
+                    //     // Get the active workspace folder
+                    //     const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+                    //     if (!workspaceFolder) {
+                    //         throw new Error('No workspace folder found');
+                    //     }
+
+                    //     // Construct the file path in the workspace folder
+                    //     const fileName = `${req.body.filename}_schema.json`;
+                    //     const filePath = path.join(workspaceFolder.uri.fsPath, fileName);
+
+                    //     // Write the file to disk
+                    //     fs.promises.writeFile(filePath, "fileContent");
+                    // } catch (err) {
+                    //     console.error(`Failed to upload file: ${err}`);
+                    // }
+
+                    try {
+                        fs.unlinkSync(`uploads/${req.body.filename}`);
+                        console.log("Delete File successfully.");
+                    } catch (error) {
+                        console.log(error);
+                        return;
+                    }
+
+                    res.status(200).json({
+                        status: 'success',
+                        message: `JSON schema created successfully`
+                    });
                 }
             });
         })
 
-        try {
-            fs.unlinkSync(`uploads/${req.body.filename}`);
-            console.log("Delete File successfully.");
-        } catch (error) {
-            console.log(error);
-            return;
-        }
 
-        res.status(200).json({
-            status: 'success',
-            message: `JSON schema created successfully`
-        });
 
     } catch (error) {
         res.json({

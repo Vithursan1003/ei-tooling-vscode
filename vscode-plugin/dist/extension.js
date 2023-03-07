@@ -70167,126 +70167,6 @@ DataServiceInfo.DATA_SERVICE_LABEL = "dataservice";
 
 /***/ }),
 
-/***/ "./src/datamapper/dataMapper.ts":
-/*!**************************************!*\
-  !*** ./src/datamapper/dataMapper.ts ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fs_1 = __webpack_require__(/*! fs */ "fs");
-const path_1 = __webpack_require__(/*! path */ "path");
-const vscode_1 = __webpack_require__(/*! vscode */ "vscode");
-class dataMapper {
-    constructor(panel, extensionPath) {
-        this._disposables = [];
-        this._panel = panel;
-        this._extensionPath = extensionPath;
-        // Set an event listener to listen for when the panel is disposed (i.e. when the user closes
-        // the panel or when the panel is closed programmatically)
-        this._panel.onDidDispose(this.dispose, null, this._disposables);
-        // Set the HTML content for the webview panel
-        this._panel.webview.html = this._getWebviewContent(this._panel.webview);
-        // Set an event listener to listen for messages passed from the webview context
-        this._setWebviewMessageListener(this._panel.webview);
-        //refreshing the webview
-        this._panel.webview.postMessage({ type: 'refresh' });
-    }
-    static render(extensionPath) {
-        if (dataMapper.currentPanel) {
-            // If the webview panel already exists reveal it
-            dataMapper.currentPanel._panel.reveal(vscode_1.ViewColumn.One);
-        }
-        else {
-            // If a webview panel does not already exist create and show a new one
-            const panel = vscode_1.window.createWebviewPanel(
-            // Panel view type
-            "OpenDataMapperView", 
-            // Panel title
-            "Data Mapper View", 
-            // The editor column the panel should be displayed in
-            vscode_1.ViewColumn.One, 
-            // Extra panel configurations
-            {
-                // Enable JavaScript in the webview
-                enableScripts: true,
-            });
-            dataMapper.currentPanel = new dataMapper(panel, extensionPath);
-        }
-    }
-    dispose() {
-        dataMapper.currentPanel = undefined;
-        // Dispose of the current webview panel
-        this._panel.dispose();
-        // Dispose of all disposables (i.e. commands) for the current webview panel
-        while (this._disposables.length) {
-            const disposable = this._disposables.pop();
-            if (disposable) {
-                disposable.dispose();
-            }
-        }
-    }
-    _getWebviewContent(webview) {
-        const buildPath = path_1.join(this._extensionPath, 'webviews', 'build', 'static');
-        const cssFile = fs_1.readdirSync(path_1.join(buildPath, 'css')).find(file => file.endsWith('.css'));
-        const jsFile = fs_1.readdirSync(path_1.join(buildPath, 'js')).filter(file => file.startsWith('main.') && file.endsWith('.js'))[0];
-        if (!cssFile || !jsFile) {
-            throw new Error('Could not find CSS or JS file in build directory');
-        }
-        const stylesUri = vscode_1.Uri.file(path_1.join(buildPath, 'css', cssFile)).with({ scheme: 'file' });
-        const scriptUri = vscode_1.Uri.file(path_1.join(buildPath, 'js', jsFile)).with({ scheme: 'file' });
-        const styles = webview.asWebviewUri(stylesUri);
-        const script = webview.asWebviewUri(scriptUri);
-        // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
-        return /*html*/ `
-        <!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-            <meta name="theme-color" content="#000000">
-            <link rel="stylesheet" type="text/css" href="${styles}">
-            <title>Data Mapper View</title>
-          </head>
-          <body>
-            <noscript>You need to enable JavaScript to run this app.</noscript>
-            <div id="root">
-            <h1>${styles}</h1>
-            </div>
-            <script src="${script}"></script>
-          </body>
-        </html>
-      `;
-    }
-    _setWebviewMessageListener(webview) {
-        webview.onDidReceiveMessage((message) => {
-            const command = message.command;
-            const text = message.text;
-            switch (command) {
-                case "hello":
-                    // Code that should run in response to the hello message command
-                    {
-                        vscode_1.window.showInformationMessage(text);
-                        break;
-                    }
-                    // case "reload": {
-                    //     webview.html = this._getWebviewContent(this._panel.webview);
-                    //     break;
-                    // }
-                    return;
-                // Add more switch case statements here as more webview message commands
-                // are created within the webview context (i.e. inside media/main.js)
-            }
-        }, undefined, this._disposables);
-    }
-}
-exports["default"] = dataMapper;
-
-
-/***/ }),
-
 /***/ "./src/extension.ts":
 /*!**************************!*\
   !*** ./src/extension.ts ***!
@@ -90121,6 +90001,16 @@ ZipStream.prototype.finalize = function() {
  * @see {@link https://github.com/archiverjs/node-compress-commons}
  */
 
+
+/***/ }),
+
+/***/ "./src/datamapper/dataMapper.ts":
+/*!**************************************!*\
+  !*** ./src/datamapper/dataMapper.ts ***!
+  \**************************************/
+/***/ (() => {
+
+throw new Error("Module parse failed: Unexpected token (7:11)\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\n| \n| export default class dataMapper {\n>     public static currentPanel: dataMapper | undefined;\n|     private readonly _panel: WebviewPanel;\n|     private _disposables: Disposable[] = [];");
 
 /***/ }),
 
