@@ -1,7 +1,9 @@
-import { readdirSync } from "fs";
+import { readdirSync, writeFile } from "fs";
 import { join } from "path";
 import { Disposable, Webview, WebviewPanel, window, ViewColumn, Uri } from "vscode";
 import * as vscode from 'vscode';
+import datamapperServer from "./datamapperServer";
+
 
 export default class dataMapper {
     public static currentPanel: dataMapper | undefined;
@@ -100,8 +102,13 @@ export default class dataMapper {
           <body>
             <noscript>You need to enable JavaScript to run this app.</noscript>
             <div id="root"></div>
-          
-            <script> window.vscode = acquireVsCodeApi();</script>
+            <script>
+            const vscode = acquireVsCodeApi();
+            window.onload = function() {
+                vscode.postMessage({ command: 'success_alert' });
+                console.log('Ready to accept data.');
+            };
+            </script>
             <script src="${script}"></script>
           </body>
         </html>
@@ -112,21 +119,20 @@ export default class dataMapper {
         this._panel.webview.onDidReceiveMessage(
             (message: any) => {
                 const command = message.command;
-                const text = message.text;
-
-                // if(command === "success_alert"){
-                //     window.showInformationMessage(text);
-                // }
                 switch (command) {
                     case "success_alert":
                         {
-                            window.showInformationMessage(text);
+                            window.showInformationMessage(message.text);
                             break;
                         }
                     case "fail_alert":
                         {
-                            window.showErrorMessage(text);
+                            window.showErrorMessage(message.text);
                             break;
+                        }
+                    case "fileUpload":
+                        {
+                            datamapperServer.handleFileUpload(message.fileContent,message.fileName,message.extension);
                         }
                         return;
                 }

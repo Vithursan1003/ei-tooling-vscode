@@ -1,20 +1,26 @@
 import { Button, FormControl, FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material'
-import React from 'react'
-import axios from "axios";
+import React from 'react';
 import { uploadStyles } from './styles';
-
 
 interface Props {
   title: string;
 }
 
+interface vscode {
+  postMessage(message: any): void;
+}
+
+declare const vscode: vscode;
+
+let fileReader: FileReader;
+
 const UploadForm = (props: Props) => {
 
   const classes = uploadStyles();
 
-  const data = ['XML', 'JSON', 'XSD', 'CSV', 'JSON SCHEMA', 'CONNECTOR'];
+  const supportedFileType = ['XML', 'JSON', 'XSD', 'CSV', 'JSON SCHEMA', 'CONNECTOR'];
 
-  const [type, setType] = React.useState("JSON SCHEMA");
+  const [fileType, setFileType] = React.useState("JSON SCHEMA");
   const [fileName, setFileName] = React.useState(props.title);
   const [file, setFile] = React.useState<File | null>(null);
 
@@ -26,7 +32,7 @@ const UploadForm = (props: Props) => {
   }
 
   const handleFileType = (e: SelectChangeEvent) => {
-    setType(e.target.value)
+    setFileType(e.target.value)
   }
 
   const handleFileName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,15 +44,19 @@ const UploadForm = (props: Props) => {
 
     if (file) {
       try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('filename', fileName + "_" + props.title );
-        const res = await axios.post(`http://localhost:5000/input/upload`, formData)
-        console.log(res.data);
-        tsvscode.postMessage({command:'success_alert', text : 'File Uploaded Successfully'})
+        var filename = fileName + "_" + props.title;
+        var fileExtension = file.name.split('.').pop();
+
+        fileReader = new FileReader();
+        fileReader.readAsText(file);
+        fileReader.onloadend = () => {
+          let content = fileReader.result;
+          console.log(content);
+          vscode.postMessage({ command: 'fileUpload', fileName: filename,fileContent:content,extension:fileExtension});
+        }
+       
       } catch (error) {
-        console.log(error);
-        tsvscode.postMessage({command:'fail_alert', text : 'Error, Cant upload file'})
+        vscode.postMessage({ command: 'fail_alert', text: 'Error, Cant upload file' });
       }
     }
   };
@@ -56,9 +66,9 @@ const UploadForm = (props: Props) => {
       <form onSubmit={handleSubmit}>
         <FormControl>
           <FormLabel className={classes.Label} >Resource Type : </FormLabel>
-          <Select value={type} onChange={handleFileType} className={classes.Select} >
+          <Select value={fileType} onChange={handleFileType} className={classes.Select} >
             {
-              data.map((type, index) =>
+              supportedFileType.map((type, index) =>
                 (<MenuItem className={classes.Label} key={index} value={type}>{type}</MenuItem>))
             }
           </Select>

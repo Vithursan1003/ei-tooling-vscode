@@ -1,27 +1,25 @@
 import { Button } from '@mui/material';
 
-// declare global {
-//     interface Window {
-//       acquireVsCodeApi(): any;
-//     }
-//   }
-  
-//   const vscode = window.acquireVsCodeApi();
-  
+interface vscode {
+  postMessage(message: any): void;
+}
+
+declare const vscode: vscode;
 
 const Testing = () => {
 
-    const handleClick = () =>{
-        tsvscode.postMessage({command:"hello",text:"Hi Webview"});
-    }
-    
+  const handleClick = () => {
+    // tsvscode.postMessage({ command: "hello", text: "Hi Webview" });
+    vscode.postMessage({ command: 'success_alert',text : 'Hiii Webview'})
+  }
+
   return (
     <div>
-        <Button onClick={handleClick}>Testing</Button>
+      <Button onClick={handleClick}>Testing</Button>
     </div>
   )
 }
 
 export default Testing
 
- 
+

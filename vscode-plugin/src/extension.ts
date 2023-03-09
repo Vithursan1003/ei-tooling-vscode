@@ -264,3 +264,7 @@ function checkUriExistence(uri: Uri | undefined) {
 // this method is called when your extension is deactivated
 export function deactivate() {
 }
+function acquireVsCodeApi() {
+    throw new Error('Function not implemented.');
+}
+

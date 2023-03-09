@@ -99,7 +99,7 @@
 						"default": "doubleQuotes",
 						"description": "Which type of quotes to use for attribute values when formatting.",
 						"scope": "window"
-					}			
+					}
 				}
 			}
 		],
@@ -362,6 +362,7 @@
 		"@types/md5": "^2.1.33",
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^8.10.25",
+		"@types/to-json-schema": "^0.2.1",
 		"@types/xml2js": "^0.4.3",
 		"@types/xmldom": "^0.1.29",
 		"tslint": "^5.12.1",
@@ -384,6 +385,7 @@
 		"js-yaml": "^4.1.0",
 		"md5": "^2.2.1",
 		"node-downloader-helper": "^2.1.1",
+		"to-json-schema": "^0.2.5",
 		"ts-loader": "^9.4.2",
 		"vscode-extension-telemetry-wrapper": "^0.3.9",
 		"vscode-languageclient": "^4.1.4",
