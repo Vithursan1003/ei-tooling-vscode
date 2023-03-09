@@ -7,6 +7,7 @@ import UploadForm from './UploadForm';
 
 interface Props {
   title: string;
+  someFunction: (data: any) => void;
 }
 
 const Upload = (props: Props) => {
@@ -42,7 +43,7 @@ const Upload = (props: Props) => {
           <div style={{ paddingLeft: '15px' }}>Load {props.title}</div>
         </Modal.Header>
         <Modal.Body style={{ fontSize: '11px' }}>
-          <UploadForm title={title}/>
+          <UploadForm title={title} someFunction={props.someFunction}/>
         </Modal.Body>
       </Modal>
     </>

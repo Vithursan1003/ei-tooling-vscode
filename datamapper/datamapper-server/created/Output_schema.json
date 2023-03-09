@@ -1,0 +1,100 @@
+{
+  "$id": "hello_world.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "This JSON Schema file was generated from hello_world.xsd on Tue Mar 07 2023 16:28:19 GMT+0530 (India Standard Time).  For more information please see http://www.xsd2jsonschema.org",
+  "description": "Schema tag attributes: xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:tns='http://tempuri.org/PurchaseOrderSchema.xsd' targetNamespace='http://tempuri.org/PurchaseOrderSchema.xsd' elementFormDefault='qualified'",
+  "properties": {
+    "PurchaseOrder": {
+      "$ref": "#/definitions/PurchaseOrderType"
+    },
+    "PurchaseOrderType": {
+      "$ref": "#/definitions/PurchaseOrderType"
+    },
+    "USAddress": {
+      "$ref": "#/definitions/USAddress"
+    }
+  },
+  "type": "object",
+  "anyOf": [
+    {
+      "required": [
+        "PurchaseOrder"
+      ]
+    },
+    {
+      "required": [
+        "PurchaseOrderType"
+      ]
+    },
+    {
+      "required": [
+        "USAddress"
+      ]
+    }
+  ],
+  "definitions": {
+    "PurchaseOrder": {
+      "$ref": "#/definitions/PurchaseOrderType"
+    },
+    "PurchaseOrderType": {
+      "required": [
+        "ShipTo",
+        "BillTo"
+      ],
+      "properties": {
+        "ShipTo": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/USAddress"
+            },
+            {
+              "items": {
+                "$ref": "#/definitions/USAddress"
+              },
+              "maxItems": 2,
+              "type": "array"
+            }
+          ]
+        },
+        "BillTo": {
+          "$ref": "#/definitions/USAddress"
+        },
+        "@OrderDate": {
+          "pattern": "-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "USAddress": {
+      "required": [
+        "name",
+        "street",
+        "city",
+        "state",
+        "zip"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "integer"
+        },
+        "@country": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
