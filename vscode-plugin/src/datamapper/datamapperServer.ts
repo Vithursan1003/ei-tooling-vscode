@@ -6,7 +6,7 @@ import { join } from 'path';
 
 export default class datamapperServer {
 
-    public static handleFileUpload(fileContent :string,fileName:string,extension :string) {
+    public static handleFileUpload(fileContent :string,fileName:string,extension :string,callback: (message: any) => void) {
       const jsonObj = JSON.parse(fileContent);
       const schema = toJsonSchema(jsonObj);
       window.showInformationMessage(JSON.stringify(schema, null, 2));
@@ -20,6 +20,7 @@ export default class datamapperServer {
               window.showErrorMessage("Cant create Json schema");
           }else{
               window.showInformationMessage("Json schema file created");
+              callback({ type: 'createdSchema', data: schema });
           }
         })
       }else{

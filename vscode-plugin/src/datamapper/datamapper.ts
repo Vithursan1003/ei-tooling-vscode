@@ -132,7 +132,10 @@ export default class dataMapper {
                         }
                     case "fileUpload":
                         {
-                            datamapperServer.handleFileUpload(message.fileContent,message.fileName,message.extension);
+                            datamapperServer.handleFileUpload(message.fileContent, message.fileName,message.extension, 
+                                (message) => {
+                                   this._panel.webview.postMessage(message);
+                                });
                         }
                         return;
                 }

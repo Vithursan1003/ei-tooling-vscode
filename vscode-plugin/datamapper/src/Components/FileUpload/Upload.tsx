@@ -11,6 +11,7 @@ const Upload = () => {
   const classes = uploadStyles();
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState('');
+  
   const handleClose = (value: boolean ) => {
     setOpen(value);
   }
@@ -28,7 +29,6 @@ const Upload = () => {
       setOpen(true);
     }
   })
-
   InputBox.setPosition(100, 100);
 
   const OutputBox = new InputsNodeModel({

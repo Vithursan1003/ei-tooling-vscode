@@ -1,4 +1,7 @@
-import { Button, FormControl, FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material'
+import {
+  Button, FormControl, FormLabel, InputLabel, 
+  MenuItem, Select,SelectChangeEvent, TextField
+} from '@mui/material'
 import React from 'react';
 import { uploadStyles } from './styles';
 
@@ -19,10 +22,24 @@ const UploadForm = (props: Props) => {
   const classes = uploadStyles();
 
   const supportedFileType = ['XML', 'JSON', 'XSD', 'CSV', 'JSON SCHEMA', 'CONNECTOR'];
-
+  // states for customnodes
+  const [node,setNode] = React.useState(null);
+  const [schema,setSchema] = React.useState(null);
+  //states for file uploading
   const [fileType, setFileType] = React.useState("JSON SCHEMA");
   const [fileName, setFileName] = React.useState(props.title);
   const [file, setFile] = React.useState<File | null>(null);
+
+  React.useEffect(() => {
+    window.addEventListener('message', (e) => {
+      if (e.data.type === 'createdSchema') {
+        setSchema(e.data.data);
+      }
+    });
+    return () => {
+      window.removeEventListener('message', (event) => {});
+    };
+  }, []);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -39,6 +56,7 @@ const UploadForm = (props: Props) => {
     setFileName(e.target.value);
   }
 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -52,14 +70,18 @@ const UploadForm = (props: Props) => {
         fileReader.onloadend = () => {
           let content = fileReader.result;
           console.log(content);
-          vscode.postMessage({ command: 'fileUpload', fileName: filename,fileContent:content,extension:fileExtension});
+          vscode.postMessage({
+            command: 'fileUpload', fileName: filename,
+            fileContent: content, extension: fileExtension
+          });
         }
-       
+
       } catch (error) {
         vscode.postMessage({ command: 'fail_alert', text: 'Error, Cant upload file' });
       }
     }
   };
+
 
   return (
     <>
@@ -80,7 +102,7 @@ const UploadForm = (props: Props) => {
 
         <InputLabel className={classes.Label}>Select from file system : </InputLabel>
         <input className={classes.Label} type="file" name='file' onChange={handleFile} />
-
+        <pre>{JSON.stringify(schema, null, 2)}</pre>
         <Button className={classes.saveButton} type="submit" variant='contained' disabled={!file}>Save</Button>
       </form>
     </>
