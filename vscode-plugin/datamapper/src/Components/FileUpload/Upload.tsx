@@ -6,11 +6,13 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { InputsNodeFactory } from '../Nodes/InputNodes/InputsNodeFactory';
 import { InputsNodeModel } from '../Nodes/InputNodes/InputsNodeModel';
 import UploadModal from './UploadModal';
+import { FileContext } from './../ContextProvider/FileContext';
 
 const Upload = () => {
   const classes = uploadStyles();
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState('');
+  const {schemaInput,schemaOutput} = React.useContext(FileContext);
   
   const handleClose = (value: boolean ) => {
     setOpen(value);

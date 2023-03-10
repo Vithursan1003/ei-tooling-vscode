@@ -1,9 +1,10 @@
 import {
-  Button, FormControl, FormLabel, InputLabel, 
-  MenuItem, Select,SelectChangeEvent, TextField
+  Button, FormControl, FormLabel, InputLabel,
+  MenuItem, Select, SelectChangeEvent, TextField
 } from '@mui/material'
-import React from 'react';
+import React, { useContext } from 'react';
 import { uploadStyles } from './styles';
+import { FileContext } from './../ContextProvider/FileContext';
 
 interface Props {
   title: string;
@@ -20,25 +21,23 @@ let fileReader: FileReader;
 const UploadForm = (props: Props) => {
 
   const classes = uploadStyles();
-
   const supportedFileType = ['XML', 'JSON', 'XSD', 'CSV', 'JSON SCHEMA', 'CONNECTOR'];
-  // states for customnodes
-  const [node,setNode] = React.useState(null);
-  const [schema,setSchema] = React.useState(null);
-  //states for file uploading
+
   const [fileType, setFileType] = React.useState("JSON SCHEMA");
   const [fileName, setFileName] = React.useState(props.title);
   const [file, setFile] = React.useState<File | null>(null);
+  const { setSchemaInput, setSchemaOutput} = React.useContext(FileContext);
 
   React.useEffect(() => {
     window.addEventListener('message', (e) => {
       if (e.data.type === 'createdSchema') {
-        setSchema(e.data.data);
+        if (props.title === 'Input') {
+          setSchemaInput(e.data.value);
+        } else if (props.title === 'Output') {
+          setSchemaOutput(e.data.value);
+        }
       }
     });
-    return () => {
-      window.removeEventListener('message', (event) => {});
-    };
   }, []);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,13 +48,12 @@ const UploadForm = (props: Props) => {
   }
 
   const handleFileType = (e: SelectChangeEvent) => {
-    setFileType(e.target.value)
+    setFileType(e.target.value);
   }
 
   const handleFileName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileName(e.target.value);
   }
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -102,7 +100,6 @@ const UploadForm = (props: Props) => {
 
         <InputLabel className={classes.Label}>Select from file system : </InputLabel>
         <input className={classes.Label} type="file" name='file' onChange={handleFile} />
-        <pre>{JSON.stringify(schema, null, 2)}</pre>
         <Button className={classes.saveButton} type="submit" variant='contained' disabled={!file}>Save</Button>
       </form>
     </>

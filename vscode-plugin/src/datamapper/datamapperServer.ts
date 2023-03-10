@@ -7,20 +7,19 @@ import { join } from 'path';
 export default class datamapperServer {
 
     public static handleFileUpload(fileContent :string,fileName:string,extension :string,callback: (message: any) => void) {
-      const jsonObj = JSON.parse(fileContent);
-      const schema = toJsonSchema(jsonObj);
-      window.showInformationMessage(JSON.stringify(schema, null, 2));
-      const schemaJson = JSON.stringify(schema);
-
-      const currentFolder = workspace.workspaceFolders?.[0];
+      var jsonObj = JSON.parse(fileContent);
+      var schema = toJsonSchema(jsonObj);
+      var schemaJson = JSON.stringify(schema);
+      
+      var currentFolder = workspace.workspaceFolders?.[0];
       if(currentFolder){
-        const filePath = join(currentFolder.uri.fsPath,`${fileName}_schema.json`);
+        var filePath = join(currentFolder.uri.fsPath,`${fileName}_schema.json`);
         writeFile(filePath,schemaJson,(err)=>{
           if(err){
               window.showErrorMessage("Cant create Json schema");
           }else{
               window.showInformationMessage("Json schema file created");
-              callback({ type: 'createdSchema', data: schema });
+              callback({ type: 'createdSchema', value: schema});
           }
         })
       }else{
