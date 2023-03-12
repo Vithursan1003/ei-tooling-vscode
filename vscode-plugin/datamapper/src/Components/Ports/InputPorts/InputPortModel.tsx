@@ -1,14 +1,16 @@
-import React from 'react'
-import { DefaultPortModel } from '@projectstorm/react-diagrams';
+import { DefaultLinkModel, DefaultPortModel, LinkModel, PortModelAlignment } from '@projectstorm/react-diagrams';
 
 export class InputPortModel extends DefaultPortModel{
-  render() {
-    return (
-      <div>
-        
-      </div>
-    )
-  }
+  constructor(alignment: PortModelAlignment) {
+		super({
+			type: 'diamond',
+			name: alignment,
+			alignment: alignment
+		});
+	}
+
+	createLinkModel(): LinkModel {
+		return new DefaultLinkModel();
+	}
 }
 
-export default InputPortModel

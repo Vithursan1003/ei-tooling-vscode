@@ -1,6 +1,8 @@
 import React from 'react';
 import createEngine, { CanvasWidget, DefaultLinkModel, DefaultNodeModel, DefaultPortModel, DiagramModel } from '@projectstorm/react-diagrams';
 //import toJsonSchema from 'to-json-schema';
+import { DataMapperNodeModel } from './Nodes/DataMapperNodes/DataMapperNodeModel';
+import { DataMapperNodeFactory } from './Nodes/DataMapperNodes/DataMapperNodeFactory';
 
 // interface MyObj {
 //     [key:string] : unknown;
@@ -9,38 +11,37 @@ import createEngine, { CanvasWidget, DefaultLinkModel, DefaultNodeModel, Default
 const engine = createEngine();
 const model = new DiagramModel();
 
-const schema = {"properties": {
-    "name": {
-      "type": "string"
-    },
-    "rank": {
-      "type": "integer"
-    },
-    "born": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "luckyNumbers": {
-      "type": "array",
-      "items": {
-        "type": "integer"
-      }
-    }
-  }}
+const schema = {
+  "type": "object", "properties":
+    { "name": { "type": "string" }, "password": { "type": "string" } }
+};
+const val = schema.properties;
+engine.getNodeFactories().registerFactory(new DataMapperNodeFactory());
 
-const node1 = new DefaultNodeModel('Input', 'red');
-const port1=node1.addPort(new DefaultPortModel(true, 'Port A', 'bottom'));
-node1.addPort(new DefaultPortModel(true, 'Port B', 'top'));
+const node1 = new DataMapperNodeModel(val, {
+  name: 'Output',
+  color: 'grey',
+})
+
+// const node1 = new DefaultNodeModel('Input', 'red');
 
 
-const node2 = new DefaultNodeModel('Output', 'blue');
-const port2=node2.addPort(new DefaultPortModel(true, 'Port C', 'left'));
-node2.addPort(new DefaultPortModel(true, 'Port D', 'right'));
+// for (const [propertyName, property] of Object.entries(val)) {
+//   const port = new DefaultPortModel({
+//     name: `${propertyName} : ${property.type}`,
+//   });
+//   node1.addPort(port);
+// }
 
-const link1 = port1.link<DefaultLinkModel>(port2);
-let models =model.addAll(node1, node2,link1);
 
+// const node2 = new DefaultNodeModel('Output', 'blue');
+// const port2 = node2.addPort(new DefaultPortModel(true, 'Port C', 'left'));
+// node2.addPort(new DefaultPortModel(true, 'Port D', 'right'));
 
+// const link1 = port1.link<DefaultLinkModel>(port2);
+// let models = model.addAll(node1, node2);
+
+model.addAll(node1);
 engine.setModel(model);
 
 // const objToBeConverted : MyObj = {
@@ -57,12 +58,12 @@ engine.setModel(model);
 
 const Test = () => {
 
-  
-    return (
-        <>
-            <CanvasWidget engine={engine} className="canvas" />
-        </>
-    )
+
+  return (
+    <>
+      <CanvasWidget engine={engine} className="canvas" />
+    </>
+  )
 }
 
 export default Test

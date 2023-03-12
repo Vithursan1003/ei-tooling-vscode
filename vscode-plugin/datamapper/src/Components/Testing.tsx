@@ -8,14 +8,18 @@ declare const vscode: vscode;
 
 const Testing = () => {
 
-  const handleClick = () => {
-    // tsvscode.postMessage({ command: "hello", text: "Hi Webview" });
-    vscode.postMessage({ command: 'success_alert',text : 'Hiii Webview'})
+ const schema = {"type":"object","properties":{"name":{"type":"string"},"password":{"type":"string"}}};
+ const val = schema.properties;
+
+ const handleClick = () =>{
+  for (const [propertyName, property] of Object.entries(val)) {
+    console.log(`${propertyName} : ${property.type}`);
   }
+ }
 
   return (
     <div>
-      <Button onClick={handleClick}>Testing</Button>
+      <Button onClick={handleClick}>Test</Button>
     </div>
   )
 }
