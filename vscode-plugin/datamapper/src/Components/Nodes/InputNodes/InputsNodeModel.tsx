@@ -1,24 +1,37 @@
-import React from 'react'
-import { NodeModel } from '@projectstorm/react-diagrams';
-import Upload from '../../FileUpload/Upload';
+import { NodeModel, NodeModelGenerics, DefaultPortModel } from '@projectstorm/react-diagrams';
 
-export class InputsNodeModel extends NodeModel {
+export class InputsNodeModel extends NodeModel<NodeModelGenerics> {
+
     icon: any;
     onClick: any;
     name: any;
     color: any;
 
+    
     constructor(options: any = {}) {
         super({
             ...options,
             type: 'my-custom-node',
         });
+
         this.name = options.name || undefined;
         this.color = options.color || undefined;
         this.icon = options.icon || null;
         this.onClick = options.onClick || null;
+
+        const inputPort = new DefaultPortModel({
+            name: 'Input',
+        });
+        this.addPort(inputPort);
+       
+
+        const outputPort = new DefaultPortModel({
+            name: 'Output',
+        });
+        this.addPort(outputPort);
+        
     }
-    
+
     setIcon(icon: any) {
         this.icon = icon;
     }
@@ -27,14 +40,4 @@ export class InputsNodeModel extends NodeModel {
         return this.icon;
     }
 
-    // setOnClick(callback: any) {
-    //     this.onClick = callback;
-    // }
-
-    // getOnClick() {
-    //     return this.onClick;
-    // }
-
 }
-
-export default InputsNodeModel

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { AbstractReactFactory } from "@projectstorm/react-canvas-core";
 import { DiagramEngine } from "@projectstorm/react-diagrams-core";
 import { InputsNodeModel } from "./InputsNodeModel";
@@ -9,7 +8,7 @@ export class InputsNodeFactory extends AbstractReactFactory<InputsNodeModel, Dia
 		super("my-custom-node");
 	}
 
-	generateModel(event: any) {
+	generateModel(event: any) :InputsNodeModel {
 		return new InputsNodeModel();
 	}
 
