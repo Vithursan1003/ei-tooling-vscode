@@ -70,7 +70,7 @@ export default class dataMapper {
 
     private _getWebviewContent(webview: any) {
 
-        const buildPath = join(this._extensionPath, 'webviews', 'build', 'static');
+        const buildPath = join(this._extensionPath, 'datamapper', 'build', 'static');
 
         const cssFile = readdirSync(join(buildPath, 'css')).find(file => file.endsWith('.css'));
         const jsFile = readdirSync(join(buildPath, 'js')).filter(file => file.startsWith('main.') && file.endsWith('.js'))[0];
