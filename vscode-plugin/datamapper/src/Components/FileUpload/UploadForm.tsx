@@ -26,19 +26,8 @@ const UploadForm = (props: Props) => {
   const [fileType, setFileType] = React.useState("JSON SCHEMA");
   const [fileName, setFileName] = React.useState(props.title);
   const [file, setFile] = React.useState<File | null>(null);
-  const { setSchemaInput, setSchemaOutput} = React.useContext(FileContext);
-
-  React.useEffect(() => {
-    window.addEventListener('message', (e) => {
-      if (e.data.type === 'createdSchema') {
-        if (props.title === 'Input') {
-          setSchemaInput(e.data.value);
-        } else if (props.title === 'Output') {
-          setSchemaOutput(e.data.value);
-        }
-      }
-    });
-  }, []);
+  const { setSchemaInput, setSchemaOutput } = React.useContext(FileContext);
+  const title = props.title;
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -59,6 +48,7 @@ const UploadForm = (props: Props) => {
     e.preventDefault();
 
     if (file) {
+      vscode.postMessage({ command: 'success_alert', text: props.title});
       try {
         var filename = fileName + "_" + props.title;
         var fileExtension = file.name.split('.').pop();
@@ -73,6 +63,15 @@ const UploadForm = (props: Props) => {
             fileContent: content, extension: fileExtension
           });
         }
+        window.addEventListener('message', (e) => {
+          if(e.data.type === 'InputSchema'){
+            setSchemaInput(e.data.value);
+            //vscode.postMessage({ command: 'fail_alert', text:'Input schema'});
+          }else if(e.data.type === 'OutputSchema'){
+            setSchemaOutput(e.data.value);
+            //vscode.postMessage({ command: 'fail_alert', text: 'Output schema'});
+          }
+        });
 
       } catch (error) {
         vscode.postMessage({ command: 'fail_alert', text: 'Error, Cant upload file' });

@@ -7,6 +7,7 @@ export const uploadStyles = makeStyles(() => createStyles({
         width: '100%',
         textAlign:'center',
     },
+    
     dialogHeader: {
         height: '40px',
         color: 'white',

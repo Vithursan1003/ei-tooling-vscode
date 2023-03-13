@@ -11,6 +11,13 @@ export default class datamapperServer {
       var schema = toJsonSchema(jsonObj);
       var schemaJson = JSON.stringify(schema);
       
+      var node: string;
+      if(fileName.endsWith('Input')){
+        node = 'Input';
+      }else if(fileName.endsWith('Output')){
+        node = 'Output';
+      }
+
       var currentFolder = workspace.workspaceFolders?.[0];
       if(currentFolder){
         var filePath = join(currentFolder.uri.fsPath,`${fileName}_schema.json`);
@@ -19,7 +26,11 @@ export default class datamapperServer {
               window.showErrorMessage("Cant create Json schema");
           }else{
               window.showInformationMessage("Json schema file created");
-              callback({ type: 'createdSchema', value: schema});
+              if(node === 'Input'){
+                callback({ type: 'InputSchema', value: schema});
+              }else{
+                callback({ type: 'OutputSchema', value: schema});
+              }
           }
         })
       }else{

@@ -18,18 +18,6 @@ export class InputsNodeModel extends NodeModel<NodeModelGenerics> {
         this.color = options.color || undefined;
         this.icon = options.icon || null;
         this.onClick = options.onClick || null;
-
-        const inputPort = new DefaultPortModel({
-            name: 'Input',
-        });
-        this.addPort(inputPort);
-       
-
-        const outputPort = new DefaultPortModel({
-            name: 'Output',
-        });
-        this.addPort(outputPort);
-        
     }
 
     setIcon(icon: any) {

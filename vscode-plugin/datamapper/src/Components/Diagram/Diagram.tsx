@@ -1,7 +1,7 @@
 import React from 'react';
 import { Add } from '@mui/icons-material';
 import { uploadStyles } from '../FileUpload/styles';
-import createEngine, { DefaultLinkWidget, DefaultPortModel, DiagramModel, NodeModel, NodeModelGenerics } from '@projectstorm/react-diagrams';
+import createEngine, { DiagramModel} from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { InputsNodeFactory } from '../Nodes/InputNodes/InputsNodeFactory';
 import { InputsNodeModel } from '../Nodes/InputNodes/InputsNodeModel';
