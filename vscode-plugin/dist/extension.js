@@ -70398,9 +70398,6 @@ function checkUriExistence(uri) {
 function deactivate() {
 }
 exports.deactivate = deactivate;
-function acquireVsCodeApi() {
-    throw new Error('Function not implemented.');
-}
 
 
 /***/ }),

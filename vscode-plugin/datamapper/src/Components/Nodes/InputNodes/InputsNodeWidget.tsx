@@ -1,8 +1,7 @@
 import React from 'react';
 import { InputsNodeModel } from './InputsNodeModel';
-import { DiagramEngine, PortModel, PortModelGenerics, PortWidget } from '@projectstorm/react-diagrams-core';
+import { DiagramEngine } from '@projectstorm/react-diagrams-core';
 import { nodeStyles } from '../styles';
-import { RadioButtonUnchecked } from '@mui/icons-material';
 
 export interface InputsNodeProps {
     node: InputsNodeModel;

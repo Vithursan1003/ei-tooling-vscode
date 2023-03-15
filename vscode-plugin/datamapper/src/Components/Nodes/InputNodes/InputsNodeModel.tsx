@@ -1,4 +1,4 @@
-import { NodeModel, NodeModelGenerics, DefaultPortModel } from '@projectstorm/react-diagrams';
+import { NodeModel, NodeModelGenerics } from '@projectstorm/react-diagrams';
 
 export class InputsNodeModel extends NodeModel<NodeModelGenerics> {
 

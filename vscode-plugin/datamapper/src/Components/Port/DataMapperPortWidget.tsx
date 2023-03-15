@@ -1,9 +1,8 @@
 import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
-import { DiagramEngine, PortWidget } from "@projectstorm/react-diagrams-core";
+import { DiagramEngine, PortModelListener, PortWidget } from "@projectstorm/react-diagrams-core";
 import React from "react";
 import DataMapperPortModel from "./DataMapperPortModel";
 import { nodeStyles } from '../Nodes/styles';
-import { BaseEvent } from "@projectstorm/react-canvas-core";
 
 export interface DataMapperPortWidgetProps {
     engine: DiagramEngine;
@@ -18,35 +17,37 @@ declare const vscode: vscode;
 
 export const DataMapperPortWidget: React.FC<DataMapperPortWidgetProps> = ({ port, engine }) => {
     const classes = nodeStyles();
-    const [active, setActive] = React.useState(false);
+    const checkedIcon = <RadioButtonChecked color="disabled" sx={{ fontSize: '16px' }} />;
+    const uncheckedIcon = <RadioButtonUnchecked color="disabled" sx={{ fontSize: '16px' }} />;
+    const [selectedPort, setSelectedPort] = React.useState<DataMapperPortModel | null>(null);
     const hasLinks = Object.entries(port.links).length > 0;
 
-    React.useEffect(() => {
-        port.registerListener({
-            selectionChanged: () => {
-                vscode.postMessage({ command: 'fail_alert', text: 'event fired' });
-                setActive(port.isSelected());
-                vscode.postMessage({ command: 'fail_alert', text: 'active' });
-            },
-        })
-    }, [port]);
-      
+    const handlePortClick = (port: DataMapperPortModel) => {
+        const newlySelected = port !== selectedPort;
+
+        if (selectedPort) {
+            selectedPort.setSelected(false);
+            setSelectedPort(null);
+        }
+
+        if (newlySelected) {
+            port.setSelected(true);
+            setSelectedPort(port);
+        }
+    };
 
     return (
-        <PortWidget port={port} engine={engine} key={port.getID()}  >
-            <div className={classes.port} >
+        <PortWidget port={port} engine={engine} key={port.getID()}>
+            <div className={classes.port} onClick={() => handlePortClick(port)}>
                 {port.portType === 'IN' ? (
-                    <div>
-                        {port.getName()} <RadioButtonUnchecked color="disabled" sx={{ fontSize: '16px' }} />
+                    <div className={classes.portLabel}>
+                        {port.getName()} {selectedPort === port ? checkedIcon : uncheckedIcon}
                     </div>
                 ) : (
-                    <div>
-                        <RadioButtonUnchecked color="disabled" sx={{ fontSize: '16px' }} /> {port.getName()}
+                    <div className={classes.portIcon} >
+                        {selectedPort === port ? checkedIcon : uncheckedIcon} {port.getName()}
                     </div>
                 )}
-
-                {/* {active ? <RadioButtonChecked color="disabled" sx={{ fontSize: '16px' }} /> :
-                    <RadioButtonUnchecked color="disabled" sx={{ fontSize: '16px' }} />} */}
             </div>
         </PortWidget>
     )

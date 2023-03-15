@@ -2,7 +2,7 @@ import {
   Button, FormControl, FormLabel, InputLabel,
   MenuItem, Select, SelectChangeEvent, TextField
 } from '@mui/material'
-import React, { useContext } from 'react';
+import React from 'react';
 import { uploadStyles } from './styles';
 import { FileContext } from './../ContextProvider/FileContext';
 
@@ -27,7 +27,6 @@ const UploadForm = (props: Props) => {
   const [fileName, setFileName] = React.useState(props.title);
   const [file, setFile] = React.useState<File | null>(null);
   const { setSchemaInput, setSchemaOutput } = React.useContext(FileContext);
-  const title = props.title;
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
