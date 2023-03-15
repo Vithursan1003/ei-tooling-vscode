@@ -1,8 +1,9 @@
 import React from 'react';
-import {DataMapperNodeModel } from './DataMapperNodeModel';
-import { DiagramEngine, PortModel, PortModelGenerics, PortWidget } from '@projectstorm/react-diagrams-core';
+import { DataMapperNodeModel } from './DataMapperNodeModel';
+import { DiagramEngine,PortWidget } from '@projectstorm/react-diagrams-core';
 import { nodeStyles } from '../styles';
-import { RadioButtonUnchecked } from '@mui/icons-material';
+import { DataMapperPortWidget } from '../../Port/DataMapperPortWidget';
+import DataMapperPortModel from '../../Port/DataMapperPortModel';
 
 export interface DataMapperNodeProps {
     node: DataMapperNodeModel;
@@ -11,9 +12,9 @@ export interface DataMapperNodeProps {
 
 export const DataMapperNodeWidget: React.FC<DataMapperNodeProps> = ({ node, engine }) => {
     const classes = nodeStyles();
-    const inputPorts = Object.values(node.getPorts());
+    const inputPorts = Object.values(node.getPorts()) as DataMapperPortModel[];
 
-    const renderPortsRecursively = (ports: PortModel[], index: number = 0) => {
+    const renderPortsRecursively = (ports: DataMapperPortModel[], index: number = 0) => {
         if (index >= ports.length) {
             return null;
         }
@@ -21,12 +22,10 @@ export const DataMapperNodeWidget: React.FC<DataMapperNodeProps> = ({ node, engi
         const port = ports[index];
 
         return (
-            <PortWidget key={port.getID()} port={port} engine={engine}>
-                <div key={port.getID()} className={classes.port}>{port.getName()}
-                    <RadioButtonUnchecked color="disabled" sx={{ fontSize: '16px' }} />
-                </div>
+            <div>
+                <DataMapperPortWidget key={port.getID()}  port={port} engine={engine} />
                 {renderPortsRecursively(ports, index + 1)}
-            </PortWidget>
+            </div>
         );
     }
 

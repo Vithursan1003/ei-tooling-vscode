@@ -1,4 +1,5 @@
-import { NodeModel, NodeModelGenerics, DefaultPortModel } from '@projectstorm/react-diagrams';
+import { NodeModel, NodeModelGenerics} from '@projectstorm/react-diagrams';
+import RecordPortModel from '../../Port/DataMapperPortModel';
 
 interface SchemaProperty {
     [key: string]: {
@@ -14,7 +15,6 @@ export class DataMapperNodeModel extends NodeModel<NodeModelGenerics> {
     name: any;
     color: any;
 
-   
     constructor(schema: SchemaProperty, options: any = {}) {
         console.log('DataMapperNodeModel constructor called');
         super({
@@ -27,10 +27,13 @@ export class DataMapperNodeModel extends NodeModel<NodeModelGenerics> {
         this.icon = options.icon || null;
         this.onClick = options.onClick || null;
 
+        let portType:'IN'|'OUT' = 'IN';
+        if(this.name === 'Output'){
+            portType = 'OUT'
+        }
+
         for (const [propertyName, property] of Object.entries(schema)) {
-            const port = new DefaultPortModel({
-                name: `${propertyName} : ${property.type}`,
-            });
+            const port = new RecordPortModel(`${propertyName} : ${property.type}`,portType)
             this.addPort(port);
             console.log(`Adding port: ${port.getName()}`);
             console.log('DataMapperNodeModel Ports added');
