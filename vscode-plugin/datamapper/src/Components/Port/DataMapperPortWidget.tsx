@@ -22,23 +22,24 @@ export const DataMapperPortWidget: React.FC<DataMapperPortWidgetProps> = ({ port
     const [selectedPort, setSelectedPort] = React.useState<DataMapperPortModel | null>(null);
     const hasLinks = Object.entries(port.links).length > 0;
 
-    const handlePortClick = (port: DataMapperPortModel) => {
-        const newlySelected = port !== selectedPort;
 
-        if (selectedPort) {
-            selectedPort.setSelected(false);
-            setSelectedPort(null);
-        }
+    const handleSelectionChanged = () => {
 
-        if (newlySelected) {
+        if(port !== selectedPort){
             port.setSelected(true);
             setSelectedPort(port);
+            vscode.postMessage({ command: 'success_alert', text: `Port ${port.getName()} selected` });
+        }else{
+            port.setSelected(false);
+            setSelectedPort(null);
+            vscode.postMessage({ command: 'success_alert', text: `Port ${port.getName()} deselected` });
         }
+       
     };
 
     return (
         <PortWidget port={port} engine={engine} key={port.getID()}>
-            <div className={classes.port} onClick={() => handlePortClick(port)}>
+            <div className={classes.port} onClick={handleSelectionChanged}>
                 {port.portType === 'IN' ? (
                     <div className={classes.portLabel}>
                         {port.getName()} {selectedPort === port ? checkedIcon : uncheckedIcon}

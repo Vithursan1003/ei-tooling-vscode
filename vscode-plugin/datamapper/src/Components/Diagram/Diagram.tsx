@@ -9,6 +9,8 @@ import UploadModal from '../FileUpload/UploadModal';
 import { FileContext } from './../ContextProvider/FileContext';
 import { DataMapperNodeFactory } from './../Nodes/DataMapperNodes/DataMapperNodeFactory';
 import { DataMapperNodeModel } from '../Nodes/DataMapperNodes/DataMapperNodeModel';
+import { DataMapperPortFactory } from './../Port/DataMapperPortFactory';
+import { DataMapperLinkFactory } from './../Link/DataMapperLinkFactory';
 
 const Diagram = () => {
     const classes = uploadStyles();
@@ -23,6 +25,9 @@ const Diagram = () => {
     const engine = createEngine({ registerDefaultPanAndZoomCanvasAction: true });
     engine.getNodeFactories().registerFactory(new InputsNodeFactory());
     engine.getNodeFactories().registerFactory(new DataMapperNodeFactory());
+    engine.getPortFactories().registerFactory(new DataMapperPortFactory());
+    engine.getLinkFactories().registerFactory(new DataMapperLinkFactory());
+
     const model = new DiagramModel();
     let OutputBox;
     let OutputModel: InputsNodeModel | undefined;

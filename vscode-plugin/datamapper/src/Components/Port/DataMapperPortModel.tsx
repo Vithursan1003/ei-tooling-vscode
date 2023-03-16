@@ -1,18 +1,30 @@
-import { DefaultPortModel } from "@projectstorm/react-diagrams";
+import { PortModel, PortModelGenerics } from "@projectstorm/react-diagrams";
 
-export interface RecordNodeModelGenerics {
-    PORT: RecordPortModel;
+export interface DataMapperNodeModelGenerics {
+    PORT: DataMapperPortModel;
 }
 
-export default class RecordPortModel extends DefaultPortModel {
+interface vscode {
+    postMessage(message: any): void;
+}
+
+declare const vscode: vscode;
+
+export default class DataMapperPortModel extends PortModel<PortModelGenerics & DataMapperNodeModelGenerics>  {
 
     constructor(public portName: string, public portType: "IN" | "OUT",) {
         super({
             name: `${portName}`,
         });
+
+        this.registerListener({
+            selectionChanged: () => {
+                vscode.postMessage({ command: 'fail_alert', text:`Port ${this.getName()} selected: ${this.isSelected()}`});
+            },
+        });
     }
 
-    canLinkToPort(port: RecordPortModel): boolean {
+    canLinkToPort(port: DataMapperPortModel): boolean {
         return this.portType !== port.portType;
     }
 }
