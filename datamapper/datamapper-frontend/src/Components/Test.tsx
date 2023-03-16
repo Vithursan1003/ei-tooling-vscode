@@ -2,8 +2,9 @@ import createEngine, { DiagramModel, DefaultNodeModel, DefaultPortModel, BaseEve
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import './test.css';
 import { useState } from 'react';
-import { Button } from 'react-bootstrap/lib/InputGroup';
 import MyButton from './Button';
+import * as FileSaver from 'file-saver';
+
 
 export default function DataMapper() {
 	//creating initial engine for the drag and drop UI
@@ -24,6 +25,13 @@ export default function DataMapper() {
 
 	const handleClick = () => {
 		console.log(link);	
+
+		//send to backend
+		
+		var link1 = JSON.stringify(link);
+		var blob = new Blob([link1], { type: 'text/plain;charset=utf-8' }); // create a new blob object with the content and file type
+  		FileSaver.saveAs(blob, 'hello.txt'); // initiate the download with FileSaver.saveAs() function
+
 	};
 
 	var node1 = new DefaultNodeModel("Input", str);
