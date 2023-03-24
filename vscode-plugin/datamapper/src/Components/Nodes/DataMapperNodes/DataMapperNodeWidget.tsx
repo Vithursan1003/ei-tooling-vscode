@@ -23,7 +23,7 @@ export const DataMapperNodeWidget: React.FC<DataMapperNodeProps> = ({ node, engi
 
         return (
             <div>
-                <DataMapperPortWidget key={port.getID()}  port={port} engine={engine} />
+                <DataMapperPortWidget key={port.getID()}  port={port} engine={engine}  />
                 {renderPortsRecursively(ports, index + 1)}
             </div>
         );

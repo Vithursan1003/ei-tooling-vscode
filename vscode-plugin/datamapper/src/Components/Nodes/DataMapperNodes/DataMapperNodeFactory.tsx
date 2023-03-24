@@ -1,15 +1,17 @@
 import { AbstractReactFactory } from "@projectstorm/react-canvas-core";
-import { DiagramEngine } from "@projectstorm/react-diagrams-core";
+import { DiagramEngine, DiagramModel, DiagramModelGenerics } from "@projectstorm/react-diagrams-core";
 import { DataMapperNodeModel } from "./DataMapperNodeModel";
 import { DataMapperNodeWidget } from "./DataMapperNodeWidget";
 
 export class DataMapperNodeFactory extends AbstractReactFactory<DataMapperNodeModel, DiagramEngine> {
+	model!: DiagramModel<DiagramModelGenerics>;
+	
 	constructor() {
 		super("my-custom-node");
 	}
 
 	generateModel(event: any) :DataMapperNodeModel {
-		return new DataMapperNodeModel(event.schema);
+		return new DataMapperNodeModel(this.engine,event.schema);
 	}
 
 	generateReactWidget(event: any): JSX.Element {

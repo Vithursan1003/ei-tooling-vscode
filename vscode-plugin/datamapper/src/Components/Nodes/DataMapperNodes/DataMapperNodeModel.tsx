@@ -1,5 +1,6 @@
-import { NodeModel, NodeModelGenerics } from '@projectstorm/react-diagrams';
-import DataMapperPortModel, { DataMapperNodeModelGenerics } from '../../Port/DataMapperPortModel';
+import { DiagramEngine } from '@projectstorm/react-diagrams';
+import DataMapperPortModel from '../../Port/DataMapperPortModel';
+import { CustomNodeModel } from '../Customs/CustomNodeModel';
 
 interface SchemaProperty {
     [key: string]: {
@@ -14,48 +15,60 @@ interface vscode {
 
 declare const vscode: vscode;
 
-export class DataMapperNodeModel extends NodeModel<NodeModelGenerics & DataMapperNodeModelGenerics> {
+const selectedPorts: {
+    sourcePort: DataMapperPortModel | null;
+    targetPort: DataMapperPortModel | null;
+} = {
+    sourcePort: null,
+    targetPort: null,
+};
+
+
+export class DataMapperNodeModel extends CustomNodeModel {
 
     icon: any;
     onClick: any;
     name: any;
     color: any;
+    engine: DiagramEngine;
 
-    constructor(schema: SchemaProperty, options: any = {}) {
-        console.log('DataMapperNodeModel constructor called');
+    constructor(engine: DiagramEngine, schema: SchemaProperty, options: any = {}) {
         super({
             ...options,
             type: 'my-custom-node',
         });
 
+
         this.name = options.name || undefined;
         this.color = options.color || undefined;
         this.icon = options.icon || null;
         this.onClick = options.onClick || null;
+        this.engine = engine;
+
 
         let portType: 'IN' | 'OUT' = 'IN';
         if (this.name === 'Output') {
             portType = 'OUT'
         }
 
-
         for (const [propertyName, property] of Object.entries(schema)) {
-            const port = new DataMapperPortModel(`${propertyName} : ${property.type}`, portType)
+            const port = new DataMapperPortModel(`${propertyName} : ${property.type}`, portType);
             this.addPort(port);
         }
 
-        Object.values(this.getPorts()).forEach((port) => {
-            if (port.isSelected()) {
-                port.setSelected(false);
-                vscode.postMessage({
-                    command: 'fail_alert',
-                    text: `Port ${port.getName()} selected: ${port.isSelected()}`,
-                });
+        this.registerListener({
+            selectionChanged : ()=>{
+                const selectedEntities = this.engine.getModel().getSelectedEntities();
+                for(const entity of selectedEntities){
+                    if(entity instanceof DataMapperPortModel){
+                        console.log("Datamapper Port selected");
+                    }
+                }
             }
-        });
-
+        })
     }
 
+   
     setIcon(icon: any) {
         this.icon = icon;
     }
@@ -64,4 +77,10 @@ export class DataMapperNodeModel extends NodeModel<NodeModelGenerics & DataMappe
         return this.icon;
     }
 
+    initPorts(): void {
+        throw new Error('Method not implemented.');
+    }
+    initLinks(): void {
+        throw new Error('Method not implemented.');
+    }
 }

@@ -1,6 +1,7 @@
 import { NodeModel, NodeModelGenerics } from '@projectstorm/react-diagrams';
+import { CustomNodeModel } from '../Customs/CustomNodeModel';
 
-export class InputsNodeModel extends NodeModel<NodeModelGenerics> {
+export class InputsNodeModel extends CustomNodeModel {
 
     icon: any;
     onClick: any;
@@ -26,6 +27,13 @@ export class InputsNodeModel extends NodeModel<NodeModelGenerics> {
 
     getIcon() {
         return this.icon;
+    }
+
+    initPorts(): void {
+        throw new Error('Method not implemented.');
+    }
+    initLinks(): void {
+        throw new Error('Method not implemented.');
     }
 
 }

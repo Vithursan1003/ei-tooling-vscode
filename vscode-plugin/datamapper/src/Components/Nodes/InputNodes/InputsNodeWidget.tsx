@@ -5,10 +5,10 @@ import { nodeStyles } from '../styles';
 
 export interface InputsNodeProps {
     node: InputsNodeModel;
-    engine: DiagramEngine;
+
 }
 
-export const InputsNodeWidget: React.FC<InputsNodeProps> = ({ node, engine }) => {
+export const InputsNodeWidget: React.FC<InputsNodeProps> = ({ node}) => {
     const classes = nodeStyles();
     return (
         <>

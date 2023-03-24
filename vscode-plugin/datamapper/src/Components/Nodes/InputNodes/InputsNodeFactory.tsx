@@ -13,6 +13,6 @@ export class InputsNodeFactory extends AbstractReactFactory<InputsNodeModel, Dia
 	}
 
 	generateReactWidget(event: any): JSX.Element {
-		return <InputsNodeWidget engine={this.engine} node={event.model} />;
+		return <InputsNodeWidget node={event.model} />;
 	}
 }

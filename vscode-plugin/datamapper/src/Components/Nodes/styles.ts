@@ -1,6 +1,5 @@
 import { createStyles, makeStyles } from "@mui/styles";
 
-
 export const nodeStyles = makeStyles(() => createStyles({
     node: {
         height: '30px',
@@ -8,7 +7,8 @@ export const nodeStyles = makeStyles(() => createStyles({
         alignItems: 'center',
         cursor: 'pointer',
         position: 'relative',
-        borderRadius: '2px'
+        borderRadius: '2px',
+        backgroundColor : 'grey',
     },
     nodeLabel: {
         textAlign: 'center',
