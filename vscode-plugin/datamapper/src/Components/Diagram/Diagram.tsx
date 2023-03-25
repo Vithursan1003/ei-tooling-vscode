@@ -1,104 +1,74 @@
 import React from 'react';
-import { Add } from '@mui/icons-material';
 import { uploadStyles } from '../FileUpload/styles';
-import createEngine, { DiagramModel} from '@projectstorm/react-diagrams';
+import createEngine, { DagreEngine, DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
-import { InputsNodeFactory } from '../Nodes/InputNodes/InputsNodeFactory';
-import { InputsNodeModel } from '../Nodes/InputNodes/InputsNodeModel';
-import UploadModal from '../FileUpload/UploadModal';
-import { FileContext } from './../ContextProvider/FileContext';
-import { DataMapperNodeFactory } from './../Nodes/DataMapperNodes/DataMapperNodeFactory';
-import { DataMapperNodeModel } from '../Nodes/DataMapperNodes/DataMapperNodeModel';
-import { DataMapperPortFactory } from './../Port/DataMapperPortFactory';
-import { DataMapperLinkFactory } from './../Link/DataMapperLinkFactory';
+import { DataMapperPortFactory } from '../Port/DataMapperPortFactory';
+import { DataMapperLinkFactory } from '../Link/Model/DataMapperLinkFactory';
+import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
+import { DataMapperLinkModel } from '../Link/Model/DataMapperLinkModel';
+import { nodeFactories } from '../Nodes';
 
-const Diagram = () => {
+interface DataMapperDiagramProps {
+    nodes?: CustomNodeModel[];
+    links?: DataMapperLinkModel[];
+}
+
+const Diagram = (props: DataMapperDiagramProps) => {
     const classes = uploadStyles();
-    const [open, setOpen] = React.useState(false);
-    const [title, setTitle] = React.useState('');
-    const { schemaInput, schemaOutput } = React.useContext(FileContext);
-
-    const handleClose = (value: boolean) => {
-        setOpen(value);
-    }
-
-    const engine = createEngine({ registerDefaultPanAndZoomCanvasAction: true });
-    engine.getNodeFactories().registerFactory(new InputsNodeFactory());
-    engine.getNodeFactories().registerFactory(new DataMapperNodeFactory());
+    const { nodes} = props;
+    const engine = createEngine();
+    
+    for (const factory of nodeFactories) {engine.getNodeFactories().registerFactory(factory);}
     engine.getPortFactories().registerFactory(new DataMapperPortFactory());
     engine.getLinkFactories().registerFactory(new DataMapperLinkFactory());
 
-    const model = new DiagramModel();
-    let OutputBox;
-    let OutputModel: InputsNodeModel | undefined;
-    let inputModel : InputsNodeModel| undefined;
-    let InputBox;
+    const dagreEngine = new DagreEngine({
+        graph: {
+            rankdir: 'LR',
+            ranksep: 600,
+            align: 'UL',
+            nodesep: 300,
+            ranker: 'longest-path',
+            marginx: 30,
+            marginy: 50,
+            fit: true
+        },
+    });
 
+    const [model, setNewModel] = React.useState<DiagramModel>(new DiagramModel());
+    
+    React.useEffect(() => {
+        console.log("use effect");
+        console.log(nodes);
+        async function genModel() {
 
-    if (schemaInput) {
-        InputBox = new DataMapperNodeModel(schemaInput.properties, {
-            name: 'Input',
-            color: 'grey',
-            icon: <Add color='disabled' />,
-            onClick: () => {
-                setTitle('Input');
-                setOpen(true);
+            if (nodes) {
+                const newModel = new DiagramModel();
+                newModel.addAll(...nodes);
+                for (const node of nodes) {
+                    try {
+                        node.setModel(newModel);
+                        await node.initPorts();
+                        node.initLinks();
+                        engine.repaintCanvas();
+                    } catch (e) {
+                        console.error(e)
+                    }
+                }
+                // newModel.setLocked(true);
+                if (newModel.getLinks().length > 0) {
+                    dagreEngine.redistribute(newModel);
+                    await engine.repaintCanvas(true);
+                }
+                setNewModel(newModel);
             }
-        })
-        if (inputModel) {
-            inputModel.remove();
         }
-    } else {
-        InputBox = new InputsNodeModel({
-            name: 'Input',
-            color: 'grey',
-            icon: <Add color='disabled' />,
-            onClick: () => {
-                setTitle('Input');
-                setOpen(true);
-            }
-        })
-        inputModel = InputBox;
-    }
+        void genModel();
+    }, [nodes]);
 
-    if (schemaOutput) {
-        OutputBox = new DataMapperNodeModel(schemaOutput.properties, {
-            name: 'Output',
-            color: 'grey',
-            icon: <Add color='disabled' />,
-            onClick: () => {
-                setTitle('Output');
-                setOpen(true);
-            }
-        })
-        if (OutputModel) {
-            OutputModel.remove();
-        }
-    } else {
-        OutputBox = new InputsNodeModel({
-            name: 'Output',
-            color: 'grey',
-            icon: <Add color='disabled' />,
-            onClick: () => {
-                setTitle('Output');
-                setOpen(true);
-            }
-        })
-        OutputModel = OutputBox;
-    }
-
-    InputBox.setPosition(100, 100);
-    OutputBox.setPosition(400, 100);
-
-    model.addAll(InputBox, OutputBox);
     engine.setModel(model);
 
-    return (
-        <>
-            <CanvasWidget className={classes.canvas} engine={engine} />
-            <UploadModal title={title} modalOpen={open} modalClose={handleClose} />
-        </>
-    )
+    return (<CanvasWidget className={classes.canvas} engine={engine} />)
 }
 
-export default Diagram;
+export default React.memo(Diagram);
