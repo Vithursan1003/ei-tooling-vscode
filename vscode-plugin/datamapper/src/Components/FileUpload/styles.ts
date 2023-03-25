@@ -7,7 +7,12 @@ export const uploadStyles = makeStyles(() => createStyles({
         width: '100%',
         textAlign:'center',
     },
-    
+    header : {
+        alignItems : 'flex-end',
+        backgroundColor:'white',
+        margin:'0px !important',
+        justifyContent:'flex-end !important'
+    },
     dialogHeader: {
         height: '40px',
         color: 'white',
