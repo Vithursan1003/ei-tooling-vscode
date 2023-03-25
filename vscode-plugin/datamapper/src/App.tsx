@@ -1,11 +1,11 @@
 import "./App.css";
 import FileContextProvider from "./Components/ContextProvider/FileContextProvider";
-import Diagram from './Components/Diagram/Diagram';
+import DataMapper from "./Components/DataMapper";
 
 function App() {
   return (
     <FileContextProvider>
-      <Diagram/>
+      <DataMapper />
     </FileContextProvider>
   );
 }

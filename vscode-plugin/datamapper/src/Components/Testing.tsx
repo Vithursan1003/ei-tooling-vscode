@@ -5,7 +5,7 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { InputsNodeFactory } from './Nodes/InputNodes/InputsNodeFactory';
 import { DataMapperNodeFactory } from './Nodes/DataMapperNodes/DataMapperNodeFactory';
 import { DataMapperPortFactory } from './Port/DataMapperPortFactory';
-import { DataMapperLinkFactory } from './Link/DataMapperLinkFactory';
+import { DataMapperLinkFactory } from './Link/Model/DataMapperLinkFactory';
 import { InputsNodeModel } from './Nodes/InputNodes/InputsNodeModel';
 import DataMapperPortModel from './Port/DataMapperPortModel';
 import { uploadStyles } from './FileUpload/styles';

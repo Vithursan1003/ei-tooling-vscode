@@ -30,9 +30,8 @@ export class DataMapperNodeModel extends CustomNodeModel {
     onClick: any;
     name: any;
     color: any;
-    engine: DiagramEngine;
-
-    constructor(engine: DiagramEngine, schema: SchemaProperty, options: any = {}) {
+ 
+    constructor(schema: SchemaProperty, options: any = {}) {
         super({
             ...options,
             type: 'my-custom-node',
@@ -43,9 +42,7 @@ export class DataMapperNodeModel extends CustomNodeModel {
         this.color = options.color || undefined;
         this.icon = options.icon || null;
         this.onClick = options.onClick || null;
-        this.engine = engine;
-
-
+        
         let portType: 'IN' | 'OUT' = 'IN';
         if (this.name === 'Output') {
             portType = 'OUT'
@@ -56,25 +53,6 @@ export class DataMapperNodeModel extends CustomNodeModel {
             this.addPort(port);
         }
 
-        this.registerListener({
-            selectionChanged : ()=>{
-                const selectedEntities = this.engine.getModel().getSelectedEntities();
-                for(const entity of selectedEntities){
-                    if(entity instanceof DataMapperPortModel){
-                        console.log("Datamapper Port selected");
-                    }
-                }
-            }
-        })
-    }
-
-   
-    setIcon(icon: any) {
-        this.icon = icon;
-    }
-
-    getIcon() {
-        return this.icon;
     }
 
     initPorts(): void {

@@ -1,5 +1,7 @@
 import { DiagramModel, NodeModel, NodeModelGenerics } from '@projectstorm/react-diagrams';
 
+export interface CustomNodeFactoryInterface {}
+
 export abstract class CustomNodeModel extends NodeModel<NodeModelGenerics> {
     name: any;
     private diagramModel: DiagramModel | undefined;
@@ -13,7 +15,6 @@ export abstract class CustomNodeModel extends NodeModel<NodeModelGenerics> {
         this.name = options.name || undefined;
     }
 
-    
 	public setModel(model: DiagramModel) {
 		this.diagramModel = model;
 	}

@@ -16,10 +16,6 @@ export const nodeStyles = makeStyles(() => createStyles({
         fontFamily: 'Asap',
         color: 'white'
     },
-    nodeIcon: {
-        marginTop: '3px',
-        paddingLeft: '25%'
-    },
     portContainer: {
         padding: '8px',
         border: '1px solid grey',

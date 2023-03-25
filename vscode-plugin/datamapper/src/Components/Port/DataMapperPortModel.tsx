@@ -1,4 +1,5 @@
-import { PortModel, PortModelGenerics } from "@projectstorm/react-diagrams";
+import { LinkModel, PortModel, PortModelGenerics } from "@projectstorm/react-diagrams";
+import { DataMapperLinkModel } from "../Link/Model/DataMapperLinkModel";
 
 export interface DataMapperNodeModelGenerics {
     PORT: DataMapperPortModel;
@@ -11,17 +12,30 @@ interface vscode {
 declare const vscode: vscode;
 
 export default class DataMapperPortModel extends PortModel<PortModelGenerics & DataMapperNodeModelGenerics>  {
+    linkedPorts: PortModel[];
 
     constructor(public portName: string, public portType: "IN" | "OUT",) {
         super({
             name: `${portName}`,
         });
 
-        this.registerListener({
-            selectionChanged: () => {
-                vscode.postMessage({ command: 'fail_alert', text:`Port ${this.getName()} selected: ${this.isSelected()}`});
-            },
-        });
+        this.linkedPorts = [];
+
+        // this.registerListener({
+        //     selectionChanged: () => {
+        //         console.log("port selection");
+        //     },
+        // });
+    }
+
+    createLinkModel(): LinkModel {
+        const dm = new DataMapperLinkModel();
+        return dm;
+    }
+
+
+    addLinkedPort(port: PortModel): void {
+        this.linkedPorts.push(port);
     }
 
     canLinkToPort(port: DataMapperPortModel): boolean {

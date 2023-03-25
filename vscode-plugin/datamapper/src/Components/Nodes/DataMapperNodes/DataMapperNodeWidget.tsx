@@ -1,9 +1,10 @@
 import React from 'react';
 import { DataMapperNodeModel } from './DataMapperNodeModel';
-import { DiagramEngine,PortWidget } from '@projectstorm/react-diagrams-core';
+import { DiagramEngine} from '@projectstorm/react-diagrams-core';
 import { nodeStyles } from '../styles';
 import { DataMapperPortWidget } from '../../Port/DataMapperPortWidget';
 import DataMapperPortModel from '../../Port/DataMapperPortModel';
+import { Add } from '@mui/icons-material';
 
 export interface DataMapperNodeProps {
     node: DataMapperNodeModel;
@@ -31,9 +32,8 @@ export const DataMapperNodeWidget: React.FC<DataMapperNodeProps> = ({ node, engi
 
     return (
         <>
-            <div style={{ backgroundColor: node.color }} className={classes.node}>
+            <div  className={classes.node}>
                 <span className={classes.nodeLabel}>{node.name}</span>
-                <span className={classes.nodeIcon} onClick={() => { node.onClick() }}>{node.getIcon()}</span>
                 <div className={classes.portContainer}>
                     {renderPortsRecursively(inputPorts)}
                 </div>
