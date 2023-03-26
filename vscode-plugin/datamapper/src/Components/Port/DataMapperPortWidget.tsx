@@ -9,42 +9,39 @@ export interface DataMapperPortWidgetProps {
     port: DataMapperPortModel;
 }
 
-interface vscode {
-    postMessage(message: any): void;
+enum PortState {
+    PortSelected,
+    LinkSelected,
+    Unselected
 }
-
-declare const vscode: vscode;
 
 export const DataMapperPortWidget: React.FC<DataMapperPortWidgetProps> = ({ port, engine }) => {
     const classes = nodeStyles();
     const checkedIcon = <RadioButtonChecked color="disabled" sx={{ fontSize: '16px' }} />;
     const uncheckedIcon = <RadioButtonUnchecked color="disabled" sx={{ fontSize: '16px' }} />;
-    const [selectedPort, setSelectedPort] = React.useState<DataMapperPortModel | null>(null);
-    const hasLinks = Object.entries(port.links).length > 0;
+    const [portState, setPortState] = React.useState<PortState>(PortState.Unselected);
+  
+    React.useEffect(() => {
+        port.registerListener({
+            selectionChanged: () => {
+                const isSelected = port.isSelected();
+                console.log("port selection : ", isSelected);
+                setPortState(isSelected ? PortState.PortSelected : PortState.Unselected);
+            }
+        });
 
-
-    const handleSelectionChanged = () => {
-
-        if(port !== selectedPort){
-            port.setSelected(true);
-            setSelectedPort(port);
-        }else{
-            port.setSelected(false);
-            setSelectedPort(null);
-        }
-       
-    };
+    }, [port]);
 
     return (
         <PortWidget port={port} engine={engine} key={port.getID()}>
             <div className={classes.port} >
                 {port.portType === 'IN' ? (
                     <div className={classes.portLabel}>
-                        {port.getName()} {selectedPort === port ? checkedIcon : uncheckedIcon}
+                        {port.getName()} {portState === PortState.PortSelected ? checkedIcon : uncheckedIcon}
                     </div>
                 ) : (
                     <div className={classes.portIcon} >
-                        {selectedPort === port ? checkedIcon : uncheckedIcon} {port.getName()}
+                        {portState === PortState.PortSelected ? checkedIcon : uncheckedIcon} {port.getName()}
                     </div>
                 )}
             </div>

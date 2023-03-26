@@ -7,6 +7,7 @@ import { DataMapperLinkFactory } from '../Link/Model/DataMapperLinkFactory';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { DataMapperLinkModel } from '../Link/Model/DataMapperLinkModel';
 import { nodeFactories } from '../Nodes';
+import { DefaultState } from './../LinkState/DefaultState';
 
 interface DataMapperDiagramProps {
     nodes?: CustomNodeModel[];
@@ -21,6 +22,7 @@ const Diagram = (props: DataMapperDiagramProps) => {
     for (const factory of nodeFactories) {engine.getNodeFactories().registerFactory(factory);}
     engine.getPortFactories().registerFactory(new DataMapperPortFactory());
     engine.getLinkFactories().registerFactory(new DataMapperLinkFactory());
+    engine.getStateMachine().pushState(new DefaultState());
 
     const dagreEngine = new DagreEngine({
         graph: {
