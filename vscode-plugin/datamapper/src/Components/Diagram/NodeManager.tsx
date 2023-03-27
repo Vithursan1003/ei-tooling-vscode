@@ -1,9 +1,9 @@
 import React from 'react';
 import { FileContext } from '../ContextProvider/FileContext';
-import { InputsNodeModel } from '../Nodes/InputNodes/InputsNodeModel';
-import Diagram from './Diagram';
+import { InputsNodeModel } from '../Nodes/InputsNodes/InputsNodeModel';
 import { DataMapperNodeModel } from '../Nodes/DataMapperNodes/DataMapperNodeModel';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
+import DataMapperDiagram from './DataMapperDiagram';
 
 const NodeManager = () => {
     const { schemaInput, schemaOutput } = React.useContext(FileContext);
@@ -18,23 +18,23 @@ const NodeManager = () => {
             newNodes.push(InputBox);
         } else {
             const InputDataMapper = new DataMapperNodeModel(schemaInput.properties, { name: 'Input', });
-            InputDataMapper.setPosition(800, 20);
+            InputDataMapper.setPosition(200, 20);
             newNodes.push(InputDataMapper);
         }
 
         if (!schemaOutput) {
             const OutputBox = new InputsNodeModel({ name: 'Output' });
-            OutputBox.setPosition(800, 20);
+            OutputBox.setPosition(400, 20);
             newNodes.push(OutputBox);
         } else {
             const OutputDataMapper = new DataMapperNodeModel(schemaOutput.properties, { name: 'Output', });
-            OutputDataMapper.setPosition(800, 20);
+            OutputDataMapper.setPosition(400, 20);
             newNodes.push(OutputDataMapper);
         }
         setNodes(newNodes);
     }, [schemaInput, schemaOutput]);
 
-    return (<Diagram nodes={nodes} />);
+    return (<DataMapperDiagram nodes={nodes} />);
 };
 
 export default NodeManager;

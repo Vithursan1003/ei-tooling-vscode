@@ -9,12 +9,10 @@ export class DataMapperLinkFactory extends DefaultLinkFactory{
   }
 
   generateModel(): DataMapperLinkModel {
-    console.log("Generate Link model");
     return new DataMapperLinkModel();
   }
 
   generateReactWidget(event: GenerateWidgetEvent<DataMapperLinkModel>): JSX.Element {
-    console.log('Generating link widget for link model:');
     return <DataMapperLinkWidget link={event.model} diagramEngine={this.engine} />;
   }
   

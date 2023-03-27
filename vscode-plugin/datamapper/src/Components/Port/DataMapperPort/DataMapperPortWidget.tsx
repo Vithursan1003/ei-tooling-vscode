@@ -2,7 +2,7 @@ import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { DiagramEngine, PortModelListener, PortWidget } from "@projectstorm/react-diagrams-core";
 import React from "react";
 import DataMapperPortModel from "./DataMapperPortModel";
-import { nodeStyles } from '../Nodes/styles';
+import { portStyles } from "../styles";
 
 export interface DataMapperPortWidgetProps {
     engine: DiagramEngine;
@@ -16,7 +16,7 @@ enum PortState {
 }
 
 export const DataMapperPortWidget: React.FC<DataMapperPortWidgetProps> = ({ port, engine }) => {
-    const classes = nodeStyles();
+    const classes = portStyles();
     const checkedIcon = <RadioButtonChecked color="disabled" sx={{ fontSize: '16px' }} />;
     const uncheckedIcon = <RadioButtonUnchecked color="disabled" sx={{ fontSize: '16px' }} />;
     const [portState, setPortState] = React.useState<PortState>(PortState.Unselected);

@@ -19,29 +19,4 @@ export class DataMapperLinkWidget extends DefaultLinkWidget {
     this.setState({ selected: true });
   }
 
-  generateLink(
-    path: string,
-    extraProps: React.Attributes,
-    id: string | number
-  ): JSX.Element {
-    const ref = React.createRef<SVGPathElement>();
-    this.refPaths.push(ref);
-    return (
-      <DefaultLinkSegmentWidget
-        key={`link-${id}`}
-        path={path}
-        selected={this.state.selected}
-        diagramEngine={this.props.diagramEngine}
-        factory={this.props.diagramEngine.getFactoryForLink(
-          this.props.link
-        )}
-        link={this.props.link}
-        forwardRef={ref}
-        onSelection={(selected) => {
-          this.setState({ selected });
-        }}
-        extras={extraProps}
-      />
-    );
-  }
 }

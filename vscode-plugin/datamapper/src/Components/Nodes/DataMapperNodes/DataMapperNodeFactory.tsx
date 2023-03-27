@@ -19,4 +19,5 @@ export class DataMapperNodeFactory extends AbstractReactFactory<DataMapperNodeMo
 	generateReactWidget(event: any): JSX.Element {
 		return <DataMapperNodeWidget engine={this.engine} node={event.model} />;
 	}
+	
 }

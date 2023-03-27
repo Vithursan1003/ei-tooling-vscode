@@ -1,6 +1,6 @@
-import { DiagramEngine } from '@projectstorm/react-diagrams';
-import DataMapperPortModel from '../../Port/DataMapperPortModel';
+import DataMapperPortModel from '../../Port/DataMapperPort/DataMapperPortModel';
 import { CustomNodeModel } from '../Customs/CustomNodeModel';
+import { DiagramEngine } from '@projectstorm/react-diagrams';
 
 interface SchemaProperty {
     [key: string]: {
@@ -9,56 +9,32 @@ interface SchemaProperty {
     }
 }
 
-interface vscode {
-    postMessage(message: any): void;
-}
-
-declare const vscode: vscode;
-
-const selectedPorts: {
-    sourcePort: DataMapperPortModel | null;
-    targetPort: DataMapperPortModel | null;
-} = {
-    sourcePort: null,
-    targetPort: null,
-};
-
-
 export class DataMapperNodeModel extends CustomNodeModel {
-
-    icon: any;
-    onClick: any;
     name: any;
-    color: any;
- 
+    schema: SchemaProperty;
+    engine!: DiagramEngine;
+
     constructor(schema: SchemaProperty, options: any = {}) {
         super({
             ...options,
             type: 'my-custom-node',
         });
-
-
         this.name = options.name || undefined;
-        this.color = options.color || undefined;
-        this.icon = options.icon || null;
-        this.onClick = options.onClick || null;
-        
-        let portType: 'IN' | 'OUT' = 'IN';
-        if (this.name === 'Output') {
-            portType = 'OUT'
-        }
-
-        for (const [propertyName, property] of Object.entries(schema)) {
-            const port = new DataMapperPortModel(`${propertyName} : ${property.type}`, portType);
-            this.addPort(port);
-        }
-
+        this.schema = schema;
+        this.initPorts();
     }
 
     initPorts(): void {
-        throw new Error('Method not implemented.');
+        let portType: 'IN' | 'OUT' = 'IN';
+        if (this.name === 'Output') {
+            portType = 'OUT';
+        }
+
+        for (const [propertyName, property] of Object.entries(this.schema)) {
+            const port = new DataMapperPortModel(`${propertyName} : ${property.type}`, portType);
+            this.addPort(port);
+        }
     }
-    initLinks(): void {
-        throw new Error('Method not implemented.');
-    }
+
+    initLinks(): void {}
 }

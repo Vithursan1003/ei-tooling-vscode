@@ -2,9 +2,8 @@ import React from 'react';
 import { DataMapperNodeModel } from './DataMapperNodeModel';
 import { DiagramEngine} from '@projectstorm/react-diagrams-core';
 import { nodeStyles } from '../styles';
-import { DataMapperPortWidget } from '../../Port/DataMapperPortWidget';
-import DataMapperPortModel from '../../Port/DataMapperPortModel';
-import { Add } from '@mui/icons-material';
+import { DataMapperPortWidget } from '../../Port/DataMapperPort/DataMapperPortWidget';
+import DataMapperPortModel from '../../Port/DataMapperPort/DataMapperPortModel';
 
 export interface DataMapperNodeProps {
     node: DataMapperNodeModel;
