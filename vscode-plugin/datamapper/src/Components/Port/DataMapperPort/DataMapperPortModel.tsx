@@ -23,7 +23,7 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
     }
 
 
-    addLinkedPort(port: PortModel): void {
+    addLinkedPort(port: DataMapperPortModel): void {
         this.linkedPorts.push(port);
     }
 

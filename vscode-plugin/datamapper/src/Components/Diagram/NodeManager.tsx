@@ -14,21 +14,22 @@ const NodeManager = () => {
 
         if (!schemaInput) {
             const InputBox = new InputsNodeModel({ name: 'Input' });
-            InputBox.setPosition(200, 20);
+            InputBox.setPosition(100, 50);
             newNodes.push(InputBox);
         } else {
             const InputDataMapper = new DataMapperNodeModel(schemaInput.properties, { name: 'Input', });
-            InputDataMapper.setPosition(200, 20);
+            InputDataMapper.setPosition(100, 50);
             newNodes.push(InputDataMapper);
+            
         }
 
         if (!schemaOutput) {
             const OutputBox = new InputsNodeModel({ name: 'Output' });
-            OutputBox.setPosition(400, 20);
+            OutputBox.setPosition(800, 50);
             newNodes.push(OutputBox);
         } else {
             const OutputDataMapper = new DataMapperNodeModel(schemaOutput.properties, { name: 'Output', });
-            OutputDataMapper.setPosition(400, 20);
+            OutputDataMapper.setPosition(800, 50);
             newNodes.push(OutputDataMapper);
         }
         setNodes(newNodes);

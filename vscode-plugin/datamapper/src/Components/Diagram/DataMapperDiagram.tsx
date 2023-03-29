@@ -6,9 +6,9 @@ import { DataMapperPortFactory } from '../Port/DataMapperPort/DataMapperPortFact
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { nodeFactories } from '../Nodes';
 import { DefaultState } from '../LinkState/DefaultState';
-import { FileContext } from '../ContextProvider/FileContext';
 import { DataMapperLinkFactory } from './../Link/Model/DataMapperLinkFactory';
 import { DataMapperLinkModel } from './../Link/Model/DataMapperLinkModel';
+import { DataMapperLabelFactory } from './../LinkLabel/DataMapperLabelFactory';
 
 interface DataMapperDiagramProps {
     nodes?: CustomNodeModel[];
@@ -17,11 +17,12 @@ interface DataMapperDiagramProps {
 const DataMapperDiagram = (props : DataMapperDiagramProps) => {
     const classes = uploadStyles();
     const { nodes } = props;
-    const engine = createEngine();
+    const engine = createEngine({registerDefaultPanAndZoomCanvasAction: true,registerDefaultZoomCanvasAction: false});
 
     for (const factory of nodeFactories) { engine.getNodeFactories().registerFactory(factory); }
     engine.getPortFactories().registerFactory(new DataMapperPortFactory());
     engine.getLinkFactories().registerFactory(new DataMapperLinkFactory());
+    engine.getLabelFactories().registerFactory(new DataMapperLabelFactory());
     engine.getStateMachine().pushState(new DefaultState());
 
     const dagreEngine = new DagreEngine({
@@ -37,7 +38,6 @@ const DataMapperDiagram = (props : DataMapperDiagramProps) => {
         },
     });
 
-    const { schemaInput, schemaOutput } = React.useContext(FileContext);
     const [model, setNewModel] = React.useState<DiagramModel>(new DiagramModel());
     const [links, setLinks] = React.useState<DataMapperLinkModel[]>([]);
 
@@ -69,7 +69,7 @@ const DataMapperDiagram = (props : DataMapperDiagramProps) => {
                 newModel.setLocked(true);
                 if (model.getLinks().length > 0) {
                     console.log("links added to model successfully");
-                    dagreEngine.redistribute(newModel);
+                    //dagreEngine.redistribute(newModel);
                     await engine.repaintCanvas(true);
                 }
                 setNewModel(newModel);

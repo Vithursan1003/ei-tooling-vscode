@@ -1,5 +1,6 @@
 import { BezierCurve } from '@projectstorm/geometry';
 import { DefaultLinkModel } from '@projectstorm/react-diagrams';
+import { DataMapperLabelModel } from '../../LinkLabel/DataMapperLabelModel';
 
 export class DataMapperLinkModel extends DefaultLinkModel {
 
@@ -10,7 +11,18 @@ export class DataMapperLinkModel extends DefaultLinkModel {
 			curvyness: 0,
 			locked: true,
 			color: "#00c0ff"
-		});
+		})
+	}
+
+	addLabel(label: DataMapperLabelModel) {
+		this.labels.push(label);
+	}
+
+	removeLabel(label: DataMapperLabelModel) {
+		const index = this.labels.indexOf(label);
+		if (index !== -1) {
+			this.labels.splice(index, 1);
+		}
 	}
 
 	getSVGPath(): string {
@@ -37,8 +49,5 @@ export class DataMapperLinkModel extends DefaultLinkModel {
 		}
 		return "";
 	}
-
-	
-
 }
 

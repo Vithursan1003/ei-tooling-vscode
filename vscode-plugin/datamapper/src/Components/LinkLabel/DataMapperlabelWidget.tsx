@@ -73,7 +73,7 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
                 </div>
             </>
         ),
-        editorOpen && <FunctionEditor />
+        editorOpen && <FunctionEditor onClose={() => setEditorOpen(false)} />
     ];
 
     return linkStatus === LinkState.LinkSelected ? (

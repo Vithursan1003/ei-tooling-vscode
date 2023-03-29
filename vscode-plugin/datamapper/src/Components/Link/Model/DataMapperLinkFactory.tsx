@@ -3,7 +3,7 @@ import { DefaultLinkFactory } from '@projectstorm/react-diagrams';
 import { DataMapperLinkModel } from './DataMapperLinkModel';
 import { DataMapperLinkWidget } from './DataMapperLinkWidget';
 
-export class DataMapperLinkFactory extends DefaultLinkFactory{
+export class DataMapperLinkFactory extends DefaultLinkFactory {
   constructor() {
     super('DataMapper-link');
   }
@@ -15,5 +15,5 @@ export class DataMapperLinkFactory extends DefaultLinkFactory{
   generateReactWidget(event: GenerateWidgetEvent<DataMapperLinkModel>): JSX.Element {
     return <DataMapperLinkWidget link={event.model} diagramEngine={this.engine} />;
   }
-  
+
 }
