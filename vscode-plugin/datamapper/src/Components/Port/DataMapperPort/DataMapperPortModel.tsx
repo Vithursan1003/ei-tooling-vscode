@@ -17,7 +17,7 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
         this.linkedPorts = [];
     }
 
-    createLinkModel(): LinkModel {
+    createLinkModel(): DataMapperLinkModel {
         const dm = new DataMapperLinkModel();
         return dm;
     }
@@ -28,6 +28,12 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
     }
 
     canLinkToPort(port: DataMapperPortModel): boolean {
-        return this.portType !== port.portType;
+        let isLinkExists = false;
+        if (port.portType === "IN") {
+			isLinkExists = this.linkedPorts.some((linkedPort) => {
+				return port.getID() === linkedPort.getID()
+			})
+		}
+        return this.portType !== port.portType && !isLinkExists;
     }
 }

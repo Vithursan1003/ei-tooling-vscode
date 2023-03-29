@@ -1,12 +1,13 @@
 import { KeyboardEvent, MouseEvent } from 'react';
 import { Action, ActionEvent, InputType, State } from '@projectstorm/react-canvas-core';
-import { DiagramEngine, LinkModel, PortModel } from '@projectstorm/react-diagrams-core';
+import { DiagramEngine, LabelModel, LinkModel, PortModel } from '@projectstorm/react-diagrams-core';
 import DataMapperPortModel from '../Port/DataMapperPort/DataMapperPortModel';
 import { DataMapperLinkModel } from './../Link/Model/DataMapperLinkModel';
+import { DataMapperLabelModel } from '../LinkLabel/DataMapperLabelModel';
 
 export class CreateLinkState extends State<DiagramEngine> {
-    sourcePort!: PortModel | undefined;
-    link!: LinkModel;
+    sourcePort!: DataMapperPortModel | undefined;
+    link!: DataMapperLinkModel;
 
     constructor() {
         super({ name: 'create-new-link' });
@@ -39,14 +40,15 @@ export class CreateLinkState extends State<DiagramEngine> {
                             }
                         }
                     } else if (element instanceof PortModel && this.sourcePort && element !== this.sourcePort) {
-                        if (element instanceof DataMapperPortModel){
+                        if (element instanceof DataMapperPortModel) {
                             if (element.portType === "OUT") {
                                 element.fireEvent({}, "mappingFinishedTo");
                                 if (this.sourcePort.canLinkToPort(element)) {
                                     this.link.setTargetPort(element);
+                                    this.link.addLabel(new DataMapperLabelModel({value :'link1',link : this.link}));
+                                    this.engine.getModel().addAll(this.link);
                                     console.log("link added to diagram");
-                                    this.engine.getModel().addAll(this.link)
-                                    console.log("link in state: ",this.engine.getModel().getLinks());
+                                    console.log("link in state: ", this.engine.getModel().getLinks());
                                     if (this.sourcePort instanceof DataMapperPortModel) {
                                         this.sourcePort.linkedPorts.forEach((linkedPort) => {
                                             linkedPort.fireEvent({}, "enableNewLinking")
@@ -102,27 +104,40 @@ export class CreateLinkState extends State<DiagramEngine> {
             })
         );
 
+
+        //link selection
         this.registerAction(
             new Action({
-              type: InputType.KEY_UP,
-              fire: (actionEvent: ActionEvent<KeyboardEvent>) => {
-                if (actionEvent.event.key === 'Delete') {
-                  const selectedEntities = this.engine.getModel().getSelectedEntities();
-                  console.log("link removed");
-                  selectedEntities.forEach(entity => {
-                    if (entity instanceof DataMapperLinkModel) {
-                      entity.remove();
+                type: InputType.MOUSE_DOWN,
+                fire: (event: ActionEvent<MouseEvent>) => {
+                    const element = this.engine.getActionEventBus().getModelForEvent(event);
+                    if (element instanceof DataMapperLinkModel) {
+                        element.setSelected(!element.isSelected());
+                        console.log("link selection logic");
                     }
-                  });
-                  
-                  this.clearState();
-                  this.eject();
-                  this.engine.repaintCanvas();
                 }
-              }
             })
-          );            
-        
+        );
+
+        this.registerAction(
+            new Action({
+                type: InputType.KEY_UP,
+                fire: (actionEvent: ActionEvent<KeyboardEvent>) => {
+                    if (actionEvent.event.key === 'Delete') {
+                        const selectedEntities = this.engine.getModel().getSelectedEntities();
+                        console.log("link removed");
+                        selectedEntities.forEach(entity => {
+                            if (entity instanceof DataMapperLinkModel) {
+                                entity.remove();
+                            }
+                        });
+                        //this.clearState();
+                        this.eject();
+                        this.engine.repaintCanvas();
+                    }
+                }
+            })
+        );
     }
 
     clearState() {
