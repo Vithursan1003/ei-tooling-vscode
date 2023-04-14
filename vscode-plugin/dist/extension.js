@@ -70221,7 +70221,7 @@ const languageUtils_1 = __webpack_require__(/*! ./language/languageUtils */ "./s
 const path = __webpack_require__(/*! path */ "path");
 const Utils_1 = __webpack_require__(/*! ./utils/Utils */ "./src/utils/Utils.ts");
 const TerminalModule_1 = __webpack_require__(/*! ./logging/TerminalModule */ "./src/logging/TerminalModule.ts");
-const dataMapper_1 = __webpack_require__(/*! ./datamapper/dataMapper */ "./src/datamapper/dataMapper.ts");
+const datamapper_1 = __webpack_require__(/*! ./datamapper/datamapper */ "./src/datamapper/datamapper.ts");
 exports.serverLaunched = false;
 let fileWatcherCreated = false;
 const chokidar = __webpack_require__(/*! chokidar */ "./node_modules/chokidar/index.js");
@@ -70386,7 +70386,7 @@ function registerSynapseCommands(context) {
     })));
     context.subscriptions.push(vscode_1.commands.registerCommand("wso2ei.datamapper.view", () => __awaiter(this, void 0, void 0, function* () {
         vscode_1.window.showInformationMessage("DataMapper Graphical View");
-        yield dataMapper_1.default.render(context.extensionPath);
+        yield datamapper_1.default.render(context.extensionPath);
     })));
 }
 function checkUriExistence(uri) {
@@ -90004,9 +90004,9 @@ ZipStream.prototype.finalize = function() {
 
 /***/ }),
 
-/***/ "./src/datamapper/dataMapper.ts":
+/***/ "./src/datamapper/datamapper.ts":
 /*!**************************************!*\
-  !*** ./src/datamapper/dataMapper.ts ***!
+  !*** ./src/datamapper/datamapper.ts ***!
   \**************************************/
 /***/ (() => {
 

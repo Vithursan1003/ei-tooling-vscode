@@ -1,12 +1,11 @@
 import { AbstractReactFactory } from "@projectstorm/react-canvas-core";
 import { DiagramEngine } from "@projectstorm/react-diagrams-core";
-import { CustomNodeFactoryInterface } from "../Customs/CustomNodeModel";
 import { InputsNodeModel } from "./InputsNodeModel";
 import { InputsNodeWidget } from "./InputsNodeWidget";
 
-export class InputsNodeFactory extends AbstractReactFactory<InputsNodeModel, DiagramEngine> implements CustomNodeFactoryInterface {
+export class InputsNodeFactory extends AbstractReactFactory<InputsNodeModel, DiagramEngine> {
 	constructor() {
-		super("my-custom-node");
+		super("my-input-node");
 	}
 
 	generateModel(event: any) :InputsNodeModel {
@@ -14,6 +13,6 @@ export class InputsNodeFactory extends AbstractReactFactory<InputsNodeModel, Dia
 	}
 
 	generateReactWidget(event: any): JSX.Element {
-		return <InputsNodeWidget node={event.model} />;
+		return <InputsNodeWidget node={event.model} engine={this.engine}/>;
 	}
 }

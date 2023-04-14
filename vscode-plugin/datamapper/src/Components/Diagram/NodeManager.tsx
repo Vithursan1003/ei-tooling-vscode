@@ -6,11 +6,11 @@ import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import DataMapperDiagram from './DataMapperDiagram';
 
 const NodeManager = () => {
-    const { schemaInput, schemaOutput } = React.useContext(FileContext);
+    const { schemaInput, schemaOutput, addedNode } = React.useContext(FileContext);
     const [nodes, setNodes] = React.useState<CustomNodeModel[]>([]);
-
+    
     React.useEffect(() => {
-        const newNodes = [];
+        const newNodes : CustomNodeModel[]= [];
 
         if (!schemaInput) {
             const InputBox = new InputsNodeModel({ name: 'Input' });
@@ -20,7 +20,6 @@ const NodeManager = () => {
             const InputDataMapper = new DataMapperNodeModel(schemaInput.properties, { name: 'Input', });
             InputDataMapper.setPosition(100, 50);
             newNodes.push(InputDataMapper);
-            
         }
 
         if (!schemaOutput) {
@@ -32,10 +31,15 @@ const NodeManager = () => {
             OutputDataMapper.setPosition(800, 50);
             newNodes.push(OutputDataMapper);
         }
+
+        // if (addedNode) {
+        //     newNodes.push(...addedNode);
+        // }
+
         setNodes(newNodes);
     }, [schemaInput, schemaOutput]);
 
-    return (<DataMapperDiagram nodes={nodes} />);
+    return (<DataMapperDiagram nodes={nodes}  />);
 };
 
 export default NodeManager;

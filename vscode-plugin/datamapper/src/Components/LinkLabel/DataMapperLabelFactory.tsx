@@ -13,7 +13,7 @@ export class DataMapperLabelFactory extends AbstractReactFactory<DataMapperLabel
 	}
 
 	generateReactWidget(event: GenerateWidgetEvent<DataMapperLabelModel>): JSX.Element {
-		return <DataMapperLabelWidget model={event.model} />;
+		return <DataMapperLabelWidget model={event.model} engine={this.engine} />;
 	}
 
 }

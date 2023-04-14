@@ -1,12 +1,13 @@
 import { KeyboardEvent, MouseEvent } from 'react';
 import { Action, ActionEvent, InputType, State } from '@projectstorm/react-canvas-core';
-import { DiagramEngine, LabelModel, LinkModel, PortModel } from '@projectstorm/react-diagrams-core';
+import { DiagramEngine, PortModel } from '@projectstorm/react-diagrams-core';
 import DataMapperPortModel from '../Port/DataMapperPort/DataMapperPortModel';
 import { DataMapperLinkModel } from './../Link/Model/DataMapperLinkModel';
 import { DataMapperLabelModel } from '../LinkLabel/DataMapperLabelModel';
+import { IntermediatePortModel } from '../Port/IntermediatePort/IntermediatePortModel';
 
 export class CreateLinkState extends State<DiagramEngine> {
-    sourcePort!: DataMapperPortModel | undefined;
+    sourcePort?: PortModel;
     link!: DataMapperLinkModel;
 
     constructor() {
@@ -20,19 +21,37 @@ export class CreateLinkState extends State<DiagramEngine> {
 
                     if (element instanceof PortModel && !this.sourcePort) {
                         if (element instanceof DataMapperPortModel) {
-                            if (element.portType === "IN") {
+                            if (element.portType === "OUT") {
                                 this.sourcePort = element;
                                 element.fireEvent({}, "mappingStartedFrom");
                                 element.linkedPorts.forEach((linkedPort) => {
                                     linkedPort.fireEvent({}, "disableNewLinking")
                                 })
-                                const link = this.sourcePort.createLinkModel();
-                                console.log("Link instance created:");
+                                const link = element.createLinkModel();
                                 if (link) {
-                                    link.setSourcePort(this.sourcePort);
+                                    link.setSourcePort(element);
                                     this.link = link;
                                 }
-
+                            } else {
+                                element.fireEvent({}, "mappingStartedTo");
+                                this.clearState();
+                                this.eject();
+                            }
+                        } else if (element instanceof IntermediatePortModel) {
+                            console.log("Intermediate Port");
+                            if (element.portType === "OUT") {
+                                this.sourcePort = element;
+                                console.log("Intermediate port model port type OUT")
+                                element.fireEvent({}, "mappingStartedFrom");
+                                element.linkedPorts.forEach((linkedPort) => {
+                                    linkedPort.fireEvent({}, "disableNewLinking")
+                                })
+                                const link = element.createLinkModel();
+                                if (link) {
+                                    link.setSourcePort(element);
+                                    this.link = link;
+                                    console.log("Intermediate link");
+                                }
                             } else {
                                 element.fireEvent({}, "mappingStartedTo");
                                 this.clearState();
@@ -41,14 +60,13 @@ export class CreateLinkState extends State<DiagramEngine> {
                         }
                     } else if (element instanceof PortModel && this.sourcePort && element !== this.sourcePort) {
                         if (element instanceof DataMapperPortModel) {
-                            if (element.portType === "OUT") {
+                            if (element.portType === "IN") {
                                 element.fireEvent({}, "mappingFinishedTo");
                                 if (this.sourcePort.canLinkToPort(element)) {
                                     this.link.setTargetPort(element);
-                                    this.link.addLabel(new DataMapperLabelModel({value :'link1',link : this.link}));
+                                    this.link.addLabel(new DataMapperLabelModel({ value: 'link1', link: this.link }));
                                     this.engine.getModel().addAll(this.link);
-                                    console.log("link added to diagram");
-                                    console.log("link in state: ", this.engine.getModel().getLinks());
+                                    console.log("link added to diagram: ", this.engine.getModel().getLinks());
                                     if (this.sourcePort instanceof DataMapperPortModel) {
                                         this.sourcePort.linkedPorts.forEach((linkedPort) => {
                                             linkedPort.fireEvent({}, "enableNewLinking")
@@ -58,7 +76,7 @@ export class CreateLinkState extends State<DiagramEngine> {
                                     this.eject();
                                 }
                             } else {
-                                this.sourcePort.fireEvent({}, "link-unselected");
+                                this.sourcePort.fireEvent({}, "linkUnselected");
                                 if (this.sourcePort instanceof DataMapperPortModel) {
                                     this.sourcePort.linkedPorts.forEach((linkedPort) => {
                                         linkedPort.fireEvent({}, "enableNewLinking")
@@ -69,6 +87,37 @@ export class CreateLinkState extends State<DiagramEngine> {
                                 this.link.setSourcePort(element);
                                 element.fireEvent({}, "mappingStartedFrom");
                                 if (element instanceof DataMapperPortModel) {
+                                    element.linkedPorts.forEach((linkedPort) => {
+                                        linkedPort.fireEvent({}, "disableNewLinking")
+                                    })
+                                }
+                            }
+                        } else if (element instanceof IntermediatePortModel) {
+                            if (element.portType === "IN") {
+                                element.fireEvent({}, "mappingFinishedTo");
+                                if (this.sourcePort.canLinkToPort(element)) {
+                                    this.link.setTargetPort(element);
+                                    this.engine.getModel().addAll(this.link);
+                                    if (this.sourcePort instanceof IntermediatePortModel) {
+                                        this.sourcePort.linkedPorts.forEach((linkedPort) => {
+                                            linkedPort.fireEvent({}, "enableNewLinking")
+                                        })
+                                    }
+                                    this.clearState();
+                                    this.eject();
+                                }
+                            } else {
+                                this.sourcePort.fireEvent({}, "linkUnselected");
+                                if (this.sourcePort instanceof IntermediatePortModel) {
+                                    this.sourcePort.linkedPorts.forEach((linkedPort) => {
+                                        linkedPort.fireEvent({}, "enableNewLinking")
+                                    })
+                                }
+                                this.sourcePort.removeLink(this.link);
+                                this.sourcePort = element;
+                                this.link.setSourcePort(element);
+                                element.fireEvent({}, "mappingStartedFrom");
+                                if (element instanceof IntermediatePortModel) {
                                     element.linkedPorts.forEach((linkedPort) => {
                                         linkedPort.fireEvent({}, "disableNewLinking")
                                     })
@@ -104,8 +153,6 @@ export class CreateLinkState extends State<DiagramEngine> {
             })
         );
 
-
-        //link selection
         this.registerAction(
             new Action({
                 type: InputType.MOUSE_DOWN,
@@ -114,26 +161,6 @@ export class CreateLinkState extends State<DiagramEngine> {
                     if (element instanceof DataMapperLinkModel) {
                         element.setSelected(!element.isSelected());
                         console.log("link selection logic");
-                    }
-                }
-            })
-        );
-
-        this.registerAction(
-            new Action({
-                type: InputType.KEY_UP,
-                fire: (actionEvent: ActionEvent<KeyboardEvent>) => {
-                    if (actionEvent.event.key === 'Delete') {
-                        const selectedEntities = this.engine.getModel().getSelectedEntities();
-                        console.log("link removed");
-                        selectedEntities.forEach(entity => {
-                            if (entity instanceof DataMapperLinkModel) {
-                                entity.remove();
-                            }
-                        });
-                        //this.clearState();
-                        this.eject();
-                        this.engine.repaintCanvas();
                     }
                 }
             })

@@ -4,6 +4,7 @@ import { DiagramEngine} from '@projectstorm/react-diagrams-core';
 import { nodeStyles } from '../styles';
 import { DataMapperPortWidget } from '../../Port/DataMapperPort/DataMapperPortWidget';
 import DataMapperPortModel from '../../Port/DataMapperPort/DataMapperPortModel';
+import { CodeOutlined } from '@mui/icons-material';
 
 export interface DataMapperNodeProps {
     node: DataMapperNodeModel;

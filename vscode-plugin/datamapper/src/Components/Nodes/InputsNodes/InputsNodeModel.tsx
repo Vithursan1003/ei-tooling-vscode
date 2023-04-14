@@ -1,16 +1,11 @@
 import { CustomNodeModel } from '../Customs/CustomNodeModel';
 
 export class InputsNodeModel extends CustomNodeModel {
-
     onClick: any;
-    name: any;
+    name: string;
   
     constructor(options: any = {}) {
-        super({
-            ...options,
-            type: 'my-custom-node',
-        });
-
+        super('my-input-node',options.name);
         this.name = options.name || undefined;
         this.onClick = options.onClick || null;
     }

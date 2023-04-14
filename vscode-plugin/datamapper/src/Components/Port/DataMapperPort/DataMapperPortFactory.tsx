@@ -6,7 +6,7 @@ import { DataMapperPortWidget } from './DataMapperPortWidget';
 export class DataMapperPortFactory extends AbstractModelFactory<PortModel, DiagramEngine> {
 
 	constructor() {
-		super("my-custom-node");
+		super("my-datamapper-port");
 	}
 
     generateModel(event: any) :DataMapperPortModel {

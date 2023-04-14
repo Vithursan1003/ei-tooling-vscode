@@ -1,7 +1,4 @@
-import {
-  Button, FormControl, FormLabel, InputLabel,
-  MenuItem, Select, SelectChangeEvent, TextField
-} from '@mui/material'
+import { Button, FormControl, FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material'
 import React from 'react';
 import { uploadStyles } from './styles';
 import { FileContext } from './../ContextProvider/FileContext';
@@ -47,7 +44,6 @@ const UploadForm = (props: Props) => {
     e.preventDefault();
 
     if (file) {
-      vscode.postMessage({ command: 'success_alert', text: props.title});
       try {
         var filename = fileName + "_" + props.title;
         var fileExtension = file.name.split('.').pop();
@@ -63,15 +59,13 @@ const UploadForm = (props: Props) => {
           });
         }
         window.addEventListener('message', (e) => {
-          if(e.data.type === 'InputSchema'){
+          if (e.data.type === 'InputSchema') {
             setSchemaInput(e.data.value);
-            //vscode.postMessage({ command: 'fail_alert', text:'Input schema'});
-          }else if(e.data.type === 'OutputSchema'){
+          } else if (e.data.type === 'OutputSchema') {
             setSchemaOutput(e.data.value);
-            //vscode.postMessage({ command: 'fail_alert', text: 'Output schema'});
           }
         });
-
+        vscode.postMessage({ command: 'success_alert', text: 'File Uploaded successfully' });
       } catch (error) {
         vscode.postMessage({ command: 'fail_alert', text: 'Error, Cant upload file' });
       }
@@ -92,10 +86,9 @@ const UploadForm = (props: Props) => {
           </Select>
         </FormControl>
 
-        <InputLabel className={classes.Label}>Input File name : </InputLabel>
+        <InputLabel className={classes.Label}>{props.title} File name : </InputLabel>
         <TextField className={classes.TextField}
           name='fileName' onChange={handleFileName} size="small" />
-
         <InputLabel className={classes.Label}>Select from file system : </InputLabel>
         <input className={classes.Label} type="file" name='file' onChange={handleFile} />
         <Button className={classes.saveButton} type="submit" variant='contained' disabled={!file}>Save</Button>

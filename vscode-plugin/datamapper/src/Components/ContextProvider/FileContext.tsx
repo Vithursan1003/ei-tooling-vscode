@@ -1,4 +1,5 @@
 import React from 'react';
+import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 
 interface Schema {
   name?: string;
@@ -15,13 +16,17 @@ interface Schema {
 type FileContextProps = {
   schemaInput: Schema | null;
   schemaOutput: Schema | null;
+  addedNode : CustomNodeModel[];
   setSchemaInput: (schemaInput: Schema) => void;
   setSchemaOutput: (schemaOutput: Schema) => void;
+  setAddedNode : (addedNode : CustomNodeModel []) => void;
 }
 
 export const FileContext = React.createContext<FileContextProps>({
   schemaInput: null,
   schemaOutput: null,
+  addedNode : [],
   setSchemaInput: () => {},
-  setSchemaOutput: () => {}
+  setSchemaOutput: () => {},
+  setAddedNode : () => {},
 });

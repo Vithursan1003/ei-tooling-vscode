@@ -8,7 +8,7 @@ export class DataMapperLinkModel extends DefaultLinkModel {
 		super({
 			type: 'DataMapper-link',
 			width: 2,
-			curvyness: 0,
+			curvyness: 5,
 			locked: true,
 			color: "#00c0ff"
 		})

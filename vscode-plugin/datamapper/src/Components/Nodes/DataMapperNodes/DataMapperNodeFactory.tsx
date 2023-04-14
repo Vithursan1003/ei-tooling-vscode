@@ -1,15 +1,13 @@
-import "reflect-metadata";
 import { AbstractReactFactory } from "@projectstorm/react-canvas-core";
 import { DiagramEngine, DiagramModel, DiagramModelGenerics } from "@projectstorm/react-diagrams-core";
-import { CustomNodeFactoryInterface } from "../Customs/CustomNodeModel";
 import { DataMapperNodeModel } from "./DataMapperNodeModel";
 import { DataMapperNodeWidget } from "./DataMapperNodeWidget";
 
-export class DataMapperNodeFactory extends AbstractReactFactory<DataMapperNodeModel, DiagramEngine> implements CustomNodeFactoryInterface{
+export class DataMapperNodeFactory extends AbstractReactFactory<DataMapperNodeModel, DiagramEngine>{
 	model!: DiagramModel<DiagramModelGenerics>;
 	
 	constructor() {
-		super("my-custom-node");
+		super("my-datamapper-node");
 	}
 
 	generateModel(event: any) :DataMapperNodeModel {

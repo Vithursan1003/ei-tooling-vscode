@@ -6,10 +6,10 @@ import { Add } from '@mui/icons-material';
 
 export interface InputsNodeProps {
     node: InputsNodeModel;
-
+    engine : DiagramEngine;
 }
 
-export const InputsNodeWidget: React.FC<InputsNodeProps> = ({ node}) => {
+export const InputsNodeWidget: React.FC<InputsNodeProps> = ({ node,engine}) => {
     const classes = nodeStyles();
     return (
         <>
