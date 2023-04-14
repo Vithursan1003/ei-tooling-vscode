@@ -7,7 +7,6 @@ export interface DataMapperLabelOptions extends BaseModelOptions {
 	link?: DataMapperLinkModel;
 	editorLabel?: string;
 	deleteLink?: () => void;
-    visible?: boolean;
 }
 
 export class DataMapperLabelModel extends LabelModel {
@@ -15,7 +14,6 @@ export class DataMapperLabelModel extends LabelModel {
 	link?: DataMapperLinkModel;
 	editorLabel?: string;
 	deleteLink?: () => void;
-    visible: boolean;
 
 	constructor(options: DataMapperLabelOptions = {}) {
 		super({
@@ -26,7 +24,6 @@ export class DataMapperLabelModel extends LabelModel {
 		this.link = options.link;
 		this.editorLabel = options.editorLabel;
 		this.deleteLink = options.deleteLink;
-        this.visible = options.visible !== undefined ? options.visible : true;
 	}
 
 	serialize() {

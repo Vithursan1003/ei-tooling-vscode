@@ -10,7 +10,6 @@ import { DataMapperLinkModel } from './../Link/Model/DataMapperLinkModel';
 import { DataMapperLabelFactory } from './../LinkLabel/DataMapperLabelFactory';
 import { portFactories } from '../Port';
 import { FileContext } from './../ContextProvider/FileContext';
-import { DataMapperNodeModel } from '../Nodes/DataMapperNodes/DataMapperNodeModel';
 
 interface DataMapperDiagramProps {
     nodes: CustomNodeModel[];
@@ -54,39 +53,7 @@ const DataMapperDiagram = (props:DataMapperDiagramProps) => {
     })
    
 
-    // if (schemaInput) {
-    //     const InputDataMapper = new DataMapperNodeModel(schemaInput.properties, { name: 'Input', });
-    //     InputDataMapper.setPosition(100, 50);
-    //     model.addAll(InputDataMapper);
-    // }
-
-    // if (schemaOutput) {
-    //     const OutputDataMapper = new DataMapperNodeModel(schemaOutput.properties, { name: 'Output', });
-    //     OutputDataMapper.setPosition(800, 50);
-    //     model.addAll(OutputDataMapper);
-    // } 
-
-    // React.useEffect(() => {
-    //     model.addAll(...addedNode);
-    //     for(const node of addedNode){
-    //         node.setModel(model);
-    //     }
-    //     console.log("nodes in model : ",model.getNodes());
-    //     engine.repaintCanvas(true);
-    //     console.log("new nodes added");
-    // }, [addedNode]);
-    
-    // model.registerListener({
-    //     nodesUpdated: () => {
-    //         setTimeout(() => {
-    //             console.log("created nodes : ",nodes);
-    //         }, 100);
-    //     }
-    // }); 
-
     React.useEffect(() => {
-        console.log("nodes: ", nodes);
-        console.log("new nodes: ", addedNode);
         async function genModel() {
             const allNodes = [...nodes, ...addedNode];
             const newNodes = allNodes.filter((node) => !model.getNode(node.name));

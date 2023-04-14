@@ -7,7 +7,6 @@ import { LinkConnectorNodeModel } from './../Nodes/LinkConnector/LinkConnectorNo
 import { FileContext } from './../ContextProvider/FileContext';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { DataMapperLinkModel } from '../Link/Model/DataMapperLinkModel';
-import { nodes } from '../Diagram/utils';
 
 export interface FunctionEditorProps {
   onClose: () => void;
