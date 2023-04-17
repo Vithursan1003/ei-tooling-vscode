@@ -34,8 +34,9 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
     if(model?.link){
         firstPoint = model?.link.getFirstPoint();
         lastPoint = model?.link.getLastPoint();
-        midX = (firstPoint.getX() + lastPoint.getX()) / 2;
+        midX = (firstPoint.getX() + lastPoint.getX()) / 2-300;
         midY = (firstPoint.getY() + lastPoint.getY()) / 2;
+        //style={{ position: 'absolute', left: `${midX}px`, top: `${midY}px` }}
     }
 
     const onDelete = (e?: React.MouseEvent<HTMLDivElement>) => {
@@ -77,7 +78,6 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
             <>
                 <div
                     className={classes.container}
-                    style={{ position: 'absolute', left: `${midX}px`, top: `${midY}px` }}
                     data-testid={`DataMapper-label-for-${props.model?.link?.getSourcePort()?.getName()}-to-${props.model?.link?.getTargetPort()?.getName()}`}>
                     <div className={classes.element} onClick={onEdit} data-testid={`DataMapper-label-edit`}>
                         <div className={classes.iconWrapper}>

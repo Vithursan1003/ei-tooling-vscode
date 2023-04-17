@@ -7,6 +7,7 @@ import { LinkConnectorNodeModel } from './../Nodes/LinkConnector/LinkConnectorNo
 import { FileContext } from './../ContextProvider/FileContext';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { DataMapperLinkModel } from '../Link/Model/DataMapperLinkModel';
+import { TotNodes } from '../Diagram/DataMapperDiagram';
 
 export interface FunctionEditorProps {
   onClose: () => void;
@@ -15,10 +16,10 @@ export interface FunctionEditorProps {
 }
 
 const FunctionEditor: React.FunctionComponent<FunctionEditorProps> = (props) => {
-  const { onClose, engine, link } = props;
+  const { onClose, link } = props;
   const classes = FunctionStyles();
-  const { setAddedNode, addedNode } = React.useContext(FileContext);
-  const IntermediateNodes: CustomNodeModel[] = [];
+  const { setAddedNode } = React.useContext(FileContext);
+  const IntermediateNodes: CustomNodeModel[] = TotNodes;
   const commonOperations = ['Constant', 'Custom Function', 'Properties', 'Compare', 'Global Variable'];
   const arithmeticOperations = ['Add', 'Subtract', 'Multiply', 'Division', 'Ceiling', 'Floor', 'Round', 'Set Precision', 'Absolute Val', 'Min', 'Max'];
   const booleanOperations = ['AND', 'OR', 'NOT'];
@@ -33,8 +34,9 @@ const FunctionEditor: React.FunctionComponent<FunctionEditorProps> = (props) => 
     midY = (firstPoint.getY() + lastPoint.getY()) / 2;
   }
 
+console.log("opened editor");
   const handleNode = () => {
-    const commonNode = new LinkConnectorNodeModel("common");
+    const commonNode = new LinkConnectorNodeModel({name:'Common'});
     link?.remove();
     commonNode.setPosition(midX, midY);
     console.log("x cordinates : ", midX);
@@ -43,6 +45,17 @@ const FunctionEditor: React.FunctionComponent<FunctionEditorProps> = (props) => 
     setAddedNode(IntermediateNodes);
   }
 
+  const handleStringNode = () => {
+    const commonNode = new LinkConnectorNodeModel({name:'ConCat'});
+    link?.remove();
+    commonNode.setPosition(midX, midY);
+    console.log("x cordinates : ", midX);
+    console.log("y cordinates : ", midY);
+    IntermediateNodes.push(commonNode);
+    setAddedNode(IntermediateNodes);
+  }
+
+  
   return (
     <Drawer anchor="right" open={true} onClose={onClose}>
       <List>
@@ -134,7 +147,7 @@ const FunctionEditor: React.FunctionComponent<FunctionEditorProps> = (props) => 
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMore />} >
-          <FolderOpenOutlined /><ListItemText primary="String" className={classes.ListItemText} />
+          <FolderOpenOutlined /><ListItemText primary="String" className={classes.ListItemText} onClick={handleStringNode}/>
         </AccordionSummary>
         <AccordionDetails>
           <List>

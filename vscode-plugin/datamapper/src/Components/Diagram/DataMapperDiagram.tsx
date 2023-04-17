@@ -1,6 +1,6 @@
 import React from 'react';
 import { uploadStyles } from '../FileUpload/styles';
-import createEngine, { DagreEngine, DiagramModel } from '@projectstorm/react-diagrams';
+import createEngine, { DagreEngine, DiagramEngine, DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { nodeFactories } from '../Nodes';
@@ -15,11 +15,12 @@ interface DataMapperDiagramProps {
     nodes: CustomNodeModel[];
 }
 
-const DataMapperDiagram = (props:DataMapperDiagramProps) => {
+export var TotNodes : CustomNodeModel[]=[];
+
+const DataMapperDiagram = (props: DataMapperDiagramProps) => {
     const classes = uploadStyles();
     const { nodes } = props;
-    const engine = createEngine({ registerDefaultPanAndZoomCanvasAction: true, registerDefaultZoomCanvasAction: false });
-
+    const [engine, setEngine] = React.useState(createEngine());
     for (const factory of nodeFactories) { engine.getNodeFactories().registerFactory(factory); }
     for (const factory of portFactories) { engine.getPortFactories().registerFactory(factory); }
     engine.getLinkFactories().registerFactory(new DataMapperLinkFactory());
@@ -40,31 +41,47 @@ const DataMapperDiagram = (props:DataMapperDiagramProps) => {
     });
 
     const [model, setNewModel] = React.useState<DiagramModel>(new DiagramModel());
-    const [links, setLinks] = React.useState<DataMapperLinkModel[]>([]);
-    const { addedNode,schemaInput,schemaOutput } = React.useContext(FileContext);
+    // const serializedN = localStorage.getItem('serializedData');
+    // console.log("serialized : ", serializedN);
+    // if (serializedN) {
+    //     console.log("model deseriliazed");
+    //     const deserializedModel = new DiagramModel();
+    //     deserializedModel.deserializeModel(JSON.parse(serializedN), engine);
+    //     console.log('Deserialized:', deserializedModel);
+    // }
 
+    // const [model, setNewModel] = React.useState<DiagramModel>(() => {
+    //     if (serializedN) {
+    //         const deserializedModel = new DiagramModel();
+    //         deserializedModel.deserializeModel(JSON.parse(serializedN), engine);
+    //         return deserializedModel;
+    //     } else {
+    //         return new DiagramModel();
+    //     }
+    // });
+
+    const [links, setLinks] = React.useState<DataMapperLinkModel[]>([]);
+    const { addedNode } = React.useContext(FileContext);
 
     model.registerListener({
         linksUpdated: () => {
             const NewLinks = engine.getModel().getLinks().map(link => new DataMapperLinkModel());;
             setLinks(NewLinks);
-            console.log("links in model : ", NewLinks);
+            console.log("links in model : ", model.getLinks());
         },
     })
-   
+
 
     React.useEffect(() => {
         async function genModel() {
             const allNodes = [...nodes, ...addedNode];
-            const newNodes = allNodes.filter((node) => !model.getNode(node.name));
-            for(const node of allNodes){
-                console.log(model.getNode(node.name));
-            }
-            console.log("filtered nodes: ",newNodes);
-            if (newNodes.length > 0) {
-                const newModel = model.clone();
-                newModel.addAll(...newNodes);
-                for (const node of newNodes) {
+            TotNodes =[...TotNodes,...addedNode];
+
+            if (allNodes.length > 0) {
+                const newModel = new DiagramModel();
+                newModel.addAll(...allNodes);
+
+                for (const node of allNodes) {
                     try {
                         node.setModel(newModel);
                         await node.initPorts();
@@ -75,10 +92,7 @@ const DataMapperDiagram = (props:DataMapperDiagramProps) => {
                     }
                 }
                 newModel.setLocked(false);
-                //dagreEngine.redistribute(newModel);
                 setNewModel(newModel);
-                const serializedData = newModel.serialize();
-                localStorage.setItem('diagramData', serializedData);
             }
         }
         void genModel();
@@ -93,6 +107,9 @@ const DataMapperDiagram = (props:DataMapperDiagramProps) => {
         }
     }, [links])
 
+    const serialized = JSON.stringify(model.serialize());
+    localStorage.setItem("serializedData", serialized);
+    console.log("Total Nodes : ",TotNodes);
     engine.setModel(model);
 
     return (<CanvasWidget className={classes.canvas} engine={engine} />)

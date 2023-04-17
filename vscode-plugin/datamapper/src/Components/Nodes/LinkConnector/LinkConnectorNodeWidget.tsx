@@ -26,18 +26,10 @@ export const LinkConnectorNodeWidget: React.FC<LinkConnectorNodeWidgetProps> = (
         console.log("delete intermediate nodes");
     };
 
-    // const sourcePortNames = node.getPorts().map(port => {
-    //     const links = port.getLinks();
-    //     if (links.length > 0) {
-    //         const sourcePort = links[0].getSourcePort();
-    //         return sourcePort.getName();
-    //     }
-    //     return "";
-    // });
-    // const concatenatedSourcePortNames = sourcePortNames.join(",");
 
     return (
         <>
+            <div className={classes.node}><span className={classes.nodeLabel}>{node.name}</span></div>
             <div className={classes.root}>
                 <div className={classes.header}>
                     <IntermediatePortWidget engine={engine} port={node.inPort} />

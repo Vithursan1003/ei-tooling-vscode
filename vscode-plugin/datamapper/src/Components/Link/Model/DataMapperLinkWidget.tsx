@@ -3,7 +3,7 @@ import { DefaultLinkWidget as ReactDiagramDefaultLinkWidget } from "@projectstor
 import { DefaultLinkSegmentWidget } from "../LinkSegment/DataMapperLinkSegments";
 
 export class DataMapperLinkWidget extends ReactDiagramDefaultLinkWidget {
-    
+
     generateLink(
         path: string,
         extraProps: React.Attributes,

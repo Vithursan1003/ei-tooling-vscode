@@ -36,46 +36,46 @@ export class DataMapperNodeModel extends CustomNodeModel {
     }
 
     initLinks(): void {
-        let inPort !: DataMapperPortModel;
-        let mappedOutPort !: DataMapperPortModel;
+        // let inPort !: DataMapperPortModel;
+        // let mappedOutPort !: DataMapperPortModel;
 
-        const ports = Object.values(this.getPorts()) as DataMapperPortModel[];
-        ports.forEach(port => {
-            const isSelected = port.isSelected();
-            console.log("port selection : ", isSelected);
-            if (port.isSelected()) {
-                if (port.portType === 'IN') {
-                    console.log("selected port sourceport");
-                    inPort = port;
-                } else if (port.portType === 'OUT') {
-                    console.log("Selected port is target");
-                    mappedOutPort = port;
-                }
-            }
-        });
+        // const ports = Object.values(this.getPorts()) as DataMapperPortModel[];
+        // ports.forEach(port => {
+        //     const isSelected = port.isSelected();
+        //     console.log("port selection : ", isSelected);
+        //     if (port.isSelected()) {
+        //         if (port.portType === 'IN') {
+        //             console.log("selected port sourceport");
+        //             inPort = port;
+        //         } else if (port.portType === 'OUT') {
+        //             console.log("Selected port is target");
+        //             mappedOutPort = port;
+        //         }
+        //     }
+        // });
 
     
-        const lm = new DataMapperLinkModel();
-        if (inPort && mappedOutPort) {
-            lm.addLabel(new DataMapperLabelModel({
-                link: lm, value: 'Link1'
-            }));
-            lm.setTargetPort(mappedOutPort);
-            lm.setSourcePort(inPort);
-            inPort.addLinkedPort(mappedOutPort);
-            lm.registerListener({
-                selectionChanged: () => {
-                    if (lm.isSelected()) {
-                        inPort.fireEvent({}, "linkSelected");
-                        mappedOutPort.fireEvent({}, "linkSelected");
-                    } else {
-                        inPort.fireEvent({}, "linkUnselected");
-                        mappedOutPort.fireEvent({}, "linkUnselected");
-                    }
-                }
-            })
-            console.log("adding link in node");
-            this.engine.getModel().addAll(lm);
-        }
+        // const lm = new DataMapperLinkModel();
+        // if (inPort && mappedOutPort) {
+        //     lm.addLabel(new DataMapperLabelModel({
+        //         link: lm, value: 'Link1'
+        //     }));
+        //     lm.setTargetPort(mappedOutPort);
+        //     lm.setSourcePort(inPort);
+        //     inPort.addLinkedPort(mappedOutPort);
+        //     lm.registerListener({
+        //         selectionChanged: () => {
+        //             if (lm.isSelected()) {
+        //                 inPort.fireEvent({}, "linkSelected");
+        //                 mappedOutPort.fireEvent({}, "linkSelected");
+        //             } else {
+        //                 inPort.fireEvent({}, "linkUnselected");
+        //                 mappedOutPort.fireEvent({}, "linkUnselected");
+        //             }
+        //         }
+        //     })
+        //     console.log("adding link in node");
+        //     this.engine.getModel().addAll(lm);
+        // }
     }
 }
