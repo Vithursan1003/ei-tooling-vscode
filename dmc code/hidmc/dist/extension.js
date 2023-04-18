@@ -54,8 +54,6 @@ exports.deactivate = exports.activate = void 0;
 // Import the module and reference it with the alias vscode in your code below
 const vscode = __webpack_require__(1);
 const fs = __webpack_require__(2);
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 function activate(context) {
     const newLink = [
         {
@@ -166,7 +164,6 @@ function activate(context) {
     ];
     //line 121 to 184 is to list actions involved in the data mapping
     const transformedData = newLink;
-    //console.log(transformedData);
     let transformDataArray = [];
     let b = 0;
     let actionnode, actionID;
@@ -211,9 +208,9 @@ function activate(context) {
             case "Split":
                 e[0] = actionnode;
                 e[1] = actionID;
-                e[2] = `split_${i + 1}_Input`;
+                e[2] = `Split_${i + 1}_Input`;
                 e[3] = false;
-                e[4] = `split_${i + 1}_Output`;
+                e[4] = `Split_${i + 1}_Output`;
                 e[5] = false;
                 break;
             case "Concat":
@@ -232,7 +229,6 @@ function activate(context) {
     let simplified_transformDataArray = transformDataArray.filter(j => j.length !== 0);
     //Below code is to list outputs connected with actions involved in the data mapping
     let outputObjectArray = transformedData.filter(j => j.targetPort.nodeId === "Output" || j.sourcePort.nodeId === "Output");
-    //console.log(outputObjectArray);
     let outputDMCArray = [];
     for (let i in outputObjectArray) {
         if (outputObjectArray[i].sourcePort.nodeId === "Output") {
@@ -252,10 +248,10 @@ function activate(context) {
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         if (targetPortPortID === "Result1:String") {
-                            e = "output." + sourcePortPortID + " = " + simplified_transformDataArray[i][2] + "[0];";
+                            e = "Output." + trimTheStringUptoColon(sourcePortPortID) + " = " + simplified_transformDataArray[i][4] + "[0];";
                         }
                         else if (targetPortPortID === "Result2:String") {
-                            e = "output." + sourcePortPortID + " = " + simplified_transformDataArray[i][2] + "[1];";
+                            e = "Output." + trimTheStringUptoColon(sourcePortPortID) + " = " + simplified_transformDataArray[i][4] + "[1];";
                         }
                     }
                 }
@@ -263,7 +259,7 @@ function activate(context) {
             case "Concat":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
-                        e = "output." + sourcePortPortID + " = " + simplified_transformDataArray[i][6] + ";";
+                        e = "Output." + trimTheStringUptoColon(sourcePortPortID) + " = " + simplified_transformDataArray[i][6] + ";";
                     }
                 }
                 break;
@@ -271,8 +267,7 @@ function activate(context) {
         return e;
     }
     const outputdmc = outputDMCArray.join('\n');
-    //console.log(outputdmc);
-    //Below code is to list list inputs connected with actions involved in the data mapping
+    //Below code is to  list inputs connected with actions involved in the data mapping
     let inputObjectArray = transformedData.filter(j => j.targetPort.nodeId !== "Output" && j.sourcePort.nodeId !== "Output");
     let inputDMCArray = [];
     let inputQueue = [];
@@ -280,7 +275,6 @@ function activate(context) {
     inputQueue.push(["Input", "1"]);
     while (i < inputQueue.length) {
         inputQueuePush(inputQueue[i][0]);
-        console.log(inputQueue[i][0]);
         i++;
     }
     function inputQueuePush(nodeID) {
@@ -293,21 +287,77 @@ function activate(context) {
             }
         }
     }
-    function checkInputQueue(actionID) {
-        for (let i in inputQueue) {
-            if (inputQueue[i][1] === actionID) {
-                return true;
+    for (let z in inputQueue) {
+        for (let j in inputObjectArray) {
+            if (inputObjectArray[j].sourcePort.nodeId === inputQueue[z][0] && inputObjectArray[j].sourcePort.alignment === "right") {
+                inputDMCArray.push(inputDmcPush(inputObjectArray[j].targetPort.nodeId, inputObjectArray[j].targetPort.portId, inputObjectArray[j].sourcePort.nodeId, inputObjectArray[j].sourcePort.portId, inputObjectArray[j].targetPort.ID));
+            }
+            else if (inputObjectArray[j].targetPort.nodeId === inputQueue[z][0] && inputObjectArray[j].targetPort.alignment === "right") {
+                inputDMCArray.push(inputDmcPush(inputObjectArray[j].sourcePort.nodeId, inputObjectArray[j].sourcePort.portId, inputObjectArray[j].targetPort.nodeId, inputObjectArray[j].targetPort.portId, inputObjectArray[j].sourcePort.ID));
             }
         }
-        return false;
+        inputQueueProgressPush(inputQueue[z][1]);
     }
-    console.log("inputqueue\n");
-    for (let i in inputQueue) {
-        console.log(inputQueue[i]);
+    function inputDmcPush(sourcePortNodeID, sourcePortPortID, targetPortNodeID, targetPortPortID, targetPortID) {
+        let e = "let ";
+        let action = sourcePortNodeID;
+        switch (action) {
+            case "Split":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (sourcePortPortID === "Value:String") {
+                            e = e + `${simplified_transformDataArray[i][2]} = ${targetPortNodeID}.${trimTheStringUptoColon(targetPortPortID)};`;
+                            simplified_transformDataArray[i][3] = true;
+                        }
+                    }
+                }
+                break;
+            case "Concat":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (sourcePortPortID === "Value1:String") {
+                            e = e + `${simplified_transformDataArray[i][2]} = ${targetPortNodeID}.${trimTheStringUptoColon(targetPortPortID)};`;
+                            simplified_transformDataArray[i][3] = true;
+                        }
+                        else if (sourcePortPortID === "Value2:String") {
+                            e = e + `${simplified_transformDataArray[i][4]} = ${targetPortNodeID}.${trimTheStringUptoColon(targetPortPortID)};`;
+                            simplified_transformDataArray[i][5] = true;
+                        }
+                        break;
+                    }
+                }
+                break;
+        }
+        return e;
+    }
+    function inputQueueProgressPush(ID) {
+        let e = "";
+        for (let j in simplified_transformDataArray) {
+            if (simplified_transformDataArray[j][1] === ID) {
+                let action = simplified_transformDataArray[j][0];
+                switch (action) {
+                    case "Split":
+                        if (simplified_transformDataArray[j][3] === true) {
+                            e = `${simplified_transformDataArray[j][4]} = ${simplified_transformDataArray[j][2]}.toString().split(" ");`;
+                        }
+                        break;
+                    case "Concat":
+                        if (simplified_transformDataArray[j][3] === true && simplified_transformDataArray[j][5] === true) {
+                            e = `${simplified_transformDataArray[j][6]} = ${simplified_transformDataArray[j][4]}.concat(${simplified_transformDataArray[j][2]});`;
+                        }
+                        break;
+                }
+            }
+        }
+        inputDMCArray.push(e);
+    }
+    const inputdmc = inputDMCArray.join('\n');
+    function trimTheStringUptoColon(str) {
+        let str1 = str.toString();
+        return str1.substring(0, str1.indexOf(":"));
     }
     //code above this line
     // This line of code will only be executed once when your extension is activated
-    //console.log('Congratulations, your extension "hivithu" is now active!');
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
@@ -317,11 +367,11 @@ function activate(context) {
         const fileName = 'newFile1.dmc';
         const filePath = 'C:/Users/WSO2/' + fileName;
         myArray[0] = "map_S_" + "Input" + "_S_" + "Output" + " = function(){ ";
-        //myArray[1] = inputdmc;
+        myArray[1] = inputdmc;
         //myArray[2] = processdmc;
         //myArray[3] = inputActiondmc;
         //myArray[4] = processActiondmc;
-        myArray[1] = outputdmc;
+        myArray[2] = outputdmc;
         myArray.push("return Output;\n}");
         const content = myArray.join('\n\n');
         fs.writeFile(filePath, content, (err) => {
@@ -338,18 +388,6 @@ exports.activate = activate;
 // This method is called when your extension is deactivated
 function deactivate() { }
 exports.deactivate = deactivate;
-//For future references
-// function getProperty(property: any) {
-// 	for (const property in properties) {
-// 		if (properties.hasOwnProperty(property)) {
-// 			//vscode.window.showInformationMessage();
-// 			//console.log(Input1.hasOwnProperty(property));
-// 			return property;
-// 			//console.log(Input1.hasOwnProperty('name')); // true
-// 		}
-// 	}
-// 	return null;
-// }
 
 })();
 
