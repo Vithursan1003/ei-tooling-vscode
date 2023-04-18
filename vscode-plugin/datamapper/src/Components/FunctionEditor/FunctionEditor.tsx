@@ -19,7 +19,7 @@ const FunctionEditor: React.FunctionComponent<FunctionEditorProps> = (props) => 
   const { onClose, link } = props;
   const classes = FunctionStyles();
   const { setAddedNode } = React.useContext(FileContext);
-  const IntermediateNodes: CustomNodeModel[] = TotNodes;
+  const IntermediateNodes: CustomNodeModel[] = [];
   const commonOperations = ['Constant', 'Custom Function', 'Properties', 'Compare', 'Global Variable'];
   const arithmeticOperations = ['Add', 'Subtract', 'Multiply', 'Division', 'Ceiling', 'Floor', 'Round', 'Set Precision', 'Absolute Val', 'Min', 'Max'];
   const booleanOperations = ['AND', 'OR', 'NOT'];
@@ -39,8 +39,6 @@ console.log("opened editor");
     const commonNode = new LinkConnectorNodeModel({name:'Common'});
     link?.remove();
     commonNode.setPosition(midX, midY);
-    console.log("x cordinates : ", midX);
-    console.log("y cordinates : ", midY);
     IntermediateNodes.push(commonNode);
     setAddedNode(IntermediateNodes);
   }
@@ -49,8 +47,6 @@ console.log("opened editor");
     const commonNode = new LinkConnectorNodeModel({name:'ConCat'});
     link?.remove();
     commonNode.setPosition(midX, midY);
-    console.log("x cordinates : ", midX);
-    console.log("y cordinates : ", midY);
     IntermediateNodes.push(commonNode);
     setAddedNode(IntermediateNodes);
   }

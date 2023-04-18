@@ -1,6 +1,6 @@
 import React from 'react';
 import { uploadStyles } from '../FileUpload/styles';
-import createEngine, { DagreEngine, DiagramEngine, DiagramModel } from '@projectstorm/react-diagrams';
+import createEngine, { DagreEngine,DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { nodeFactories } from '../Nodes';
@@ -17,9 +17,9 @@ interface DataMapperDiagramProps {
 
 export var TotNodes : CustomNodeModel[]=[];
 
-const DataMapperDiagram = (props: DataMapperDiagramProps) => {
+const DataMapperDiagram = () => {
     const classes = uploadStyles();
-    const { nodes } = props;
+    //const { nodes } = props;
     const [engine, setEngine] = React.useState(createEngine());
     for (const factory of nodeFactories) { engine.getNodeFactories().registerFactory(factory); }
     for (const factory of portFactories) { engine.getPortFactories().registerFactory(factory); }
@@ -67,20 +67,25 @@ const DataMapperDiagram = (props: DataMapperDiagramProps) => {
         linksUpdated: () => {
             const NewLinks = engine.getModel().getLinks().map(link => new DataMapperLinkModel());;
             setLinks(NewLinks);
-            console.log("links in model : ", model.getLinks());
         },
     })
 
+    React.useEffect(() => {
+        if (model.getLinks().length > 0) {
+            engine.repaintCanvas(true);
+            console.log("links added to model successfully");
+        }
+    }, [links])
 
     React.useEffect(() => {
         async function genModel() {
-            const allNodes = [...nodes, ...addedNode];
             TotNodes =[...TotNodes,...addedNode];
+            //const allNodes = [...nodes, ...TotNodes];
+            const allNodes = [...addedNode];
 
             if (allNodes.length > 0) {
-                const newModel = new DiagramModel();
+                const newModel = model.clone();
                 newModel.addAll(...allNodes);
-
                 for (const node of allNodes) {
                     try {
                         node.setModel(newModel);
@@ -96,20 +101,10 @@ const DataMapperDiagram = (props: DataMapperDiagramProps) => {
             }
         }
         void genModel();
-    }, [nodes, addedNode]);
-
-
-    React.useEffect(() => {
-        if (model.getLinks().length > 0) {
-            //dagreEngine.redistribute(newModel);
-            engine.repaintCanvas(true);
-            console.log("links added to model successfully");
-        }
-    }, [links])
+    }, [addedNode]);
 
     const serialized = JSON.stringify(model.serialize());
     localStorage.setItem("serializedData", serialized);
-    console.log("Total Nodes : ",TotNodes);
     engine.setModel(model);
 
     return (<CanvasWidget className={classes.canvas} engine={engine} />)

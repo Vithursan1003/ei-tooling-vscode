@@ -30,7 +30,21 @@ export const LinkConnectorNodeWidget: React.FC<LinkConnectorNodeWidgetProps> = (
     return (
         <>
             <div className={classes.node}><span className={classes.nodeLabel}>{node.name}</span></div>
-            <div className={classes.root}>
+            <div className={classes.portContainer}>
+                <IntermediatePortWidget engine={engine} port={node.inPort} />
+                {/* <div className={classes.element} onClick={onClickEdit} >
+                    <Tooltip title="Configure" className={classes.icons}>
+                        <CodeOutlined sx={{ fontSize: '14px', color: 'black' }} />
+                    </Tooltip>
+                </div>
+                <div className={classes.element} onClick={onClickDelete} >
+                    <Tooltip title="Delete" className={classes.icons}>
+                        <Delete sx={{ fontSize: '14px', color: 'black' }} />
+                    </Tooltip>
+                </div> */}
+                <IntermediatePortWidget engine={engine} port={node.outPort} />
+            </div>
+            {/* <div className={classes.root}>
                 <div className={classes.header}>
                     <IntermediatePortWidget engine={engine} port={node.inPort} />
                     <div className={classes.element} onClick={onClickEdit} >
@@ -45,7 +59,7 @@ export const LinkConnectorNodeWidget: React.FC<LinkConnectorNodeWidgetProps> = (
                     </div>
                     <IntermediatePortWidget engine={engine} port={node.outPort} />
                 </div>
-            </div>
+            </div> */}
         </>
 
     );
