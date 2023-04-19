@@ -11,7 +11,8 @@ export class IntermediatePortModel extends PortModel<PortModelGenerics & Interme
 
 	constructor(
 		public portId: string,
-		public portType: "IN" | "OUT") {
+		public portType: "IN" | "OUT",
+		public isIn : boolean) {
 		super({
 			type: INT_PORT_TYPE_ID,
 			name: portId,

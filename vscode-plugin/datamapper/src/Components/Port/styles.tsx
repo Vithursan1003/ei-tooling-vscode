@@ -13,6 +13,14 @@ export const portStyles = makeStyles(() => createStyles({
         border: '1px solid #83a9cc',
         padding: '4px'
     },
+    joinPort: {
+        width: '100px',
+        height: '25 px',
+        background: '#d8d8d8',
+        fontSize: '10px',
+        border: '1px solid #E5E4E2',
+        padding: '4px'
+    },
     portLabel :{
         display: "flex",
         justifyContent: "space-between",

@@ -12,11 +12,11 @@ export class LinkConnectorNodeModel extends CustomNodeModel {
     }
 
     initPorts(): void {
-        this.inPort = new IntermediatePortModel("Test1", "IN");
-        this.addPort(this.inPort);
+        // this.inPort = new IntermediatePortModel("IN : [STRING]", "IN");
+        // this.addPort(this.inPort);
 
-        this.outPort = new IntermediatePortModel('Test2', "OUT");
-        this.addPort(this.outPort);
+        // this.outPort = new IntermediatePortModel('Result : [STRING]', "OUT");
+        // this.addPort(this.outPort);
     }
     
     initLinks(): void {}

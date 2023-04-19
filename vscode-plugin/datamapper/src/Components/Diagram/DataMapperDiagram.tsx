@@ -1,6 +1,6 @@
 import React from 'react';
 import { uploadStyles } from '../FileUpload/styles';
-import createEngine, { DagreEngine,DiagramModel } from '@projectstorm/react-diagrams';
+import createEngine, { DagreEngine, DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { nodeFactories } from '../Nodes';
@@ -15,7 +15,7 @@ interface DataMapperDiagramProps {
     nodes: CustomNodeModel[];
 }
 
-export var TotNodes : CustomNodeModel[]=[];
+export var TotNodes: CustomNodeModel[] = [];
 
 const DataMapperDiagram = () => {
     const classes = uploadStyles();
@@ -61,7 +61,7 @@ const DataMapperDiagram = () => {
     // });
 
     const [links, setLinks] = React.useState<DataMapperLinkModel[]>([]);
-    const { addedNode } = React.useContext(FileContext);
+    const { addedNode, removedNode } = React.useContext(FileContext);
 
     model.registerListener({
         linksUpdated: () => {
@@ -79,7 +79,7 @@ const DataMapperDiagram = () => {
 
     React.useEffect(() => {
         async function genModel() {
-            TotNodes =[...TotNodes,...addedNode];
+            TotNodes = [...TotNodes, ...addedNode];
             //const allNodes = [...nodes, ...TotNodes];
             const allNodes = [...addedNode];
 
@@ -102,6 +102,17 @@ const DataMapperDiagram = () => {
         }
         void genModel();
     }, [addedNode]);
+
+    React.useEffect(() => {
+        if (removedNode && model.getNode(removedNode.getID())) {
+            model.getLinks().forEach(link => {
+                if (link.getSourcePort().getParent() === removedNode || link.getTargetPort().getParent() === removedNode) {
+                    model.removeLink(link);
+                }
+            });
+            model.removeNode(removedNode);
+        }
+    }, [removedNode]);
 
     const serialized = JSON.stringify(model.serialize());
     localStorage.setItem("serializedData", serialized);

@@ -8,6 +8,8 @@ import { FileContext } from './../ContextProvider/FileContext';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { DataMapperLinkModel } from '../Link/Model/DataMapperLinkModel';
 import { TotNodes } from '../Diagram/DataMapperDiagram';
+import { JoinNodeModel } from '../Nodes/String/Join/JoinNodeModel';
+import { InputsNodeModel } from '../Nodes/InputsNodes/InputsNodeModel';
 
 export interface FunctionEditorProps {
   onClose: () => void;
@@ -34,9 +36,19 @@ const FunctionEditor: React.FunctionComponent<FunctionEditorProps> = (props) => 
     midY = (firstPoint.getY() + lastPoint.getY()) / 2;
   }
 
-console.log("opened editor");
-  const handleNode = () => {
-    const commonNode = new LinkConnectorNodeModel({name:'Common'});
+  const handleNode = (operation: String) => {
+    var commonNode: CustomNodeModel;
+    switch (operation) {
+      case 'Concat':
+        {
+          commonNode = new JoinNodeModel({ name: operation });
+          break;
+        }
+      default:
+        {
+          commonNode = new InputsNodeModel({ name: operation });
+        }
+    }
     link?.remove();
     commonNode.setPosition(midX, midY);
     IntermediateNodes.push(commonNode);
@@ -44,14 +56,14 @@ console.log("opened editor");
   }
 
   const handleStringNode = () => {
-    const commonNode = new LinkConnectorNodeModel({name:'ConCat'});
+    const commonNode = new LinkConnectorNodeModel({ name: 'ConCat' });
     link?.remove();
     commonNode.setPosition(midX, midY);
     IntermediateNodes.push(commonNode);
     setAddedNode(IntermediateNodes);
   }
 
-  
+
   return (
     <Drawer anchor="right" open={true} onClose={onClose}>
       <List>
@@ -69,7 +81,7 @@ console.log("opened editor");
             {commonOperations.map((operation, key) => {
               return (<>
                 <ListItem key={key}>
-                  <ListItemText primary={operation} className={classes.ListItemText} onClick={handleNode} />
+                  <ListItemText primary={operation} className={classes.ListItemText} />
                 </ListItem>
               </>)
             })}
@@ -143,14 +155,14 @@ console.log("opened editor");
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMore />} >
-          <FolderOpenOutlined /><ListItemText primary="String" className={classes.ListItemText} onClick={handleStringNode}/>
+          <FolderOpenOutlined /><ListItemText primary="String" className={classes.ListItemText} />
         </AccordionSummary>
         <AccordionDetails>
           <List>
             {stringOperations.map((operation, key) => {
               return (<>
                 <ListItem key={key}>
-                  <ListItemText primary={operation} className={classes.ListItemText} />
+                  <ListItemText primary={operation} className={classes.ListItemText} onClick={() => handleNode(operation)}  />
                 </ListItem>
               </>)
             })}

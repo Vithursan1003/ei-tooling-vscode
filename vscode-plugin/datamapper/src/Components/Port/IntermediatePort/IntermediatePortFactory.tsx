@@ -10,7 +10,7 @@ export class IntermediatePortFactory extends AbstractModelFactory<PortModel, Dia
     }
 
     generateModel(event: any): IntermediatePortModel {
-        return new IntermediatePortModel('name', 'IN');
+        return new IntermediatePortModel('name', 'IN',true);
     }
 
     generateReactWidget(event: any): JSX.Element {
