@@ -27,18 +27,17 @@ export const IntermediatePortWidget: React.FC<IntermediatePortWidgetProps> = (pr
     }, []);
 
     return (
-        <PortWidget
-            port={port}
-            engine={engine}
-            style={{
-                display: "inline",
-                color: active ? "#bfd6d5" :  "#96C0CE" 
-            }}>
-            {/* {active ? <Brightness1 /> : (hasLinks ? checkedIcon : uncheckedIcon)} */}
+        <PortWidget port={port} engine={engine} style={{color: active ? "#1b6782" : "#96C0CE"}}>
             <div className={classes.joinPort} >
-                <div className={classes.portLabel}>
-                    {port.getName()} {active ? checkedIcon  : uncheckedIcon}
-                </div>
+                {port.portType === 'OUT' ? (
+                    <div className={classes.portLabel}>
+                        {port.getName()} {active ? checkedIcon : uncheckedIcon}
+                    </div>
+                ) : (
+                    <div className={classes.portIcon} >
+                        {active ? checkedIcon : uncheckedIcon}{port.getName()}
+                    </div>
+                )}
             </div>
         </PortWidget >
     )

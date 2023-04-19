@@ -14,8 +14,6 @@ export const portStyles = makeStyles(() => createStyles({
         padding: '4px'
     },
     joinPort: {
-        width: '100px',
-        height: '25 px',
         background: '#d8d8d8',
         fontSize: '10px',
         border: '1px solid #E5E4E2',
@@ -27,6 +25,7 @@ export const portStyles = makeStyles(() => createStyles({
         alignItems: "center",
     },
     portIcon :{
+        padding : '0px 10px 0px 10px',
         display: "flex",
         justifyContent: "stretch",
         alignItems: "center",

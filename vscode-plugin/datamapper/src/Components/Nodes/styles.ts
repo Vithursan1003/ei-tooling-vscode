@@ -12,7 +12,7 @@ export const nodeStyles = makeStyles(() => createStyles({
     },
     joinNode : {
         height: '25px',
-        width: '120px',
+        width: '200px',
         alignItems: 'center',
         cursor: 'pointer',
         position: 'relative',
@@ -28,6 +28,40 @@ export const nodeStyles = makeStyles(() => createStyles({
     portContainer: {
         padding: '8px',
         border: '1px solid grey',
+    },
+    root: {
+        width: '100%',
+        backgroundColor:'#d8d8d8',
+        display: "flex",
+        flexDirection: "column",
+        gap: "5px",
+        boxShadow: "0px 5px 50px rgba(203, 206, 219, 0.5)",
+        borderRadius: "5px",
+		      alignItems: "center",
+		      overflow: "hidden",
+    },
+    element: {
+        backgroundColor: 'grey',
+        padding: "5px",
+        cursor: "pointer",
+        transitionDuration: "0.2s",
+        userSelect: "none",
+        pointerEvents: "auto",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        "&:hover": {
+            filter: "brightness(0.95)",
+        },
+    },
+    fromClause: {
+        padding: "5px",
+        fontFamily: "monospace"
+    },
+    mappingPane: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between"
     },
     header: {
         display: "flex",
@@ -52,9 +86,14 @@ export const nodeStyles = makeStyles(() => createStyles({
         position: "absolute",
         right: "35px"
     },
-    editIcon: {
+    separator: {
+        height: "22px",
+        width: "1px",
+        backgroundColor: "grey",
+    },
+    Icon: {
         color: 'white',
-        padding: "5px",
+        paddingLeft: "15px",
         height: "32px",
         width: "32px"
     },

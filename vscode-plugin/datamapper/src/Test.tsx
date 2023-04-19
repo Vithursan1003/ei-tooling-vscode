@@ -9,13 +9,14 @@ import { LinkConnectorNodeModel } from './Components/Nodes/LinkConnector/LinkCon
 import { LinkConnectorNodeFactory } from './Components/Nodes/LinkConnector/LinkConnectorNodeFactory';
 import { InputsNodeFactory } from './Components/Nodes/InputsNodes/InputsNodeFactory';
 import { InputsNodeModel } from './Components/Nodes/InputsNodes/InputsNodeModel';
+import { Grid } from '@mui/material';
 
 export default function Test() {
 	//creating initial engine for the drag and drop UI
 	const engine = createEngine();
-    engine.getNodeFactories().registerFactory(new JoinNodeFactory());
+	engine.getNodeFactories().registerFactory(new JoinNodeFactory());
 	engine.getNodeFactories().registerFactory(new LinkConnectorNodeFactory());
-    engine.getPortFactories().registerFactory(new DataMapperPortFactory());
+	engine.getPortFactories().registerFactory(new DataMapperPortFactory());
 	//calling diagram model to create the nodes
 	var model = new DiagramModel();
 	//setting the colour of the nodes
@@ -23,29 +24,36 @@ export default function Test() {
 
 	const link: any[] = [];
 
-	
+
 	var node1 = new InputsNodeModel("Input");
-    // node1.addPort(new DataMapperPortModel("Port 1","IN"));
-    // node1.addPort(new DataMapperPortModel("Port 2","OUT"));
+	// node1.addPort(new DataMapperPortModel("Port 1","IN"));
+	// node1.addPort(new DataMapperPortModel("Port 2","OUT"));
 	node1.addPort(new DefaultPortModel(true, "name4", "name"));
 	node1.addPort(new DefaultPortModel(false, "name5", "name"));
 	node1.addPort(new DefaultPortModel(false, "name6", "name"));
 
 	node1.setPosition(100, 100);
 
-	var node2 = new LinkConnectorNodeModel({name:'Concat'});
-    node2.addPort(new DataMapperPortModel("Port 1","IN"));
-    node2.addPort(new DataMapperPortModel("Port 1","OUT"));
+	var node2 = new LinkConnectorNodeModel({ name: 'Concat' });
+	node2.addPort(new DataMapperPortModel("Port 1", "IN"));
+	node2.addPort(new DataMapperPortModel("Port 1", "OUT"));
 
 	node2.setPosition(400, 100);
 
-	model.addAll(node1,node2);
+	model.addAll(node1, node2);
 	engine.setModel(model);
 	console.log(model.getNodes());
 
 	return (
 		<div className="container">
-			<CanvasWidget className="canvas" engine={engine} />
-		</div>
+			{/* <CanvasWidget className="canvas" engine={engine} /> */}
+			<Grid container spacing={2} direction='row'>
+				<Grid item xs={6} direction='column'>
+					<p>Helllooo 1</p>
+					<p>Helloo 2</p>
+				</Grid>
+				<Grid item xs={6}>Hellooo 3</Grid>
+			</Grid>
+		</div >
 	);
 };
