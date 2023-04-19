@@ -60,73 +60,13 @@ function activate(context) {
             "sourcePort": {
                 "nodeId": "Input",
                 "portId": "fullName:string",
-                "ID": "c1165718-2a6c-4110-94a9-358bf3dbfb63",
+                "ID": "f00ba244-c1da-4db9-baf3-5a56095d5727",
                 "alignment": "right"
             },
             "targetPort": {
                 "nodeId": "Split",
                 "portId": "Value:String",
-                "ID": "5be088c5-1c7f-4d28-9079-e95bb609ac84",
-                "alignment": "left"
-            },
-            "isChecked": false
-        },
-        {
-            "sourcePort": {
-                "nodeId": "Input",
-                "portId": "address1:string",
-                "ID": "c1165718-2a6c-4110-94a9-358bf3dbfb63",
-                "alignment": "right"
-            },
-            "targetPort": {
-                "nodeId": "Concat",
-                "portId": "Value1:String",
-                "ID": "66488ad8-ee86-48b9-bc9a-f359a6cb9b3b",
-                "alignment": "left"
-            },
-            "isChecked": false
-        },
-        {
-            "sourcePort": {
-                "nodeId": "Input",
-                "portId": "address2:string",
-                "ID": "c1165718-2a6c-4110-94a9-358bf3dbfb63",
-                "alignment": "right"
-            },
-            "targetPort": {
-                "nodeId": "Concat",
-                "portId": "Value2:String",
-                "ID": "66488ad8-ee86-48b9-bc9a-f359a6cb9b3b",
-                "alignment": "left"
-            },
-            "isChecked": false
-        },
-        {
-            "sourcePort": {
-                "nodeId": "Input",
-                "portId": "age:string",
-                "ID": "c1165718-2a6c-4110-94a9-358bf3dbfb63",
-                "alignment": "right"
-            },
-            "targetPort": {
-                "nodeId": "Output",
-                "portId": "age:string",
-                "ID": "100e1957-beea-406b-912d-5e19fd56f017",
-                "alignment": "left"
-            },
-            "isChecked": false
-        },
-        {
-            "sourcePort": {
-                "nodeId": "Concat",
-                "portId": "Result:String",
-                "ID": "66488ad8-ee86-48b9-bc9a-f359a6cb9b3b",
-                "alignment": "right"
-            },
-            "targetPort": {
-                "nodeId": "Output",
-                "portId": "address:string",
-                "ID": "100e1957-beea-406b-912d-5e19fd56f017",
+                "ID": "4ccf3ea6-bba2-40c1-9128-8277a85078a2",
                 "alignment": "left"
             },
             "isChecked": false
@@ -135,13 +75,13 @@ function activate(context) {
             "sourcePort": {
                 "nodeId": "Split",
                 "portId": "Result1:String",
-                "ID": "5be088c5-1c7f-4d28-9079-e95bb609ac84",
+                "ID": "4ccf3ea6-bba2-40c1-9128-8277a85078a2",
                 "alignment": "right"
             },
             "targetPort": {
-                "nodeId": "Output",
-                "portId": "firstName:string",
-                "ID": "100e1957-beea-406b-912d-5e19fd56f017",
+                "nodeId": "Concat",
+                "portId": "Value1:String",
+                "ID": "395f3b33-d39d-44e5-8e34-77a60a1c1cd7",
                 "alignment": "left"
             },
             "isChecked": false
@@ -150,50 +90,194 @@ function activate(context) {
             "sourcePort": {
                 "nodeId": "Split",
                 "portId": "Result2:String",
-                "ID": "5be088c5-1c7f-4d28-9079-e95bb609ac84",
+                "ID": "4ccf3ea6-bba2-40c1-9128-8277a85078a2",
+                "alignment": "right"
+            },
+            "targetPort": {
+                "nodeId": "Concat",
+                "portId": "Value2:String",
+                "ID": "395f3b33-d39d-44e5-8e34-77a60a1c1cd7",
+                "alignment": "left"
+            },
+            "isChecked": false
+        },
+        {
+            "sourcePort": {
+                "nodeId": "Concat",
+                "portId": "Result:String",
+                "ID": "395f3b33-d39d-44e5-8e34-77a60a1c1cd7",
+                "alignment": "right"
+            },
+            "targetPort": {
+                "nodeId": "UpperCase",
+                "portId": "Value:String",
+                "ID": "829cc589-9451-4e31-84ee-6c54a273d2ad",
+                "alignment": "left"
+            },
+            "isChecked": false
+        },
+        {
+            "sourcePort": {
+                "nodeId": "UpperCase",
+                "portId": "Result:String",
+                "ID": "829cc589-9451-4e31-84ee-6c54a273d2ad",
                 "alignment": "right"
             },
             "targetPort": {
                 "nodeId": "Output",
-                "portId": "lastName:string",
-                "ID": "100e1957-beea-406b-912d-5e19fd56f017",
+                "portId": "firstName:string",
+                "ID": "ed83bfe0-8dcd-4d9a-866d-20cb64c7b050",
                 "alignment": "left"
             },
             "isChecked": false
         }
     ];
-    //line 121 to 184 is to list actions involved in the data mapping
     const transformedData = newLink;
-    let transformDataArray = [];
-    let b = 0;
-    let actionnode, actionID;
+    // === //
+    let inputID = {};
     for (let i in transformedData) {
+        if (transformedData[i].sourcePort.nodeId === "Input") {
+            inputID = transformedData[i].sourcePort.ID;
+        }
+        else if (transformedData[i].targetPort.nodeId === "Input") {
+            inputID = transformedData[i].targetPort.ID;
+        }
+    }
+    // === //
+    const Input = {
+        "$id": "https://example.com/person.schema.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "Person",
+        "type": "object",
+        "properties": {
+            "fullName": {
+                "type": "string",
+                "description": "The person's full name."
+            },
+            "address1": {
+                "description": "Age in years which must be equal to or greater than zero.",
+                "type": "string",
+                "minimum": 0
+            },
+            "address2": {
+                "description": "Age in years which must be equal to or greater than zero.",
+                "type": "string",
+                "minimum": 0
+            },
+            "age": {
+                "description": "Age in years which must be equal to or greater than zero.",
+                "type": "integer",
+                "minimum": 0
+            }
+        }
+    };
+    const Output = {
+        "$id": "https://example.com/person.schema.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "Person",
+        "type": "object",
+        "properties": {
+            "firstName": {
+                "type": "string",
+                "description": "The person's first name."
+            },
+            "lastName": {
+                "type": "string",
+                "description": "The person's last name."
+            },
+            "address": {
+                "description": "Age in years which must be equal to or greater than zero.",
+                "type": "string",
+                "minimum": 0
+            },
+            "age": {
+                "description": "Age in years which must be equal to or greater than zero.",
+                "type": "integer",
+                "minimum": 0
+            }
+        }
+    };
+    let arrayInput = createArray(Input, "input");
+    let arrayOutput = createArray(Output, "output");
+    function createArray(outputJSON, string1) {
+        let dmcArray = [];
+        let string = string1;
+        dmcArray.push([string, string]);
+        for (let prop in outputJSON.properties) {
+            let myArray = [];
+            myArray[0] = string;
+            let i = 1;
+            i = includePropToArray(outputJSON, myArray, prop, i);
+        }
+        function recursiveproperty(object1, JSONarray, j) {
+            for (let prop in object1.properties) {
+                j = includePropToArray(object1, JSONarray, prop, j);
+            }
+        }
+        function includePropToArray(JSONobject, array, prop, k) {
+            array[k] = prop;
+            const str = array.join(".");
+            if (string1 === "output") {
+                dmcArray.push([str, prop, false]);
+            }
+            else if (string1 === "input") {
+                dmcArray.push([str, prop]);
+            }
+            if (JSONobject.properties[prop].type === 'object') {
+                k++;
+                recursiveproperty(JSONobject.properties[prop], array, k);
+            }
+            return k;
+        }
+        return dmcArray;
+    }
+    // === //
+    let transformDataArray = [];
+    let inputQueueArray1 = [];
+    inputQueueArray1.push(["Input", inputID]);
+    let b = 0;
+    let data = [];
+    let actionnode = {}, actionID = {};
+    for (let i = 0; i < transformedData.length; i++) {
         if (!(transformedData[i].sourcePort.nodeId === "Input" && transformedData[i].targetPort.nodeId === "Output") || (transformedData[i].sourcePort.nodeId === "Output" && transformedData[i].targetPort.nodeId === "Input")) {
             if (transformedData[i].sourcePort.nodeId === "Input" || transformedData[i].sourcePort.nodeId === "Output") {
                 actionnode = transformedData[i].targetPort.nodeId;
                 actionID = transformedData[i].targetPort.ID;
-                let data = checkTransformDataArray(transformedData, actionnode, actionID, i, b);
-                if (data) {
-                    transformDataArray.push(data);
-                    b++;
-                }
+                data = checkTransformDataArray(actionnode, actionID, b);
             }
             else if (transformedData[i].targetPort.nodeId === "Input" || transformedData[i].targetPort.nodeId === "Output") {
                 actionnode = transformedData[i].sourcePort.nodeId;
                 actionID = transformedData[i].sourcePort.ID;
-                let data = checkTransformDataArray(transformedData, actionnode, actionID, i, b);
-                if (data) {
+                data = checkTransformDataArray(actionnode, actionID, b);
+            }
+            else {
+                actionnode = transformedData[i].sourcePort.nodeId;
+                actionID = transformedData[i].sourcePort.ID;
+                data = checkTransformDataArray(actionnode, actionID, b);
+                actionnode = transformedData[i].targetPort.nodeId;
+                actionID = transformedData[i].targetPort.ID;
+                data = checkTransformDataArray(actionnode, actionID, b);
+            }
+            if (data) {
+                let c = 0;
+                for (let k = 0; k < transformDataArray.length; k++) {
+                    if (transformDataArray[k] === data) {
+                        c++;
+                    }
+                }
+                if (c === 0) {
                     transformDataArray.push(data);
+                    inputQueueArray1.push([`${data[0]}`, `${data[1]}`]);
                     b++;
                 }
             }
         }
     }
-    function checkTransformDataArray(transformedData, actionnode, actionID, i, b) {
+    function checkTransformDataArray(actionnode, actionID, b) {
         let c = 0;
         let d = [];
-        for (let p = 0; p < i; p++) {
-            if ((transformedData[p].targetPort.nodeId === actionnode || transformedData[p].sourcePort.nodeId === actionnode)) {
+        for (let i in transformDataArray) {
+            if (transformDataArray[i][1] === actionID) {
                 c++;
             }
         }
@@ -223,10 +307,20 @@ function activate(context) {
                 e[6] = `Concat_${i + 1}_Output`;
                 e[7] = false;
                 break;
+            case "UpperCase":
+                e[0] = actionnode;
+                e[1] = actionID;
+                e[2] = `UpperCase_${i + 1}_Input`;
+                e[3] = false;
+                e[4] = `UpperCase_${i + 1}_Output`;
+                e[5] = false;
+                break;
         }
         return e;
     }
     let simplified_transformDataArray = transformDataArray.filter(j => j.length !== 0);
+    let simplified_inputQueueArray1 = inputQueueArray1.filter(j => j[0] !== "undefined");
+    // === //
     //Below code is to list outputs connected with actions involved in the data mapping
     let outputObjectArray = transformedData.filter(j => j.targetPort.nodeId === "Output" || j.sourcePort.nodeId === "Output");
     let outputDMCArray = [];
@@ -242,16 +336,23 @@ function activate(context) {
     }
     function outputDMC(sourcePortNodeID, sourcePortPortID, targetPortNodeID, targetPortPortID, targetPortID) {
         let e = "";
+        let f = "";
+        for (let i in arrayOutput) {
+            if (arrayOutput[i][1] === trimTheStringUptoColon(sourcePortPortID)) {
+                f = arrayOutput[i][0];
+                arrayOutput[i][2] = true;
+            }
+        }
         let action = targetPortNodeID;
         switch (action) {
             case "Split":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         if (targetPortPortID === "Result1:String") {
-                            e = "Output." + trimTheStringUptoColon(sourcePortPortID) + " = " + simplified_transformDataArray[i][4] + "[0];";
+                            e = simplified_transformDataArray[i][4] + "[0]";
                         }
                         else if (targetPortPortID === "Result2:String") {
-                            e = "Output." + trimTheStringUptoColon(sourcePortPortID) + " = " + simplified_transformDataArray[i][4] + "[1];";
+                            e = simplified_transformDataArray[i][4] + "[1]";
                         }
                     }
                 }
@@ -259,55 +360,60 @@ function activate(context) {
             case "Concat":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
-                        e = "Output." + trimTheStringUptoColon(sourcePortPortID) + " = " + simplified_transformDataArray[i][6] + ";";
+                        e = simplified_transformDataArray[i][6];
                     }
                 }
                 break;
+            case "UpperCase":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        e = simplified_transformDataArray[i][4];
+                    }
+                }
+                break;
+            default:
+                e = targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID);
         }
-        return e;
+        return `${f} = ${e};`;
+    }
+    for (let i in arrayOutput) {
+        if (arrayOutput[i][2] === false) {
+            outputDMCArray.push(`${arrayOutput[i][0]} = {};`);
+        }
     }
     const outputdmc = outputDMCArray.join('\n');
-    //Below code is to  list inputs connected with actions involved in the data mapping
+    // === //
     let inputObjectArray = transformedData.filter(j => j.targetPort.nodeId !== "Output" && j.sourcePort.nodeId !== "Output");
     let inputDMCArray = [];
-    let inputQueue = [];
-    let i = 0, c = 1;
-    inputQueue.push(["Input", "1"]);
-    while (i < inputQueue.length) {
-        inputQueuePush(inputQueue[i][0]);
-        i++;
-    }
-    function inputQueuePush(nodeID) {
+    for (let z in simplified_inputQueueArray1) {
         for (let j in inputObjectArray) {
-            if (inputObjectArray[j].sourcePort.nodeId === nodeID && inputObjectArray[j].sourcePort.alignment === "right") {
-                inputQueue.push([inputObjectArray[j].targetPort.nodeId.toString(), inputObjectArray[j].targetPort.ID.toString()]);
+            if (inputObjectArray[j].sourcePort.nodeId === simplified_inputQueueArray1[z][0] && inputObjectArray[j].sourcePort.alignment === "right") {
+                inputDmcPush(inputObjectArray[j].targetPort.nodeId, inputObjectArray[j].targetPort.portId, inputObjectArray[j].sourcePort.ID, inputObjectArray[j].sourcePort.nodeId, inputObjectArray[j].sourcePort.portId, inputObjectArray[j].targetPort.ID);
             }
-            else if (inputObjectArray[j].targetPort.nodeId === nodeID && inputObjectArray[j].targetPort.alignment === "right") {
-                inputQueue.push([inputObjectArray[j].sourcePort.nodeId.toString(), inputObjectArray[j].sourcePort.ID.toString()]);
+            else if (inputObjectArray[j].targetPort.nodeId === simplified_inputQueueArray1[z][0] && inputObjectArray[j].targetPort.alignment === "right") {
+                inputDmcPush(inputObjectArray[j].sourcePort.nodeId, inputObjectArray[j].sourcePort.portId, inputObjectArray[j].targetPort.ID, inputObjectArray[j].targetPort.nodeId, inputObjectArray[j].targetPort.portId, inputObjectArray[j].sourcePort.ID);
             }
         }
+        //inputQueueProgressPush(simplified_inputQueue[z][1]);
     }
-    for (let z in inputQueue) {
-        for (let j in inputObjectArray) {
-            if (inputObjectArray[j].sourcePort.nodeId === inputQueue[z][0] && inputObjectArray[j].sourcePort.alignment === "right") {
-                inputDMCArray.push(inputDmcPush(inputObjectArray[j].targetPort.nodeId, inputObjectArray[j].targetPort.portId, inputObjectArray[j].sourcePort.nodeId, inputObjectArray[j].sourcePort.portId, inputObjectArray[j].targetPort.ID));
-            }
-            else if (inputObjectArray[j].targetPort.nodeId === inputQueue[z][0] && inputObjectArray[j].targetPort.alignment === "right") {
-                inputDMCArray.push(inputDmcPush(inputObjectArray[j].sourcePort.nodeId, inputObjectArray[j].sourcePort.portId, inputObjectArray[j].targetPort.nodeId, inputObjectArray[j].targetPort.portId, inputObjectArray[j].sourcePort.ID));
-            }
-        }
-        inputQueueProgressPush(inputQueue[z][1]);
-    }
-    function inputDmcPush(sourcePortNodeID, sourcePortPortID, targetPortNodeID, targetPortPortID, targetPortID) {
-        let e = "let ";
+    function inputDmcPush(sourcePortNodeID, sourcePortPortID, sourcePortID, targetPortNodeID, targetPortPortID, targetPortID) {
+        let e = "";
+        let f = "";
+        let g = sourceEqualsTarget(targetPortPortID, targetPortNodeID, sourcePortID, sourcePortPortID);
         let action = sourcePortNodeID;
         switch (action) {
             case "Split":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         if (sourcePortPortID === "Value:String") {
-                            e = e + `${simplified_transformDataArray[i][2]} = ${targetPortNodeID}.${trimTheStringUptoColon(targetPortPortID)};`;
-                            simplified_transformDataArray[i][3] = true;
+                            if (simplified_transformDataArray[i][3] === false) {
+                                e = `let ${simplified_transformDataArray[i][2]} = ${g};`;
+                                simplified_transformDataArray[i][3] = true;
+                            }
+                        }
+                        if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
+                            f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString.split(" ");`;
+                            simplified_transformDataArray[i][5] = true;
                         }
                     }
                 }
@@ -316,64 +422,97 @@ function activate(context) {
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         if (sourcePortPortID === "Value1:String") {
-                            e = e + `${simplified_transformDataArray[i][2]} = ${targetPortNodeID}.${trimTheStringUptoColon(targetPortPortID)};`;
-                            simplified_transformDataArray[i][3] = true;
+                            if (simplified_transformDataArray[i][3] === false) {
+                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+                                simplified_transformDataArray[i][3] = true;
+                            }
                         }
                         else if (sourcePortPortID === "Value2:String") {
-                            e = e + `${simplified_transformDataArray[i][4]} = ${targetPortNodeID}.${trimTheStringUptoColon(targetPortPortID)};`;
+                            if (simplified_transformDataArray[i][5] === false) {
+                                e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
+                                simplified_transformDataArray[i][5] = true;
+                            }
+                        }
+                        if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] !== true) {
+                            f = `${simplified_transformDataArray[i][6]} = ${simplified_transformDataArray[i][2]}.toString().concat(${simplified_transformDataArray[i][4]}.toString());`;
+                            simplified_transformDataArray[i][7] = true;
+                        }
+                    }
+                }
+                break;
+            case "UpperCase":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (sourcePortPortID === "Value:String") {
+                            if (simplified_transformDataArray[i][3] !== true) {
+                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+                                simplified_transformDataArray[i][3] = true;
+                            }
+                        }
+                        if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
+                            f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().UpperCase();`;
                             simplified_transformDataArray[i][5] = true;
                         }
-                        break;
                     }
                 }
                 break;
         }
-        return e;
-    }
-    function inputQueueProgressPush(ID) {
-        let e = "";
-        for (let j in simplified_transformDataArray) {
-            if (simplified_transformDataArray[j][1] === ID) {
-                let action = simplified_transformDataArray[j][0];
-                switch (action) {
-                    case "Split":
-                        if (simplified_transformDataArray[j][3] === true) {
-                            e = `${simplified_transformDataArray[j][4]} = ${simplified_transformDataArray[j][2]}.toString().split(" ");`;
-                        }
-                        break;
-                    case "Concat":
-                        if (simplified_transformDataArray[j][3] === true && simplified_transformDataArray[j][5] === true) {
-                            e = `${simplified_transformDataArray[j][6]} = ${simplified_transformDataArray[j][4]}.concat(${simplified_transformDataArray[j][2]});`;
-                        }
-                        break;
-                }
-            }
+        if (e !== "") {
+            inputDMCArray.push(e);
         }
-        inputDMCArray.push(e);
+        if (f !== "") {
+            inputDMCArray.push(f + "\n");
+        }
     }
-    const inputdmc = inputDMCArray.join('\n');
+    function sourceEqualsTarget(targetPortPortID, targetPortNodeID, targetPortID, sourcePortPortID) {
+        let string = "";
+        let action = targetPortNodeID;
+        switch (action) {
+            case "Split":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (trimTheStringUptoColon(sourcePortPortID) === "Value1") {
+                            string = `${simplified_transformDataArray[i][4]}[0]`;
+                        }
+                        else if (trimTheStringUptoColon(sourcePortPortID) === "Value2") {
+                            string = `${simplified_transformDataArray[i][4]}[1]`;
+                        }
+                    }
+                }
+                break;
+            case "Concat":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        string = `${simplified_transformDataArray[i][6]}`;
+                    }
+                }
+                break;
+            case "UpperCase":
+                // if (simplified_transformDataArray[i][1] === targetPortID){
+                // 	string = `${simplified_transformDataArray[i][4]};`;
+                // }
+                break;
+            default:
+                string = `${targetPortNodeID}.${trimTheStringUptoColon(targetPortPortID)}`;
+        }
+        return string;
+    }
+    const inputdmc = inputDMCArray.filter(j => j.length !== 0).join('\n');
+    // === //
     function trimTheStringUptoColon(str) {
         let str1 = str.toString();
         return str1.substring(0, str1.indexOf(":"));
     }
-    //code above this line
-    // This line of code will only be executed once when your extension is activated
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with registerCommand
-    // The commandId parameter must match the command field in package.json
     let disposable = vscode.commands.registerCommand('hidmc.helloWorld', async () => {
         //later codes
         const myArray = [];
         const fileName = 'newFile1.dmc';
         const filePath = 'C:/Users/WSO2/' + fileName;
-        myArray[0] = "map_S_" + "Input" + "_S_" + "Output" + " = function(){ ";
+        myArray[0] = "map_S_" + Input.title + "_S_" + Output.title + " = function(){ \n";
         myArray[1] = inputdmc;
-        //myArray[2] = processdmc;
-        //myArray[3] = inputActiondmc;
-        //myArray[4] = processActiondmc;
         myArray[2] = outputdmc;
-        myArray.push("return Output;\n}");
-        const content = myArray.join('\n\n');
+        myArray[3] = "\nreturn Output;\n}";
+        const content = myArray.join('\n');
         fs.writeFile(filePath, content, (err) => {
             if (err) {
                 vscode.window.showErrorMessage('Unable to create file: ' + err.message);
