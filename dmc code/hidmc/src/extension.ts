@@ -24,79 +24,19 @@ export function activate(context: vscode.ExtensionContext) {
 		{
 			"sourcePort": {
 				"nodeId": "Input",
-				"portId": "fullName:string",
-				"ID": "f00ba244-c1da-4db9-baf3-5a56095d5727",
-				"alignment": "right"
-			},
-			"targetPort": {
-				"nodeId": "Split",
-				"portId": "Value:String",
-				"ID": "4ccf3ea6-bba2-40c1-9128-8277a85078a2",
-				"alignment": "left"
-			},
-			"isChecked": false
-		},
-		{
-			"sourcePort": {
-				"nodeId": "Split",
-				"portId": "Result1:String",
-				"ID": "4ccf3ea6-bba2-40c1-9128-8277a85078a2",
-				"alignment": "right"
-			},
-			"targetPort": {
-				"nodeId": "Concat",
-				"portId": "Value1:String",
-				"ID": "395f3b33-d39d-44e5-8e34-77a60a1c1cd7",
-				"alignment": "left"
-			},
-			"isChecked": false
-		},
-		{
-			"sourcePort": {
-				"nodeId": "Split",
-				"portId": "Result2:String",
-				"ID": "4ccf3ea6-bba2-40c1-9128-8277a85078a2",
-				"alignment": "right"
-			},
-			"targetPort": {
-				"nodeId": "Concat",
-				"portId": "Value2:String",
-				"ID": "395f3b33-d39d-44e5-8e34-77a60a1c1cd7",
-				"alignment": "left"
-			},
-			"isChecked": false
-		},
-		{
-			"sourcePort": {
-				"nodeId": "Concat",
-				"portId": "Result:String",
-				"ID": "395f3b33-d39d-44e5-8e34-77a60a1c1cd7",
-				"alignment": "right"
-			},
-			"targetPort": {
-				"nodeId": "UpperCase",
-				"portId": "Value:String",
-				"ID": "829cc589-9451-4e31-84ee-6c54a273d2ad",
-				"alignment": "left"
-			},
-			"isChecked": false
-		},
-		{
-			"sourcePort": {
-				"nodeId": "UpperCase",
-				"portId": "Result:String",
-				"ID": "829cc589-9451-4e31-84ee-6c54a273d2ad",
+				"portId": "age:string",
+				"ID": "f15f3780-84fa-482c-a274-428a5727bf05",
 				"alignment": "right"
 			},
 			"targetPort": {
 				"nodeId": "Output",
-				"portId": "firstName:string",
-				"ID": "ed83bfe0-8dcd-4d9a-866d-20cb64c7b050",
+				"portId": "age:number",
+				"ID": "181e2f90-ff68-4627-9c7a-515f6b512aed",
 				"alignment": "left"
 			},
 			"isChecked": false
 		}
-	];
+	]
 
 	const transformedData: DataModel[] = newLink;
 
@@ -170,10 +110,10 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	};
 
-	let arrayInput = createArray(Input, "input");
-	let arrayOutput = createArray(Output, "output");
+	let arrayInput = createArray(Input, "Input");
+	let arrayOutput = createArray(Output, "Output");
 
-	function createArray(outputJSON: any, string1: string) {
+	function createArray(outputJSON: any, string1: string): any[][] {
 		let dmcArray: any[][] = [];
 		let string = string1;
 		dmcArray.push([string, string]);
@@ -194,9 +134,9 @@ export function activate(context: vscode.ExtensionContext) {
 		function includePropToArray(JSONobject: any, array: any[], prop: any, k: any) {
 			array[k] = prop;
 			const str: string = array.join(".");
-			if (string1 === "output") {
+			if (string1 === "Output") {
 				dmcArray.push([str, prop, false]);
-			} else if (string1 === "input") {
+			} else if (string1 === "Input") {
 				dmcArray.push([str, prop]);
 			}
 
@@ -253,7 +193,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
-	function checkTransformDataArray(actionnode: any, actionID: any, b: any) {
+	function checkTransformDataArray(actionnode: any, actionID: any, b: any): any[] {
 		let c = 0;
 		let d: any = [];
 		for (let i in transformDataArray) {
@@ -267,46 +207,65 @@ export function activate(context: vscode.ExtensionContext) {
 		return d;
 	}
 
-	function pushToTransformDataArray(actionnode: any, actionID: any, i: any) {
+	function pushToTransformDataArray(actionnode: any, actionID: any, i: any): any[] {
 		let e = [];
+		e[0] = actionnode;
+		e[1] = actionID;
 		switch (actionnode) {
 			case "Split":
-				e[0] = actionnode;
-				e[1] = actionID;
-				e[2] = `Split_${i + 1}_Input`;
+			case "UpperCase":
+			case "LowerCase":
+			case "Trim":
+			case "StringLength":
+			case "StringToNumber":
+			case "ToString":
+			case "StringToBoolean":
+				e[2] = `${actionnode}_${i + 1}_Input`;
 				e[3] = false;
-				e[4] = `Split_${i + 1}_Output`;
-				e[5] = false;
 				break;
 			case "Concat":
-				e[0] = actionnode;
-				e[1] = actionID;
 				e[2] = `Concat_${i + 1}_0`;
 				e[3] = false;
 				e[4] = `Concat_${i + 1}_1`;
 				e[5] = false;
-				e[6] = `Concat_${i + 1}_Output`;
-				e[7] = false;
 				break;
-			case "UpperCase":
-				e[0] = actionnode;
-				e[1] = actionID;
-				e[2] = `UpperCase_${i + 1}_Input`;
+			case "StartsWith":
+			case "EndsWith":
+			case "Match":
+				e[2] = `${actionnode}_${i + 1}_Input`;
 				e[3] = false;
-				e[4] = `UpperCase_${i + 1}_Output`;
+				e[4] = `${actionnode}_${i + 1}_Pattern`;
 				e[5] = false;
 				break;
+			case "Replace":
+				e[2] = `Replace_${i + 1}_Input`;
+				e[3] = false;
+				e[4] = `Replace_${i + 1}_Target`;
+				e[5] = false;
+				e[6] = `Replace_${i + 1}_ReplaceWith`;
+				e[7] = false;
+				break;
+			case "Substring":
+				e[2] = `Substring_${i + 1}_Input`;
+				e[3] = false;
+				e[4] = `Substring_${i + 1}_StartIndex`;
+				e[5] = false;
+				e[6] = `Substring_${i + 1}_length`;
+				e[7] = false;
+			default: break;
 		}
+		e[e.length] = `${actionnode}_${i + 1}_Output`;
+		e[e.length + 1] = false;
 		return e;
 	}
 
 	let simplified_transformDataArray = transformDataArray.filter(j => j.length !== 0);
+	console.log(simplified_transformDataArray);
 
 	let simplified_inputQueueArray1 = inputQueueArray1.filter(j => j[0] !== "undefined");
 
 	// === //
 
-	//Below code is to list outputs connected with actions involved in the data mapping
 	let outputObjectArray = transformedData.filter(j => j.targetPort.nodeId === "Output" || j.sourcePort.nodeId === "Output");
 
 	let outputDMCArray: string[] = [];
@@ -321,7 +280,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
-	function outputDMC(sourcePortNodeID: {}, sourcePortPortID: {}, targetPortNodeID: {}, targetPortPortID: {}, targetPortID: {}) {
+	function outputDMC(sourcePortNodeID: {}, sourcePortPortID: {}, targetPortNodeID: {}, targetPortPortID: {}, targetPortID: {}): string {
 		let e: string = "";
 		let f: string = "";
 		for (let i in arrayOutput) {
@@ -344,6 +303,9 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				break;
 			case "Concat":
+			case "StartsWith":
+			case "EndsWith":
+			case "Match":
 				for (let i in simplified_transformDataArray) {
 					if (simplified_transformDataArray[i][1] === targetPortID) {
 						e = simplified_transformDataArray[i][6];
@@ -351,14 +313,38 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				break;
 			case "UpperCase":
+			case "LoweCase":
+			case "StringLength":
+			case "Trim":
+			case "StringToNumber":
+			case "ToString":
+			case "StringToBoolean":
 				for (let i in simplified_transformDataArray) {
 					if (simplified_transformDataArray[i][1] === targetPortID) {
 						e = simplified_transformDataArray[i][4];
 					}
 				}
 				break;
+			case "Replace":
+			case "Substring":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						e = simplified_transformDataArray[i][8];
+					}
+				}
+				break;
 			default:
-				e = targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID);
+				//e = targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID);
+				console.log("1 " + trimTheStringFromColumnToEnd(sourcePortPortID) + " 2 " + trimTheStringFromColumnToEnd(targetPortPortID));
+				if (trimTheStringFromColumnToEnd(sourcePortPortID) === trimTheStringFromColumnToEnd(targetPortPortID)) {
+					e = targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID);
+				} else {
+					if (trimTheStringFromColumnToEnd(sourcePortPortID) === "string") {
+						e = targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID) + ".toString()";
+					} else if (trimTheStringFromColumnToEnd(sourcePortPortID) === "number") {
+						e = "parseInt((" + targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID) + "),10)";
+					}
+				}
 		}
 		return `${f} = ${e};`;
 	}
@@ -392,6 +378,7 @@ export function activate(context: vscode.ExtensionContext) {
 		let e: string = "";
 		let f: string = "";
 		let g: string = sourceEqualsTarget(targetPortPortID, targetPortNodeID, sourcePortID, sourcePortPortID);
+		//console.log("g: " + g + " " + sourcePortID);
 		let action = sourcePortNodeID;
 		switch (action) {
 			case "Split":
@@ -411,6 +398,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				break;
 			case "Concat":
+				let action2 = action.toString().charAt(0).toLowerCase() + action.toString().slice(1);
 				for (let i in simplified_transformDataArray) {
 					if (simplified_transformDataArray[i][1] === targetPortID) {
 						if (sourcePortPortID === "Value1:String") {
@@ -425,13 +413,38 @@ export function activate(context: vscode.ExtensionContext) {
 							}
 						}
 						if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] !== true) {
-							f = `${simplified_transformDataArray[i][6]} = ${simplified_transformDataArray[i][2]}.toString().concat(${simplified_transformDataArray[i][4]}.toString());`;
+							f = `${simplified_transformDataArray[i][6]} = ${simplified_transformDataArray[i][2]}.toString().${action2}.(${simplified_transformDataArray[i][4]}.toString());`;
+							simplified_transformDataArray[i][7] = true;
+						}
+					}
+				}
+				break;
+			case "StartsWith":
+			case "EndsWith":
+			case "Match":
+				let action1 = action.toString().charAt(0).toLowerCase() + action.toString().slice(1);
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						if (sourcePortPortID === "Value:String") {
+							if (simplified_transformDataArray[i][3] === false) {
+								e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+								simplified_transformDataArray[i][3] = true;
+							}
+						} else if (sourcePortPortID === "Pattern:String") {
+							if (simplified_transformDataArray[i][5] === false) {
+								e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
+								simplified_transformDataArray[i][5] = true;
+							}
+						}
+						if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] !== true) {
+							f = `${simplified_transformDataArray[i][6]} = ${simplified_transformDataArray[i][2]}.toString().${action1}.(${simplified_transformDataArray[i][4]}.toString());`;
 							simplified_transformDataArray[i][7] = true;
 						}
 					}
 				}
 				break;
 			case "UpperCase":
+			case "LowerCase":
 				for (let i in simplified_transformDataArray) {
 					if (simplified_transformDataArray[i][1] === targetPortID) {
 						if (sourcePortPortID === "Value:String") {
@@ -441,12 +454,145 @@ export function activate(context: vscode.ExtensionContext) {
 							}
 						}
 						if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
-							f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().UpperCase();`;
+							f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().to${action}();`;
 							simplified_transformDataArray[i][5] = true;
 						}
 					}
 				}
 				break;
+			case "ToString":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						if (sourcePortPortID === "Value:String") {
+							if (simplified_transformDataArray[i][3] !== true) {
+								e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+								simplified_transformDataArray[i][3] = true;
+							}
+						}
+						if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
+							f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString();`;
+							simplified_transformDataArray[i][5] = true;
+						}
+					}
+				}
+				break;
+			case "StringToNumber":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						if (sourcePortPortID === "Value:String") {
+							if (simplified_transformDataArray[i][3] !== true) {
+								e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+								simplified_transformDataArray[i][3] = true;
+							}
+						}
+						if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
+							f = `${simplified_transformDataArray[i][4]} = Number(${simplified_transformDataArray[i][2]});`;
+							simplified_transformDataArray[i][5] = true;
+						}
+					}
+				}
+				break;
+			case "StringToBoolean":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						if (sourcePortPortID === "Value:String") {
+							if (simplified_transformDataArray[i][3] !== true) {
+								e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+								simplified_transformDataArray[i][3] = true;
+							}
+						}
+						if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
+							f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().toLowerCase() === true;`;
+							simplified_transformDataArray[i][5] = true;
+						}
+					}
+				}
+				break;
+			case "Trim":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						if (sourcePortPortID === "Value:String") {
+							if (simplified_transformDataArray[i][3] !== true) {
+								e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+								simplified_transformDataArray[i][3] = true;
+							}
+						}
+						if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
+							f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().trim();`;
+							simplified_transformDataArray[i][5] = true;
+						}
+					}
+				}
+				break;
+			case "StringLength":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						if (sourcePortPortID === "Value:String") {
+							if (simplified_transformDataArray[i][3] !== true) {
+								e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+								simplified_transformDataArray[i][3] = true;
+							}
+						}
+						if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
+							f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().length;`;
+							simplified_transformDataArray[i][5] = true;
+						}
+					}
+				}
+				break;
+			case "Replace":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						if (sourcePortPortID === "Value:String") {
+							if (simplified_transformDataArray[i][3] === false) {
+								e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+								simplified_transformDataArray[i][3] = true;
+							}
+						} else if (sourcePortPortID === "Pattern:String") {
+							if (simplified_transformDataArray[i][5] === false) {
+								e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
+								simplified_transformDataArray[i][5] = true;
+							}
+						} else if (sourcePortPortID === "Target:String") {
+							if (simplified_transformDataArray[i][7] === false) {
+								e = `let ${simplified_transformDataArray[i][6]} =  ${g};`;
+								simplified_transformDataArray[i][7] = true;
+							}
+						}
+						if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] === true && simplified_transformDataArray[i][9] !== true) {
+							f = `${simplified_transformDataArray[i][8]} = ${simplified_transformDataArray[i][2]}.toString().replace(${simplified_transformDataArray[i][4]},${simplified_transformDataArray[i][6]});`;
+							simplified_transformDataArray[i][9] = true;
+						}
+					}
+				}
+				break;
+			case "Substring":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						if (sourcePortPortID === "Value:String") {
+							if (simplified_transformDataArray[i][3] === false) {
+								e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+								simplified_transformDataArray[i][3] = true;
+							}
+						} else if (sourcePortPortID === "StartIndex:Number") {
+							if (simplified_transformDataArray[i][5] === false) {
+								e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
+								simplified_transformDataArray[i][5] = true;
+							}
+						} else if (sourcePortPortID === "Length:Number") {
+							if (simplified_transformDataArray[i][7] === false) {
+								e = `let ${simplified_transformDataArray[i][6]} =  ${g};`;
+								simplified_transformDataArray[i][7] = true;
+							}
+						}
+						if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] === true && simplified_transformDataArray[i][9] !== true) {
+							f = `${simplified_transformDataArray[i][8]} = ${simplified_transformDataArray[i][2]}.toString().replace(${simplified_transformDataArray[i][4]},${simplified_transformDataArray[i][6]});`;
+							simplified_transformDataArray[i][9] = true;
+						}
+					}
+				}
+				break;
+
 		}
 		if (e !== "") {
 			inputDMCArray.push(e);
@@ -456,22 +602,25 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
-	function sourceEqualsTarget(targetPortPortID: {}, targetPortNodeID: {}, targetPortID: {}, sourcePortPortID: {}) {
+	function sourceEqualsTarget(targetPortPortID: {}, targetPortNodeID: {}, targetPortID: {}, sourcePortPortID: {}): string {
 		let string = "";
 		let action = targetPortNodeID;
 		switch (action) {
 			case "Split":
 				for (let i in simplified_transformDataArray) {
 					if (simplified_transformDataArray[i][1] === targetPortID) {
-						if (trimTheStringUptoColon(sourcePortPortID) === "Value1") {
+						if (trimTheStringUptoColon(targetPortPortID) === "Result1") {
 							string = `${simplified_transformDataArray[i][4]}[0]`;
-						} else if (trimTheStringUptoColon(sourcePortPortID) === "Value2") {
+						} else if (trimTheStringUptoColon(targetPortPortID) === "Result2") {
 							string = `${simplified_transformDataArray[i][4]}[1]`;
 						}
 					}
 				}
 				break;
 			case "Concat":
+			case "StartsWith":
+			case "EndsWith":
+			case "Match":
 				for (let i in simplified_transformDataArray) {
 					if (simplified_transformDataArray[i][1] === targetPortID) {
 						string = `${simplified_transformDataArray[i][6]}`;
@@ -479,9 +628,25 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				break;
 			case "UpperCase":
-				// if (simplified_transformDataArray[i][1] === targetPortID){
-				// 	string = `${simplified_transformDataArray[i][4]};`;
-				// }
+			case "LowerCase":
+			case "StringLength":
+			case "Trim":
+			case "StringToNumber":
+			case "StringToBoolean":
+			case "ToString":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						string = `${simplified_transformDataArray[i][4]}`;
+					}
+				}
+				break;
+			case "Replace":
+			case "Substring":
+				for (let i in simplified_transformDataArray) {
+					if (simplified_transformDataArray[i][1] === targetPortID) {
+						string = `${simplified_transformDataArray[i][8]}`;
+					}
+				}
 				break;
 			default:
 				string = `${targetPortNodeID}.${trimTheStringUptoColon(targetPortPortID)}`;
@@ -493,9 +658,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// === //
 
-	function trimTheStringUptoColon(str: {}) {
+	function trimTheStringUptoColon(str: {}): string {
 		let str1 = str.toString();
 		return str1.substring(0, str1.indexOf(":"));
+	}
+
+	function trimTheStringFromColumnToEnd(str: {}): string {
+		let str1 = str.toString();
+		return str1.substring(str1.indexOf(":") + 1, str1.length);
 	}
 
 	let disposable = vscode.commands.registerCommand('hidmc.helloWorld', async () => {
