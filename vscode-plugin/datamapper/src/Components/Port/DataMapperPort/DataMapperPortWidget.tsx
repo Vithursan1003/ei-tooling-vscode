@@ -1,4 +1,4 @@
-import { Brightness1, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
+import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { DiagramEngine, PortWidget } from "@projectstorm/react-diagrams-core";
 import React from "react";
 import DataMapperPortModel from "./DataMapperPortModel";
@@ -37,11 +37,11 @@ export const DataMapperPortWidget: React.FC<DataMapperPortWidgetProps> = ({ port
             <div className={classes.port} >
                 {port.portType === 'OUT' ? (
                     <div className={classes.portLabel}>
-                        {port.getName()} {portState === PortState.PortSelected ? checkedIcon : (hasLinks ? checkedIcon : uncheckedIcon)}
+                        {port.getName()} {portState === PortState.PortSelected ? checkedIcon : uncheckedIcon}
                     </div>
                 ) : (
                     <div className={classes.portIcon} >
-                        {portState === PortState.PortSelected ? checkedIcon : (hasLinks ? checkedIcon : uncheckedIcon)}{port.getName()}
+                        {portState === PortState.PortSelected ? checkedIcon : uncheckedIcon}{port.getName()}
                     </div>
                 )}
             </div>

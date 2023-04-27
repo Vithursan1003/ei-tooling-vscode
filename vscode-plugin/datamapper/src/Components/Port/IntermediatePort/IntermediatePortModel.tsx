@@ -1,4 +1,4 @@
-import { LinkModel, PortModel, PortModelGenerics } from '@projectstorm/react-diagrams';
+import { PortModel, PortModelGenerics } from '@projectstorm/react-diagrams';
 import { DataMapperLinkModel } from '../../Link/Model/DataMapperLinkModel';
 
 export interface IntermediateNodeModelGenerics {
@@ -17,6 +17,10 @@ export class IntermediatePortModel extends PortModel<PortModelGenerics & Interme
 			type: INT_PORT_TYPE_ID,
 			name: portId,
 		});
+	}
+
+	setName(PortName : string){
+		this.options.name = PortName;
 	}
 
 	createLinkModel(): DataMapperLinkModel {

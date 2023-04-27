@@ -1,8 +1,10 @@
+import { IntermediatePortModel } from '../../Port/IntermediatePort/IntermediatePortModel';
 import { CustomNodeModel } from '../Customs/CustomNodeModel';
 
 export class InputsNodeModel extends CustomNodeModel {
     onClick: any;
     name: string;
+    inPort1!: IntermediatePortModel;
   
     constructor(options: any = {}) {
         super('my-input-node',options.name);
@@ -11,8 +13,10 @@ export class InputsNodeModel extends CustomNodeModel {
     }
 
     initPorts(): void {
-        throw new Error('Method not implemented.');
+        this.inPort1 = new IntermediatePortModel("[NUMBER,STRING,BOOLEAN] ", "IN",true);
+        this.addPort(this.inPort1);
     }
+    
     initLinks(): void {
         throw new Error('Method not implemented.');
     }

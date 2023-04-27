@@ -1,5 +1,4 @@
 import React from 'react';
-import { uploadStyles } from '../FileUpload/styles';
 import createEngine, { DagreEngine, DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
@@ -10,17 +9,21 @@ import { DataMapperLinkModel } from './../Link/Model/DataMapperLinkModel';
 import { DataMapperLabelFactory } from './../LinkLabel/DataMapperLabelFactory';
 import { portFactories } from '../Port';
 import { FileContext } from './../ContextProvider/FileContext';
+import { Cached, FitScreen } from '@mui/icons-material';
+import { DiagramStyles } from './styles';
+import { Tooltip } from '@mui/material';
 
 interface DataMapperDiagramProps {
     nodes: CustomNodeModel[];
 }
 
 export var TotNodes: CustomNodeModel[] = [];
+const defaultModelOptions = { zoom: 90 };
 
 const DataMapperDiagram = () => {
-    const classes = uploadStyles();
+    const classes = DiagramStyles();
     //const { nodes } = props;
-    const [engine, setEngine] = React.useState(createEngine());
+    const [engine, setEngine] = React.useState(createEngine({ registerDefaultZoomCanvasAction: true }));
     for (const factory of nodeFactories) { engine.getNodeFactories().registerFactory(factory); }
     for (const factory of portFactories) { engine.getPortFactories().registerFactory(factory); }
     engine.getLinkFactories().registerFactory(new DataMapperLinkFactory());
@@ -40,15 +43,17 @@ const DataMapperDiagram = () => {
         },
     });
 
-    const [model, setNewModel] = React.useState<DiagramModel>(new DiagramModel());
+
     // const serializedN = localStorage.getItem('serializedData');
     // console.log("serialized : ", serializedN);
+    // const deserializedModel = new DiagramModel();
     // if (serializedN) {
     //     console.log("model deseriliazed");
-    //     const deserializedModel = new DiagramModel();
     //     deserializedModel.deserializeModel(JSON.parse(serializedN), engine);
     //     console.log('Deserialized:', deserializedModel);
     // }
+
+    const [model, setNewModel] = React.useState<DiagramModel>(new DiagramModel());
 
     // const [model, setNewModel] = React.useState<DiagramModel>(() => {
     //     if (serializedN) {
@@ -64,9 +69,32 @@ const DataMapperDiagram = () => {
     const { addedNode, removedNode } = React.useContext(FileContext);
 
     model.registerListener({
-        linksUpdated: () => {
-            const NewLinks = engine.getModel().getLinks().map(link => new DataMapperLinkModel());;
-            setLinks(NewLinks);
+        linksUpdated: async (event: any) => {
+            const AllLinks = engine.getModel().getLinks().map(link => new DataMapperLinkModel());;
+            setLinks(AllLinks);
+
+            const diagramLink:any= [];
+            const currentLinks = engine.getModel().getLinks();
+            currentLinks.forEach((link) => {
+                const Link = {
+                    sourcePort: {
+                        nodeId: link.getSourcePort()?.getParent()?.getName(),
+                        portId: link.getSourcePort()?.getName(),
+                    },
+                    targetPort: {
+                        nodeId: link.getTargetPort()?.getParent()?.getName(),
+                        portId: link.getTargetPort()?.getName(),
+                    },
+                    linkId: link.getOptions().id
+                };
+                console.log("new Link : ",Link);
+                diagramLink.push(Link);
+            })
+            // console.log("Links : ",engine.getModel().getLinks());
+            // const exists = diagramLink.some(link => (
+            //     link.linkId === data.options.id
+            // ));
+            console.log("All links : ", diagramLink);
         },
     })
 
@@ -118,7 +146,28 @@ const DataMapperDiagram = () => {
     localStorage.setItem("serializedData", serialized);
     engine.setModel(model);
 
-    return (<CanvasWidget className={classes.canvas} engine={engine} />)
+    const resetZoomAndOffset = () => {
+        const currentModel = engine.getModel();
+        currentModel.setZoomLevel(defaultModelOptions.zoom);
+        currentModel.setOffset(0, 0);
+        engine.setModel(currentModel);
+    }
+
+    return (<>
+        <CanvasWidget className={classes.canvas} engine={engine} />
+        <div className={classes.buttonWrap}>
+            <Tooltip title="Fit to Screen">
+                <div className={classes.iconWrap} onClick={resetZoomAndOffset}>
+                    <Cached className={classes.icon} />
+                </div>
+            </Tooltip>
+            <Tooltip title="Zoom">
+                <div className={classes.iconWrap} onClick={() => void engine.zoomToFitNodes({ maxZoom: 60 })}>
+                    <FitScreen className={classes.icon} />
+                </div>
+            </Tooltip>
+        </div>
+    </>)
 }
 
 export default React.memo(DataMapperDiagram);

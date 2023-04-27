@@ -25,7 +25,6 @@ export const portStyles = makeStyles(() => createStyles({
         alignItems: "center",
     },
     portIcon :{
-        padding : '0px 10px 0px 10px',
         display: "flex",
         justifyContent: "stretch",
         alignItems: "center",

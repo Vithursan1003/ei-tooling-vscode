@@ -31,11 +31,11 @@ export const IntermediatePortWidget: React.FC<IntermediatePortWidgetProps> = (pr
             <div className={classes.joinPort} >
                 {port.portType === 'OUT' ? (
                     <div className={classes.portLabel}>
-                        {port.getName()} {active ? checkedIcon : uncheckedIcon}
+                        {port.getName()} <span style={{paddingLeft :'2px'}}>{active ? checkedIcon : uncheckedIcon}</span>
                     </div>
                 ) : (
                     <div className={classes.portIcon} >
-                        {active ? checkedIcon : uncheckedIcon}{port.getName()}
+                        <span style={{paddingRight:'2px'}}>{active ? checkedIcon : uncheckedIcon}</span>{port.getName()}
                     </div>
                 )}
             </div>

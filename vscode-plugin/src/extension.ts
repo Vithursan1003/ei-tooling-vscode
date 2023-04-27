@@ -243,6 +243,7 @@ function registerSynapseCommands(context: ExtensionContext) {
     context.subscriptions.push(commands.registerCommand("wso2ei.connector.import", async () => {
         await addNewConnectorFromFileSystem();
     }));
+    
     context.subscriptions.push(commands.registerCommand("wso2ei.connector.create.project", async () => {
         await addNewConnectorExporter();
     }));

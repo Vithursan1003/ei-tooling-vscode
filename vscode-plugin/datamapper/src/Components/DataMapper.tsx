@@ -1,4 +1,3 @@
-import DataMapperDiagram from './Diagram/DataMapperDiagram'
 import NodeManager from './Diagram/NodeManager'
 import UploadIcon from './FileUpload/UploadIcon'
 

@@ -12,7 +12,7 @@ export const nodeStyles = makeStyles(() => createStyles({
     },
     joinNode : {
         height: '25px',
-        width: '200px',
+        width: '205px',
         alignItems: 'center',
         cursor: 'pointer',
         position: 'relative',

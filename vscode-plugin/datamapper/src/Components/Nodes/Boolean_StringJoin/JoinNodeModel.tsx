@@ -1,5 +1,5 @@
-import { IntermediatePortModel } from "../../../Port/IntermediatePort/IntermediatePortModel";
-import { CustomNodeModel } from "../../Customs/CustomNodeModel";
+import { IntermediatePortModel } from "../../Port/IntermediatePort/IntermediatePortModel";
+import { CustomNodeModel } from "../Customs/CustomNodeModel";
 
 export class JoinNodeModel extends CustomNodeModel {
     name: string;
@@ -13,13 +13,13 @@ export class JoinNodeModel extends CustomNodeModel {
     }
 
     initPorts(): void {
-        this.inPort1 = new IntermediatePortModel("IN_1 : [STRING]", "IN",true);
+        this.inPort1 = new IntermediatePortModel("IN_1 : [STRING] ", "IN",true);
         this.addPort(this.inPort1);
 
-        this.inPort2 = new IntermediatePortModel("IN_2 : [STRING]", "IN",true);
+        this.inPort2 = new IntermediatePortModel("IN_2 : [STRING] ", "IN",true);
         this.addPort(this.inPort2);
 
-        this.outPort = new IntermediatePortModel('Result : [STRING]', "OUT",false);
+        this.outPort = new IntermediatePortModel(' Result : [STRING]', "OUT",false);
         this.addPort(this.outPort);
     }
     

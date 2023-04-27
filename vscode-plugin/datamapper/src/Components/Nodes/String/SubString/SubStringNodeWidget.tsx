@@ -1,23 +1,23 @@
 import { DiagramEngine } from '@projectstorm/react-diagrams-core';
 import * as React from 'react';
-import { JoinNodeModel } from './JoinNodeModel';
+import { SubStringNodeModel } from './SubStringNodeModel';
 import { nodeStyles } from '../../styles';
 import { IntermediatePortWidget } from '../../../Port/IntermediatePort/IntermediatePortWidget';
 import { FileContext } from '../../../ContextProvider/FileContext';
 import { Delete, Edit } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 
-export interface JoinNodeWidgetProps {
-    node: JoinNodeModel;
+export interface SubStringNodeWidgetProps {
+    node: SubStringNodeModel;
     engine: DiagramEngine;
 }
 
-export const JoinNodeWidget: React.FC<JoinNodeWidgetProps> = ({ node, engine }) => {
+export const SubStringNodeWidget: React.FC<SubStringNodeWidgetProps> = ({ node, engine }) => {
     const classes = nodeStyles();
     const { setRemovedNode } = React.useContext(FileContext);
 
     const onClickEdit = () => {
-        console.log("Edit Join nodes");
+        console.log("Edit SubString nodes");
     };
 
     const onClickDelete = () => {
@@ -35,17 +35,13 @@ export const JoinNodeWidget: React.FC<JoinNodeWidgetProps> = ({ node, engine }) 
                         <Delete sx={{ fontSize: '15px' }} />
                     </Tooltip>
                 </span>
-                {/* <span onClick={onClickEdit} className={classes.Icon}>
-                    <Tooltip title="Configure Node">
-                        <Edit sx={{ fontSize: '15px' }} />
-                    </Tooltip>
-                </span> */}
                 <div className={classes.root}>
                     <div className={classes.header}>
-                        <div>
+                        <span>
                             <IntermediatePortWidget engine={engine} port={node.inPort1} />
                             <IntermediatePortWidget engine={engine} port={node.inPort2} />
-                        </div>
+                            <IntermediatePortWidget engine={engine} port={node.inPort3} />
+                        </span>
                         <IntermediatePortWidget engine={engine} port={node.outPort} />
                     </div>
                 </div>

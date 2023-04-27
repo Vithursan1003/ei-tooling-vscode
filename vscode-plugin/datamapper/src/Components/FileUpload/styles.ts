@@ -2,11 +2,6 @@ import { createStyles, makeStyles } from "@mui/styles";
 
 
 export const uploadStyles = makeStyles(() => createStyles({
-    canvas : {
-        height: '500px',
-        width: '100%',
-        textAlign:'center',
-    },
     header : {
         alignItems : 'flex-end',
         backgroundColor:'white',

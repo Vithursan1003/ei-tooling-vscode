@@ -17,6 +17,10 @@ export abstract class CustomNodeModel extends NodeModel<NodeModelGenerics>{
         return this.diagramModel;
     }
 
+    public getName(){
+        return this.name;
+    }
+
     abstract initPorts(): void;
     abstract initLinks(): void;
 }
