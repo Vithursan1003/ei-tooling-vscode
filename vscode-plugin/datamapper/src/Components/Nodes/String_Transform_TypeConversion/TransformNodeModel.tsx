@@ -14,10 +14,10 @@ export class TransformNodeModel extends CustomNodeModel {
     inPortName = this.name === 'ToString' ?"IN : [BOOL/NUM] ": "IN : [STRING] ";
 
     initPorts(): void {
-        this.inPort = new IntermediatePortModel(this.inPortName, "IN",true);
+        this.inPort = new IntermediatePortModel(this.inPortName, "IN",'right');
         this.addPort(this.inPort);
 
-        this.outPort = new IntermediatePortModel(' Result : [STRING]', "OUT",false);
+        this.outPort = new IntermediatePortModel(' Result : [STRING]', "OUT",'left');
         this.addPort(this.outPort);
     }
     

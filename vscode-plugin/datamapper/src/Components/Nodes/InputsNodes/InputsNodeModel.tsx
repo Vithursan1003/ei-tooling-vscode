@@ -13,7 +13,7 @@ export class InputsNodeModel extends CustomNodeModel {
     }
 
     initPorts(): void {
-        this.inPort1 = new IntermediatePortModel("[NUMBER,STRING,BOOLEAN] ", "IN",true);
+        this.inPort1 = new IntermediatePortModel("[NUMBER,STRING,BOOLEAN] ", "IN",'right');
         this.addPort(this.inPort1);
     }
     

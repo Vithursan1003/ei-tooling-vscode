@@ -12,6 +12,7 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
     constructor(
         public portName: string,
         public portType: "IN" | "OUT",
+        public alignment : string,
         public parentModel?: DataMapperPortModel,
         public collapsed?: boolean,
         public hidden?: boolean,
@@ -19,8 +20,12 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
         public ancestorHasValue?: boolean) {
         super({
             name: `${portName}`,
-            type: 'my-datamapper-port'
+            type: 'my-datamapper-port',
         });
+    }
+
+    getPortType(): string {
+        return this.portType;
     }
 
     createLinkModel(): DataMapperLinkModel {

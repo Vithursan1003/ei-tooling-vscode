@@ -12,12 +12,16 @@ export class IntermediatePortModel extends PortModel<PortModelGenerics & Interme
 	constructor(
 		public portId: string,
 		public portType: "IN" | "OUT",
-		public isIn : boolean) {
+		public alignment : string) {
 		super({
 			type: INT_PORT_TYPE_ID,
 			name: portId,
 		});
 	}
+
+	getPortType(): string {
+        return this.portType;
+    }
 
 	setName(PortName : string){
 		this.options.name = PortName;

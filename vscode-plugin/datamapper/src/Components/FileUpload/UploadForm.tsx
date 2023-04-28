@@ -12,7 +12,6 @@ interface vscode {
 }
 
 declare const vscode: vscode;
-
 let fileReader: FileReader;
 
 const UploadForm = (props: Props) => {

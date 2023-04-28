@@ -13,13 +13,13 @@ export class JoinNodeModel extends CustomNodeModel {
     }
 
     initPorts(): void {
-        this.inPort1 = new IntermediatePortModel("IN_1 : [STRING] ", "IN",true);
+        this.inPort1 = new IntermediatePortModel("IN_1 : [STRING] ", "IN",'right');
         this.addPort(this.inPort1);
 
-        this.inPort2 = new IntermediatePortModel("IN_2 : [STRING] ", "IN",true);
+        this.inPort2 = new IntermediatePortModel("IN_2 : [STRING] ", "IN",'right');
         this.addPort(this.inPort2);
 
-        this.outPort = new IntermediatePortModel(' Result : [STRING]', "OUT",false);
+        this.outPort = new IntermediatePortModel(' Result : [STRING]', "OUT",'left');
         this.addPort(this.outPort);
     }
     

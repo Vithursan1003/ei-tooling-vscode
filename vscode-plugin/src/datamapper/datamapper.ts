@@ -132,11 +132,17 @@ export default class dataMapper {
                         }
                     case "fileUpload":
                         {
-                            datamapperServer.handleFileUpload(message.fileContent, message.fileName,message.extension, 
+                            datamapperServer.handleFileUpload(message.fileContent, message.fileName, message.extension,
                                 (message) => {
-                                   this._panel.webview.postMessage(message);
+                                    this._panel.webview.postMessage(message);
                                 });
+                            break;
                         }
+                    case "DMC": {
+                        window.showInformationMessage("DMC file Updated");
+                        console.log("dmc : ",message.linkData);
+                        break;
+                    }
                         return;
                 }
             },

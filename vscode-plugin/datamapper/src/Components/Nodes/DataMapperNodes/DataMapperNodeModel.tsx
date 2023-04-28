@@ -25,12 +25,14 @@ export class DataMapperNodeModel extends CustomNodeModel {
 
     initPorts(): void {
         let portType: 'IN' | 'OUT' = 'OUT';
+        let alignment = 'right';
         if (this.name === 'Output') {
             portType = 'IN';
+            alignment = 'left'
         }
 
         for (const [propertyName, property] of Object.entries(this.schema)) {
-            const port = new DataMapperPortModel(`${propertyName} : ${property.type}`, portType);
+            const port = new DataMapperPortModel(`${propertyName} : ${property.type}`, portType,alignment);
             this.addPort(port);
         }
     }

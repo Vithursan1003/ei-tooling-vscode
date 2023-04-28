@@ -10,7 +10,7 @@ export class DataMapperPortFactory extends AbstractModelFactory<PortModel, Diagr
 	}
 
     generateModel(event: any) :DataMapperPortModel {
-		return new DataMapperPortModel('name','IN');
+		return new DataMapperPortModel('name','IN','right');
 	}
 
     generateReactWidget(event: any): JSX.Element {

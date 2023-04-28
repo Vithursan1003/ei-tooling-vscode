@@ -18,16 +18,16 @@ export class SubStringNodeModel extends CustomNodeModel {
     inPort3Name = this.name ==='Replace'? 'ReplaceWith : [STRING] ':'Length : [NUMBER] ';
 
     initPorts(): void {
-        this.inPort1 = new IntermediatePortModel(this.inPort1Name, "IN",true);
+        this.inPort1 = new IntermediatePortModel(this.inPort1Name, "IN",'right');
         this.addPort(this.inPort1);
 
-        this.inPort2 = new IntermediatePortModel(this.inPort2Name, "IN",true);
+        this.inPort2 = new IntermediatePortModel(this.inPort2Name, "IN",'right');
         this.addPort(this.inPort2);
 
-        this.inPort3 = new IntermediatePortModel(this.inPort3Name, "IN",true);
+        this.inPort3 = new IntermediatePortModel(this.inPort3Name, "IN",'right');
         this.addPort(this.inPort3);
 
-        this.outPort = new IntermediatePortModel(' Result : [STRING]', "OUT",false);
+        this.outPort = new IntermediatePortModel(' Result : [STRING]', "OUT",'left');
         this.addPort(this.outPort);
     }
     
