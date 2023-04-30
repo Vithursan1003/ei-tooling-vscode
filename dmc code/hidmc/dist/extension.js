@@ -59,59 +59,59 @@ function activate(context) {
         {
             "sourcePort": {
                 "nodeId": "Input",
-                "portId": "fullName:string",
-                "ID": "418dd158-e655-4d89-b38a-8c7f01eba00a",
+                "portId": "age:string",
+                "ID": "4fc3cb98-5517-404a-ab91-135327becc76",
                 "alignment": "right"
             },
             "targetPort": {
-                "nodeId": "IfElse",
-                "portId": "Condition:Boolean",
-                "ID": "2b4bb5c5-4518-4b66-8cb0-e207912b93fb",
+                "nodeId": "StringToNumber",
+                "portId": "Value:String",
+                "ID": "0a1dd9ff-0ab0-4ce1-82cd-b8ed72bfe083",
                 "alignment": "left"
             },
             "isChecked": false
         },
         {
             "sourcePort": {
-                "nodeId": "Input",
-                "portId": "address1:string",
-                "ID": "418dd158-e655-4d89-b38a-8c7f01eba00a",
+                "nodeId": "StringToNumber",
+                "portId": "Result:Number",
+                "ID": "0a1dd9ff-0ab0-4ce1-82cd-b8ed72bfe083",
                 "alignment": "right"
             },
             "targetPort": {
-                "nodeId": "IfElse",
-                "portId": "If:Boolean",
-                "ID": "2b4bb5c5-4518-4b66-8cb0-e207912b93fb",
+                "nodeId": "Floor",
+                "portId": "Value:Number",
+                "ID": "a1bd93e6-e7b4-4b46-872e-f1963bd39637",
                 "alignment": "left"
             },
             "isChecked": false
         },
         {
             "sourcePort": {
-                "nodeId": "Input",
-                "portId": "address2:string",
-                "ID": "418dd158-e655-4d89-b38a-8c7f01eba00a",
+                "nodeId": "Floot",
+                "portId": "Result:Number",
+                "ID": "a1bd93e6-e7b4-4b46-872e-f1963bd39637",
                 "alignment": "right"
             },
             "targetPort": {
-                "nodeId": "IfElse",
-                "portId": "Then:Boolean",
-                "ID": "2b4bb5c5-4518-4b66-8cb0-e207912b93fb",
+                "nodeId": "ToString",
+                "portId": "Value:String/Number/Boolean",
+                "ID": "160c9573-b2ee-4b09-9119-fd7c1ae17bc0",
                 "alignment": "left"
             },
             "isChecked": false
         },
         {
             "sourcePort": {
-                "nodeId": "IfElse",
-                "portId": "Result:Boolean",
-                "ID": "2b4bb5c5-4518-4b66-8cb0-e207912b93fb",
+                "nodeId": "ToString",
+                "portId": "Result:String",
+                "ID": "160c9573-b2ee-4b09-9119-fd7c1ae17bc0",
                 "alignment": "right"
             },
             "targetPort": {
                 "nodeId": "Output",
                 "portId": "firstName:string",
-                "ID": "548397e6-0a6f-4718-8f21-d2b978674037",
+                "ID": "20b97318-08f1-4596-8150-a2e168f3bffa",
                 "alignment": "left"
             },
             "isChecked": false
@@ -139,7 +139,7 @@ function activate(context) {
     // === //
     let arrayInput = createArray(inputData, "Input");
     let arrayOutput = createArray(outputData, "Output");
-    console.log(arrayOutput);
+    console.log(arrayInput);
     function createArray(outputJSON, string1) {
         let dmcArray = [];
         let string = string1;
@@ -283,13 +283,39 @@ function activate(context) {
                 break;
             case "AND":
             case "OR":
+            case "Add":
+            case "Multiply":
+            case "Min":
+            case "Max":
                 e[2] = `Input_1`;
                 e[3] = false;
                 e[4] = `Input_2`;
                 e[5] = false;
                 break;
-            case "NOT":
+            case "Subtract":
                 e[2] = `Input`;
+                e[3] = false;
+                e[4] = `Subtrahend`;
+                e[5] = false;
+                break;
+            case "Divide":
+                e[2] = `Input`;
+                e[3] = false;
+                e[4] = `Divisor`;
+                e[5] = false;
+                break;
+            case "SetPrecision":
+                e[2] = `Input`;
+                e[3] = false;
+                e[4] = `NumberOfDigits`;
+                e[5] = false;
+                break;
+            case "NOT":
+            case "Round":
+            case "Ceiling":
+            case "Floor":
+            case "AbsoluteValue":
+                e[2] = `${actionnode}_Input`;
                 e[3] = false;
                 break;
             default: break;
@@ -344,6 +370,13 @@ function activate(context) {
             case "Match":
             case "AND":
             case "OR":
+            case "Add":
+            case "Multiply":
+            case "Min":
+            case "Max":
+            case "Subtract":
+            case "Divide":
+            case "SetPrecision":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         e = simplified_transformDataArray[i][6];
@@ -358,6 +391,10 @@ function activate(context) {
             case "ToString":
             case "StringToBoolean":
             case "NOT":
+            case "Round":
+            case "Ceiling":
+            case "Floor":
+            case "AbsoluteValue":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         e = simplified_transformDataArray[i][4];
@@ -380,10 +417,10 @@ function activate(context) {
                     e = targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID);
                 }
                 else {
-                    if (trimTheStringFromColumnToEnd(sourcePortPortID) === "string") {
+                    if (trimTheStringFromColumnToEnd(sourcePortPortID) === "String") {
                         e = targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID) + ".toString()";
                     }
-                    else if (trimTheStringFromColumnToEnd(sourcePortPortID) === "number") {
+                    else if (trimTheStringFromColumnToEnd(sourcePortPortID) === "Number") {
                         e = "parseInt((" + targetPortNodeID + "." + trimTheStringUptoColon(targetPortPortID) + "),10)";
                     }
                 }
@@ -408,28 +445,29 @@ function activate(context) {
                 inputDmcPush(inputObjectArray[j].sourcePort.nodeId, inputObjectArray[j].sourcePort.portId, inputObjectArray[j].targetPort.ID, inputObjectArray[j].targetPort.nodeId, inputObjectArray[j].targetPort.portId, inputObjectArray[j].sourcePort.ID);
             }
         }
-        //inputQueueProgressPush(simplified_inputQueue[z][1]);
     }
     function inputDmcPush(sourcePortNodeID, sourcePortPortID, sourcePortID, targetPortNodeID, targetPortPortID, targetPortID) {
         let e = "";
         let f = "";
         let g = sourceEqualsTarget(targetPortPortID, targetPortNodeID, sourcePortID, sourcePortPortID);
-        //console.log("g: " + g + " " + sourcePortID);
         let action = sourcePortNodeID;
         switch (action) {
             case "Split":
+            case "StringToNumber":
+            case "StringToBoolean":
+            case "Trim":
+            case "StringLength":
+            case "UpperCase":
+            case "LowerCase":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         if (sourcePortPortID === "Value:String") {
-                            if (simplified_transformDataArray[i][3] === false) {
-                                e = `let ${simplified_transformDataArray[i][2]} = ${g};`;
+                            if (simplified_transformDataArray[i][3] !== true) {
+                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
                                 simplified_transformDataArray[i][3] = true;
                             }
                         }
-                        if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
-                            f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString.split(" ");`;
-                            simplified_transformDataArray[i][5] = true;
-                        }
+                        f = StringOperationPush1(simplified_transformDataArray[i], action);
                     }
                 }
                 break;
@@ -482,27 +520,6 @@ function activate(context) {
                 }
                 break;
             case "AND":
-                for (let i in simplified_transformDataArray) {
-                    if (simplified_transformDataArray[i][1] === targetPortID) {
-                        if (sourcePortPortID === "Value1:String") {
-                            if (simplified_transformDataArray[i][3] === false) {
-                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
-                                simplified_transformDataArray[i][3] = true;
-                            }
-                        }
-                        else if (sourcePortPortID === "Value2:String") {
-                            if (simplified_transformDataArray[i][5] === false) {
-                                e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
-                                simplified_transformDataArray[i][5] = true;
-                            }
-                        }
-                        if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] !== true) {
-                            f = `${simplified_transformDataArray[i][6]} = ${simplified_transformDataArray[i][2]}&&(${simplified_transformDataArray[i][4]});`;
-                            simplified_transformDataArray[i][7] = true;
-                        }
-                    }
-                }
-                break;
             case "OR":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
@@ -518,8 +535,93 @@ function activate(context) {
                                 simplified_transformDataArray[i][5] = true;
                             }
                         }
+                        f = andOrActionPush(simplified_transformDataArray[i], action);
+                    }
+                }
+                break;
+            case "Add":
+            case "Multiply":
+            case "Max":
+            case "Min":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (sourcePortPortID === "Value1:Number") {
+                            if (simplified_transformDataArray[i][3] === false) {
+                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+                                simplified_transformDataArray[i][3] = true;
+                            }
+                        }
+                        else if (sourcePortPortID === "Value2:Number") {
+                            if (simplified_transformDataArray[i][5] === false) {
+                                e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
+                                simplified_transformDataArray[i][5] = true;
+                            }
+                        }
+                        f = arithmeticOperationPush1(simplified_transformDataArray[i], action);
+                    }
+                }
+                break;
+            case "Subtract":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (sourcePortPortID === "Value:Number") {
+                            if (simplified_transformDataArray[i][3] === false) {
+                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+                                simplified_transformDataArray[i][3] = true;
+                            }
+                        }
+                        else if (sourcePortPortID === "Subtrahend:Number") {
+                            if (simplified_transformDataArray[i][5] === false) {
+                                e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
+                                simplified_transformDataArray[i][5] = true;
+                            }
+                        }
                         if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] !== true) {
-                            f = `${simplified_transformDataArray[i][6]} = ${simplified_transformDataArray[i][2]}||${simplified_transformDataArray[i][4]};`;
+                            f = `${simplified_transformDataArray[i][6]} =  ${simplified_transformDataArray[i][2]} - ${simplified_transformDataArray[i][4]};`;
+                            simplified_transformDataArray[i][7] = true;
+                        }
+                    }
+                }
+                break;
+            case "Divide":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (sourcePortPortID === "Value:Number") {
+                            if (simplified_transformDataArray[i][3] === false) {
+                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+                                simplified_transformDataArray[i][3] = true;
+                            }
+                        }
+                        else if (sourcePortPortID === "Divisor:Number") {
+                            if (simplified_transformDataArray[i][5] === false) {
+                                e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
+                                simplified_transformDataArray[i][5] = true;
+                            }
+                        }
+                        if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] !== true) {
+                            f = `${simplified_transformDataArray[i][6]} =  ${simplified_transformDataArray[i][2]}/${simplified_transformDataArray[i][4]};`;
+                            simplified_transformDataArray[i][7] = true;
+                        }
+                    }
+                }
+                break;
+            case "SetPrecision":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (sourcePortPortID === "Value:Number") {
+                            if (simplified_transformDataArray[i][3] === false) {
+                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+                                simplified_transformDataArray[i][3] = true;
+                            }
+                        }
+                        else if (sourcePortPortID === "NumberOfDigits:Number") {
+                            if (simplified_transformDataArray[i][5] === false) {
+                                e = `let ${simplified_transformDataArray[i][4]} =  ${g};`;
+                                simplified_transformDataArray[i][5] = true;
+                            }
+                        }
+                        if (simplified_transformDataArray[i][5] === true && simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][7] !== true) {
+                            f = `${simplified_transformDataArray[i][6]} =  ${simplified_transformDataArray[i][2]}.toFixed(${simplified_transformDataArray[i][4]});`;
                             simplified_transformDataArray[i][7] = true;
                         }
                     }
@@ -541,27 +643,10 @@ function activate(context) {
                     }
                 }
                 break;
-            case "UpperCase":
-            case "LowerCase":
-                for (let i in simplified_transformDataArray) {
-                    if (simplified_transformDataArray[i][1] === targetPortID) {
-                        if (sourcePortPortID === "Value:String") {
-                            if (simplified_transformDataArray[i][3] !== true) {
-                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
-                                simplified_transformDataArray[i][3] = true;
-                            }
-                        }
-                        if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
-                            f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().to${action}();`;
-                            simplified_transformDataArray[i][5] = true;
-                        }
-                    }
-                }
-                break;
             case "ToString":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
-                        if (sourcePortPortID === "Value:String") {
+                        if (sourcePortPortID === "Value:String/Number/Boolean") {
                             if (simplified_transformDataArray[i][3] !== true) {
                                 e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
                                 simplified_transformDataArray[i][3] = true;
@@ -569,70 +654,6 @@ function activate(context) {
                         }
                         if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
                             f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString();`;
-                            simplified_transformDataArray[i][5] = true;
-                        }
-                    }
-                }
-                break;
-            case "StringToNumber":
-                for (let i in simplified_transformDataArray) {
-                    if (simplified_transformDataArray[i][1] === targetPortID) {
-                        if (sourcePortPortID === "Value:String") {
-                            if (simplified_transformDataArray[i][3] !== true) {
-                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
-                                simplified_transformDataArray[i][3] = true;
-                            }
-                        }
-                        if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
-                            f = `${simplified_transformDataArray[i][4]} = Number(${simplified_transformDataArray[i][2]});`;
-                            simplified_transformDataArray[i][5] = true;
-                        }
-                    }
-                }
-                break;
-            case "StringToBoolean":
-                for (let i in simplified_transformDataArray) {
-                    if (simplified_transformDataArray[i][1] === targetPortID) {
-                        if (sourcePortPortID === "Value:String") {
-                            if (simplified_transformDataArray[i][3] !== true) {
-                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
-                                simplified_transformDataArray[i][3] = true;
-                            }
-                        }
-                        if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
-                            f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().toLowerCase() === true;`;
-                            simplified_transformDataArray[i][5] = true;
-                        }
-                    }
-                }
-                break;
-            case "Trim":
-                for (let i in simplified_transformDataArray) {
-                    if (simplified_transformDataArray[i][1] === targetPortID) {
-                        if (sourcePortPortID === "Value:String") {
-                            if (simplified_transformDataArray[i][3] !== true) {
-                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
-                                simplified_transformDataArray[i][3] = true;
-                            }
-                        }
-                        if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
-                            f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().trim();`;
-                            simplified_transformDataArray[i][5] = true;
-                        }
-                    }
-                }
-                break;
-            case "StringLength":
-                for (let i in simplified_transformDataArray) {
-                    if (simplified_transformDataArray[i][1] === targetPortID) {
-                        if (sourcePortPortID === "Value:String") {
-                            if (simplified_transformDataArray[i][3] !== true) {
-                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
-                                simplified_transformDataArray[i][3] = true;
-                            }
-                        }
-                        if (simplified_transformDataArray[i][3] === true && simplified_transformDataArray[i][5] !== true) {
-                            f = `${simplified_transformDataArray[i][4]} = ${simplified_transformDataArray[i][2]}.toString().length;`;
                             simplified_transformDataArray[i][5] = true;
                         }
                     }
@@ -722,6 +743,22 @@ function activate(context) {
                     }
                 }
                 break;
+            case "Round":
+            case "Floor":
+            case "Ceiling":
+            case "AbsoluteValue":
+                for (let i in simplified_transformDataArray) {
+                    if (simplified_transformDataArray[i][1] === targetPortID) {
+                        if (sourcePortPortID === "Value:Number") {
+                            if (simplified_transformDataArray[i][3] !== true) {
+                                e = `let ${simplified_transformDataArray[i][2]} =  ${g};`;
+                                simplified_transformDataArray[i][3] = true;
+                            }
+                        }
+                        f = arithmeticOperationPush2(simplified_transformDataArray[i], action);
+                    }
+                }
+                break;
         }
         if (e !== "") {
             inputDMCArray.push(e);
@@ -729,6 +766,89 @@ function activate(context) {
         if (f !== "") {
             inputDMCArray.push(f + "\n");
         }
+    }
+    function andOrActionPush(simpleArray, action) {
+        let f = "";
+        if (simpleArray[5] === true && simpleArray[3] === true && simpleArray[7] !== true) {
+            if (action === "OR") {
+                f = `${simpleArray[6]} = ${simpleArray[2]}||${simpleArray[4]};`;
+            }
+            else if (action === "AND") {
+                f = `${simpleArray[6]} = ${simpleArray[2]}&&${simpleArray[4]};`;
+            }
+            simpleArray[7] = true;
+        }
+        return f;
+    }
+    function arithmeticOperationPush1(simpleArray, action) {
+        let f = "";
+        if (simpleArray[5] === true && simpleArray[3] === true && simpleArray[7] !== true) {
+            switch (action) {
+                case "Add":
+                    f = `${simpleArray[6]} = ${simpleArray[2]}+${simpleArray[4]};`;
+                    break;
+                case "Multiply":
+                    f = `${simpleArray[6]} = ${simpleArray[2]}*${simpleArray[4]};`;
+                    break;
+                case "Min":
+                    f = `${simpleArray[6]} = Math.min(${simpleArray[2]},${simpleArray[4]});`;
+                    break;
+                case "Max":
+                    f = `${simpleArray[6]} = Math.max(${simpleArray[2]},${simpleArray[4]});`;
+                    break;
+            }
+            simpleArray[7] = true;
+        }
+        return f;
+    }
+    function arithmeticOperationPush2(simpleArray, action) {
+        let f = "";
+        if (simpleArray[5] !== true && simpleArray[3] === true) {
+            switch (action) {
+                case "Round":
+                    f = `${simpleArray[4]} = Math.round(${simpleArray[2]});`;
+                    break;
+                case "Floor":
+                    f = `${simpleArray[4]} = Math.floor(${simpleArray[2]});`;
+                    break;
+                case "Ceiling":
+                    f = `${simpleArray[4]} = Math.ceil(${simpleArray[2]});`;
+                    break;
+                case "AbsoluteValue":
+                    f = `${simpleArray[4]} = Math.abs(${simpleArray[2]});`;
+                    break;
+            }
+            simpleArray[5] = true;
+        }
+        return f;
+    }
+    function StringOperationPush1(simpleArray, action) {
+        let f = "";
+        if (simpleArray[5] !== true && simpleArray[3] === true) {
+            switch (action) {
+                case "StringToBoolean":
+                    f = `${simpleArray[4]} = ${simpleArray[2]}.toString().toLowerCase() === true;`;
+                    break;
+                case "StringToNumber":
+                    f = `${simpleArray[4]} = Number(${simpleArray[2]});`;
+                    break;
+                case "Trim":
+                    f = `${simpleArray[4]} = ${simpleArray[2]}.toString().trim();`;
+                    break;
+                case "StringLength":
+                    f = `${simpleArray[4]} = ${simpleArray[2]}.toString().length();`;
+                    break;
+                case "ToLowerCase":
+                case "ToUpperCase":
+                    f = `${simpleArray[4]} = ${simpleArray[2]}.toString().to${action}();`;
+                    break;
+                case "Split":
+                    f = `${simpleArray[4]} = ${simpleArray[2]}.toString().split(" ");`;
+                    break;
+            }
+            simpleArray[5] = true;
+        }
+        return f;
     }
     function sourceEqualsTarget(targetPortPortID, targetPortNodeID, targetPortID, sourcePortPortID) {
         let string = "";
@@ -752,6 +872,13 @@ function activate(context) {
             case "Match":
             case "OR":
             case "AND":
+            case "Add":
+            case "Multiply":
+            case "Max":
+            case "Min":
+            case "Subtract":
+            case "Divide":
+            case "SetPrecision":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         string = `${simplified_transformDataArray[i][6]}`;
@@ -766,6 +893,10 @@ function activate(context) {
             case "StringToBoolean":
             case "ToString":
             case "NOT":
+            case "Round":
+            case "Ceiling":
+            case "Floor":
+            case "AbsoluteValue":
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         string = `${simplified_transformDataArray[i][4]}`;
@@ -778,6 +909,13 @@ function activate(context) {
                 for (let i in simplified_transformDataArray) {
                     if (simplified_transformDataArray[i][1] === targetPortID) {
                         string = `${simplified_transformDataArray[i][8]}`;
+                    }
+                }
+                break;
+            case "Input":
+                for (let i in arrayInput) {
+                    if (arrayInput[i][1] === trimTheStringUptoColon(targetPortPortID)) {
+                        string = `${arrayInput[i][0]}`;
                     }
                 }
                 break;
@@ -796,6 +934,7 @@ function activate(context) {
         let str1 = str.toString();
         return str1.substring(str1.indexOf(":") + 1, str1.length);
     }
+    // === //
     let disposable = vscode.commands.registerCommand('hidmc.helloWorld', async () => {
         //later codes
         const myArray = [];
