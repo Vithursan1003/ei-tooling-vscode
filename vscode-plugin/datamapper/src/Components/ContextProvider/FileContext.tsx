@@ -2,12 +2,16 @@ import React from 'react';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 
 interface Schema {
-  name?: string;
+  $schema?: string;
+  inputType?: string;
+  id?:string;
   description?: string;
-  type: string;
+  title?: string;
+  type: string | object;
   properties: {
     [key: string]: {
       type: string;
+      id?: string;
       description?: string;
     }
   };

@@ -11,6 +11,7 @@ const NodeManager = () => {
     React.useEffect(() => {
         const newNodes : CustomNodeModel[]= [];
         if (schemaInput) {
+            console.log("schema input properties : ", schemaInput.properties)
             const InputDataMapper = new DataMapperNodeModel(schemaInput.properties, { name: 'Input', });
             InputDataMapper.setPosition(100, 50);
             newNodes.push(InputDataMapper);

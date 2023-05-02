@@ -7,6 +7,7 @@ import { DataMapperLabelModel } from '../../LinkLabel/DataMapperLabelModel';
 interface SchemaProperty {
     [key: string]: {
         type: string;
+        id?: string;
         description?: string;
     }
 }
@@ -20,6 +21,7 @@ export class DataMapperNodeModel extends CustomNodeModel {
         super('my-datamapper-node',options.name);
         this.name = options.name || undefined;
         this.schema = schema;
+        console.log("schema : ",schema)
         this.initPorts();
     }
 

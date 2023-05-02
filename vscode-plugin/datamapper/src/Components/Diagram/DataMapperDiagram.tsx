@@ -70,6 +70,7 @@ const DataMapperDiagram = () => {
                         ID: link.getTargetPort()?.getID(),
                         alignment: link.getTargetPort()?.getPortType()
                     },
+                    isChecked : false,
                     linkId: link.getOptions().id
                 };
                 console.log("new Link : ", Link);
