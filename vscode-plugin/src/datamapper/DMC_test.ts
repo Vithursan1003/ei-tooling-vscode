@@ -910,7 +910,7 @@ export default class DMCFile {
 			myArray[3] = "\nreturn Output;\n}";
 			const content = myArray.join('\n');
 
-			fs.writeFile(filePath, content, (err: { message: string; }) => {
+			fs.writeFile(filePath, content, (err) => {
 				if (err) {
 					vscode.window.showErrorMessage('Unable to create file: ' + err.message);
 					return;
