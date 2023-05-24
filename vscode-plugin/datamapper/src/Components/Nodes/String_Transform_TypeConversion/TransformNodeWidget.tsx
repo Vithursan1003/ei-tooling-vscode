@@ -4,7 +4,7 @@ import { TransformNodeModel } from './TransformNodeModel';
 import { nodeStyles } from '../styles';
 import { IntermediatePortWidget } from '../../Port/IntermediatePort/IntermediatePortWidget';
 import { FileContext } from '../../ContextProvider/FileContext';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete} from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 
 export interface TransformNodeWidgetProps {

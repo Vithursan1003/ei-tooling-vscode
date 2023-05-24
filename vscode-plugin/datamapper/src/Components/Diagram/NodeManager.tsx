@@ -16,10 +16,6 @@ const NodeManager = () => {
             InputDataMapper.setPosition(100, 50);
             newNodes.push(InputDataMapper);
             setAddedNode(newNodes);
-            // const InputBox = new InputsNodeModel({ name: 'Input' });
-            // InputBox.setPosition(100, 50);
-            // newNodes.push(InputBox);
-            // setAddedNode(newNodes);
         } 
     }, [schemaInput]);
 
@@ -30,10 +26,6 @@ const NodeManager = () => {
             OutputDataMapper.setPosition(800, 50);
             newNodes.push(OutputDataMapper);
             setAddedNode(newNodes);
-            // const OutputBox = new InputsNodeModel({ name: 'Output' });
-            // OutputBox.setPosition(800, 50);
-            // newNodes.push(OutputBox);
-            // setAddedNode(newNodes);
         } 
     }, [schemaOutput]);
 

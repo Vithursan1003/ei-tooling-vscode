@@ -1,6 +1,7 @@
 import { PortModel, PortModelGenerics } from "@projectstorm/react-diagrams";
 import { DataMapperLinkModel } from "../../Link/Model/DataMapperLinkModel";
 import { IntermediatePortModel } from './../IntermediatePort/IntermediatePortModel';
+import { DeserializeEvent } from "@projectstorm/react-canvas-core";
 
 export interface DataMapperNodeModelGenerics {
     PORT: DataMapperPortModel;
@@ -59,6 +60,18 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
         return ((this.portType !== port.portType) && !this.isLinkedTo(port) &&  (port instanceof IntermediatePortModel || (!port.isDisabled())) );
     }
 
-    
+    // serialize() {
+    //     return {
+    //         ...super.serialize(),
+    //         portName : this.portName,
+    //         portType : this.portType
+    //     };
+    // }
+
+    // deserialize(event: DeserializeEvent<this>) {
+    //     super.deserialize(event);
+    //     this.portName = event.data.portName;
+    //     this.portType = event.data.portType;
+    // }
 
 }

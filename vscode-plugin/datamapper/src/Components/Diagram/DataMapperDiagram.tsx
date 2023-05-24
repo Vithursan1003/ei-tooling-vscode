@@ -1,5 +1,5 @@
 import React from 'react';
-import createEngine, { DagreEngine, DiagramModel } from '@projectstorm/react-diagrams';
+import createEngine, { DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { nodeFactories } from '../Nodes';
@@ -13,10 +13,6 @@ import { Cached, FitScreen } from '@mui/icons-material';
 import { DiagramStyles } from './styles';
 import { Tooltip } from '@mui/material';
 
-// interface DataMapperDiagramProps {
-//     nodes: CustomNodeModel[];
-// }
-
 export var TotNodes: CustomNodeModel[] = [];
 const defaultModelOptions = { zoom: 90 };
 interface vscode {
@@ -27,7 +23,6 @@ declare const vscode: vscode;
 
 const DataMapperDiagram = () => {
     const classes = DiagramStyles();
-    //const { nodes } = props;
     const [engine, setEngine] = React.useState(createEngine({ registerDefaultZoomCanvasAction: true }));
     for (const factory of nodeFactories) { engine.getNodeFactories().registerFactory(factory); }
     for (const factory of portFactories) { engine.getPortFactories().registerFactory(factory); }
@@ -35,19 +30,27 @@ const DataMapperDiagram = () => {
     engine.getLabelFactories().registerFactory(new DataMapperLabelFactory());
     engine.getStateMachine().pushState(new DefaultState());
 
-    const [model, setNewModel] = React.useState<DiagramModel>(new DiagramModel());
+    
     const [links, setLinks] = React.useState<DataMapperLinkModel[]>([]);
     const { addedNode, removedNode } = React.useContext(FileContext);
 
-    // React.useEffect(() => {
-    //     const serializedData = localStorage.getItem('serializedData');
-    //     console.log("serialized Data: ", serializedData);
-    //     if (serializedData) {
-    //         const parsed = JSON.parse(serializedData);
-    //         model.deserializeModel(parsed, engine)
-    //         console.log('Deserialized:', model);
-    //     }
-    // }, [])
+    const ModelDiagram = new DiagramModel();
+    React.useEffect(() => {
+        console.log("react initialized");
+        window.addEventListener('message', (e) => {
+            if (e.data.command === 'serialized') {
+
+                console.log("deserialization code");
+                console.log("serialized diagram 1: ", ModelDiagram)
+                const parsed = JSON.parse(e.data.data);
+                ModelDiagram.deserializeModel(parsed, engine)
+                vscode.postMessage({ command: 'success_alert', text: 'diagram updated successfully' });
+                console.log("serialized diagram 2: ", ModelDiagram)
+            }
+        });
+    }, [])
+
+    const [model, setNewModel] = React.useState<DiagramModel>(ModelDiagram);
 
     model.registerListener({
         linksUpdated: async (event: any) => {
@@ -61,23 +64,23 @@ const DataMapperDiagram = () => {
                     sourcePort: {
                         nodeId: link.getSourcePort()?.getParent()?.getName(),
                         portId: link.getSourcePort()?.getName(),
-                        ID: link.getSourcePort()?.getID(),
+                        ID: link.getSourcePort()?.getParent()?.getID(),
                         alignment: link.getSourcePort()?.getPortType()
                     },
                     targetPort: {
                         nodeId: link.getTargetPort()?.getParent()?.getName(),
                         portId: link.getTargetPort()?.getName(),
-                        ID: link.getTargetPort()?.getID(),
+                        ID: link.getTargetPort()?.getParent()?.getID(),
                         alignment: link.getTargetPort()?.getPortType()
                     },
-                    isChecked : false,
+                    isChecked: false,
                     linkId: link.getOptions().id
                 };
                 console.log("new Link : ", Link);
                 diagramLink.push(Link);
             })
             console.log("All links : ", diagramLink);
-            vscode.postMessage({ command: 'DMC',linkData : diagramLink});
+            vscode.postMessage({ command: 'DMC', linkData: diagramLink });
         },
     })
 
@@ -86,6 +89,11 @@ const DataMapperDiagram = () => {
             engine.repaintCanvas(true);
             console.log("links added to model successfully");
         }
+        const serialized = JSON.stringify(model.serialize());
+        vscode.postMessage({
+            command: 'serializing',
+            fileContent: serialized
+        });
     }, [links])
 
     React.useEffect(() => {
@@ -112,6 +120,11 @@ const DataMapperDiagram = () => {
             }
         }
         void genModel();
+        const serialized = JSON.stringify(model.serialize());
+        vscode.postMessage({
+            command: 'serializing',
+            fileContent: serialized
+        });
     }, [addedNode]);
 
     React.useEffect(() => {
@@ -123,11 +136,13 @@ const DataMapperDiagram = () => {
             });
             model.removeNode(removedNode);
         }
+        const serialized = JSON.stringify(model.serialize());
+        vscode.postMessage({
+            command: 'serializing',
+            fileContent: serialized
+        });
     }, [removedNode]);
 
-    const serialized = JSON.stringify(model.serialize());
-    localStorage.setItem("serializedData", serialized);
-    console.log("serialized data : ", serialized);
     engine.setModel(model);
 
     const resetZoomAndOffset = () => {

@@ -1,8 +1,9 @@
-import { readdirSync, writeFile } from "fs";
-import { join } from "path";
-import { Disposable, Webview, WebviewPanel, window, ViewColumn, Uri } from "vscode";
+import { readFile,readdirSync } from "fs";
+import { join,dirname } from "path";
+import { Disposable, WebviewPanel, window, ViewColumn, Uri } from "vscode";
 import * as vscode from 'vscode';
-import datamapperServer from "./datamapperServer";
+import DMCFile from "./DMC_test";
+import datamapperFileUpload from "./datamapperFileUpload";
 
 
 export default class dataMapper {
@@ -132,15 +133,19 @@ export default class dataMapper {
                         }
                     case "fileUpload":
                         {
-                            datamapperServer.handleFileUpload(message.fileContent, message.fileName, message.extension,
+                            datamapperFileUpload.handleFileUpload(message.fileContent, message.fileName, message.extension,
                                 (message) => {
                                     this._panel.webview.postMessage(message);
                                 });
                             break;
                         }
+                    case "serializing":
+                        {
+                            datamapperFileUpload.serializingDiagram(message.fileContent)
+                        }
                     case "DMC": {
                         window.showInformationMessage("DMC file Updated");
-                        console.log("dmc : ",message.linkData);
+                        DMCFile.fileCreation(message.linkData);
                         break;
                     }
                         return;
@@ -149,5 +154,19 @@ export default class dataMapper {
             undefined,
             this._disposables
         );
+
+        const filePath = join(dirname(__filename), 'data.json');
+       
+        readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                window.showErrorMessage(`Unable to read file: ${err.message}`);
+                return;
+            }
+
+            const message = { command: 'serialized', data: data };
+            console.log("mesg passed")
+            this._panel.webview.postMessage(message);
+        });
+
     }
 }

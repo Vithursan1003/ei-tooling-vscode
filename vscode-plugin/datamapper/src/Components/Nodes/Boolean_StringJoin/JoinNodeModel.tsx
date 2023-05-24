@@ -13,13 +13,19 @@ export class JoinNodeModel extends CustomNodeModel {
     }
 
     initPorts(): void {
-        this.inPort1 = new IntermediatePortModel("IN_1 : [STRING] ", "IN",'right');
+        const inPort1Name = 
+        (this.name ===  'Add' || this.name === 'Subtract' ||this.name === 'Multiply' || this.name ==='Division'|| this.name ==='Set Precision' || this.name === 'Min'|| this.name ==='Max' || this.name === 'Compare' ) ? "IN_1 : [NUM] " : "IN_1 : [STRING] ";
+        this.inPort1 = new IntermediatePortModel(inPort1Name, "IN",'right');
         this.addPort(this.inPort1);
 
-        this.inPort2 = new IntermediatePortModel("IN_2 : [STRING] ", "IN",'right');
+        const inPort2Name = 
+        (this.name ===  'Add' || this.name === 'Subtract' ||this.name === 'Multiply' || this.name ==='Division'|| this.name === 'Min'|| this.name ==='Max' || this.name === 'Compare' ) ? "IN_2 : [NUM] " : ((this.name ==='Set Precision')? "NoOfDigits:NUM ":"IN_2 : [STRING] ");
+        this.inPort2 = new IntermediatePortModel(inPort2Name, "IN",'right');
         this.addPort(this.inPort2);
 
-        this.outPort = new IntermediatePortModel(' Result : [STRING]', "OUT",'left');
+        const outPortName = 
+        (this.name ===  'Add' || this.name ==='Subtract' ||this.name === 'Multiply' || this.name ==='Division'|| this.name ==='Set Precision' || this.name === 'Min'|| this.name ==='Max' || this.name === 'Compare' ) ? ' Result : [NUM]' : ' Result : [STRING]';
+        this.outPort = new IntermediatePortModel(outPortName, "OUT",'left');
         this.addPort(this.outPort);
     }
     

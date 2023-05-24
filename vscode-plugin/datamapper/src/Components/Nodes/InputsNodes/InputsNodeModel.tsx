@@ -4,7 +4,8 @@ import { CustomNodeModel } from '../Customs/CustomNodeModel';
 export class InputsNodeModel extends CustomNodeModel {
     onClick: any;
     name: string;
-    inPort1!: IntermediatePortModel;
+    inPort!: IntermediatePortModel;
+    outPort!: IntermediatePortModel;
   
     constructor(options: any = {}) {
         super('my-input-node',options.name);
@@ -13,8 +14,10 @@ export class InputsNodeModel extends CustomNodeModel {
     }
 
     initPorts(): void {
-        this.inPort1 = new IntermediatePortModel("[NUMBER,STRING,BOOLEAN] ", "IN",'right');
-        this.addPort(this.inPort1);
+        this.inPort = new IntermediatePortModel(" ", "IN",'right');
+        this.addPort(this.inPort);
+        this.outPort = new IntermediatePortModel("[NUMBER,STRING,BOOLEAN] ", "IN",'right');
+        this.addPort(this.outPort);
     }
     
     initLinks(): void {

@@ -2,34 +2,11 @@ import { writeFile } from "fs";
 import toJsonSchema = require("to-json-schema");
 import { window } from 'vscode';
 import { workspace } from 'vscode';
-import { join } from 'path';
-import { parseString } from "xml2js";
+import { join,dirname } from 'path';
 
-export default class datamapperServer {
+export default class datamapperFileUpload {
 
   public static handleFileUpload(fileContent: string, fileName: string, extension: string, callback: (message: any) => void) {
-
-    // console.log("file extension : ", extension);
-    // var schemaJson, schema: any;
-    // switch (extension) {
-    //   case 'xml': {
-    //     parseString(fileContent, (err, result) => {
-    //       if (err) {
-    //         console.error(err);
-    //       } else {
-    //         schema = result;
-    //         schemaJson = JSON.stringify(result);
-    //       }
-    //     });
-    //     break;
-    //   }
-    //   case 'json': {
-    //     var jsonObj = JSON.parse(fileContent);
-    //     schema = toJsonSchema(jsonObj);
-    //     schemaJson = JSON.stringify(schema);
-    //     break;
-    //   }
-    // }
 
     var jsonObj = JSON.parse(fileContent);
     var schema = toJsonSchema(jsonObj);
@@ -59,7 +36,22 @@ export default class datamapperServer {
     } else {
       window.showErrorMessage("No current workspace");
     }
-
   }
+
+  public static serializingDiagram(fileContent: string){
+
+    const currentFile = __filename;
+    const currentFolder =dirname(currentFile);
+    const filePath = join(currentFolder, 'data.json');
+  
+    writeFile(filePath, fileContent, (err) => {
+      if (err) {
+        window.showErrorMessage('Unable to save serialized data file.');
+      } else {
+        window.showInformationMessage('Serialized data file created.',filePath);
+      }
+    });
+  }
+
 }
 

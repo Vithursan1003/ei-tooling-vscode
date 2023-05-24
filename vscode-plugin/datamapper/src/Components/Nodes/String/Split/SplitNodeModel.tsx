@@ -19,7 +19,7 @@ export class SplitNodeModel extends CustomNodeModel {
         this.outPort2 = new IntermediatePortModel(" Result_2 : [STRING]", "OUT",'left');
         this.addPort(this.outPort2);
 
-        this.inPort = new IntermediatePortModel("IN : [STRING] ", "IN",'right');
+        this.inPort = new IntermediatePortModel(' Result : [STRING]', "IN",'right');
         this.addPort(this.inPort);
     }
     

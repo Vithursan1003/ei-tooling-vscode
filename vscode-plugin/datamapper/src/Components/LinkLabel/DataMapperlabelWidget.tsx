@@ -36,7 +36,6 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
         lastPoint = model?.link.getLastPoint();
         midX = (firstPoint.getX() + lastPoint.getX()) / 2-300;
         midY = (firstPoint.getY() + lastPoint.getY()) / 2;
-        //style={{ position: 'absolute', left: `${midX}px`, top: `${midY}px` }}
     }
 
     const onDelete = (e?: React.MouseEvent<HTMLDivElement>) => {
