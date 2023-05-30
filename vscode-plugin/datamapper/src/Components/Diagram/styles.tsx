@@ -6,6 +6,18 @@ export const DiagramStyles = makeStyles(() => createStyles({
 		width: '100%',
 		textAlign: 'center',
 	},
+	clrButtonWrap : {
+		paddingLeft : '85%',
+	},
+	clrButton : {
+		backgroundColor: '#c0c0c0 !important', 
+		fontFamily: 'monospace !important',
+		height:'25px !important',
+		fontSize : '13px !important',
+		'&:hover': {
+			backgroundColor: '#d3d3d3d3 !important', 
+		  },
+	},
 	buttonWrap: {
 		position: 'absolute',
 		bottom: '10px',

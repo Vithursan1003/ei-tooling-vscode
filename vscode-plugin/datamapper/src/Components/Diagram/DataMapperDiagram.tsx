@@ -1,5 +1,5 @@
 import React from 'react';
-import createEngine, { DiagramModel} from '@projectstorm/react-diagrams';
+import createEngine, { DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { CustomNodeModel } from '../Nodes/Customs/CustomNodeModel';
 import { nodeFactories } from '../Nodes';
@@ -9,9 +9,9 @@ import { DataMapperLinkModel } from './../Link/Model/DataMapperLinkModel';
 import { DataMapperLabelFactory } from './../LinkLabel/DataMapperLabelFactory';
 import { portFactories } from '../Port';
 import { FileContext } from './../ContextProvider/FileContext';
-import { Cached, FitScreen } from '@mui/icons-material';
+import { Cached, Delete,FitScreen } from '@mui/icons-material';
 import { DiagramStyles } from './styles';
-import { Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 
 export var TotNodes: CustomNodeModel[] = [];
 const defaultModelOptions = { zoom: 90 };
@@ -24,6 +24,10 @@ declare const vscode: vscode;
 const DataMapperDiagram = () => {
     const classes = DiagramStyles();
     const [engine, setEngine] = React.useState(createEngine({ registerDefaultZoomCanvasAction: true }));
+    const [model, setNewModel] = React.useState<DiagramModel>(new DiagramModel());
+    const modelRef = React.useRef<DiagramModel>(model);
+    const [links, setLinks] = React.useState<DataMapperLinkModel[]>([]);
+    const { addedNode, removedNode } = React.useContext(FileContext);
 
     for (const factory of nodeFactories) { engine.getNodeFactories().registerFactory(factory); }
     for (const factory of portFactories) { engine.getPortFactories().registerFactory(factory); }
@@ -31,18 +35,21 @@ const DataMapperDiagram = () => {
     engine.getLabelFactories().registerFactory(new DataMapperLabelFactory());
     engine.getStateMachine().pushState(new DefaultState());
 
-
-    const [model, setNewModel] = React.useState<DiagramModel>(new DiagramModel());
-    const modelRef = React.useRef<DiagramModel>(model);
-    const [links, setLinks] = React.useState<DataMapperLinkModel[]>([]);
-    const { addedNode, removedNode } = React.useContext(FileContext);
+    const handleSerialization = ()=>{
+        setTimeout(() => {
+            console.log("serializing");
+            const serialized = JSON.stringify(modelRef.current.serialize());
+            vscode.postMessage({
+                command: 'serializing',
+                fileContent: serialized
+            });
+        }, 1000);
+    }
 
     React.useEffect(() => {
         console.log("react initialized");
         const handleMessage = (e: MessageEvent) => {
             if (e.data.command === 'serialized') {
-                console.log("deserialization code");
-                console.log("serialized diagram 1: ", e.data.data);
                 const parsed = JSON.parse(e.data.data);
                 model.deserializeModel(parsed, engine);
                 setNewModel(model);
@@ -50,8 +57,6 @@ const DataMapperDiagram = () => {
                 setTimeout(() => {
                     engine.setModel(model);
                 }, 0);
-
-                console.log('Deserialized:', model);
                 vscode.postMessage({ command: 'success_alert', text: 'diagram updated successfully' });
             }
         };
@@ -95,22 +100,13 @@ const DataMapperDiagram = () => {
     React.useEffect(() => {
         if (model.getLinks().length > 0) {
             engine.repaintCanvas(true);
-            console.log("links added to model successfully");
         }
-    
-        setTimeout(() => {
-            const serialized = JSON.stringify(model.serialize());
-            vscode.postMessage({
-                command: 'serializing',
-                fileContent: serialized
-            });
-        }, 1000);
+        handleSerialization();
     }, [links])
 
     React.useEffect(() => {
         async function genModel() {
             TotNodes = [...TotNodes, ...addedNode];
-            //const allNodes = [...nodes, ...TotNodes];
             const allNodes = [...addedNode];
 
             if (allNodes.length > 0) {
@@ -133,15 +129,7 @@ const DataMapperDiagram = () => {
             }
         }
         void genModel();
-        setTimeout(() => {
-            console.log("serializing");
-            const serialized = JSON.stringify(modelRef.current.serialize());
-            console.log("serialized data : ",serialized);
-            vscode.postMessage({
-                command: 'serializing',
-                fileContent: serialized
-            });
-        }, 1000);
+        handleSerialization();
     }, [addedNode]);
 
     React.useEffect(() => {
@@ -153,15 +141,13 @@ const DataMapperDiagram = () => {
             });
             model.removeNode(removedNode);
         }
-        setTimeout(() => {
-            console.log("serializing");
-            const serialized = JSON.stringify(modelRef.current.serialize());
-            vscode.postMessage({
-                command: 'serializing',
-                fileContent: serialized
-            });
-        }, 1000);
+        handleSerialization();
     }, [removedNode]);
+
+    const clearDiagram = () => {
+        const clearModel = new DiagramModel();
+        setNewModel(clearModel);
+    }
 
     engine.setModel(model);
 
@@ -173,6 +159,10 @@ const DataMapperDiagram = () => {
     }
 
     return (<>
+        <div className={classes.clrButtonWrap}>
+            <Button onClick={clearDiagram} className={classes.clrButton} variant='contained' endIcon={<Delete className={classes.icon} />}>
+                Clear Diagram</Button>
+        </div>
         <CanvasWidget className={classes.canvas} engine={engine} />
         <div className={classes.buttonWrap}>
             <Tooltip title="Fit to Screen">

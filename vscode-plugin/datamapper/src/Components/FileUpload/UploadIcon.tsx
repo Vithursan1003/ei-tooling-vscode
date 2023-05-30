@@ -18,11 +18,12 @@ const UploadIcon = () => {
     return (
         <>
             <div className={classes.header} >
-                {NodeTitle.map((node,index) => {
+                {NodeTitle.map((node, index) => {
                     return (
-                        <Button key={index} sx={{color:'#c0c0c0',fontFamily:'monospace'}}
-                        onClick={() => { setTitle(node); setOpen(true); }} 
-                        startIcon={<AddCircleRounded fontSize="small" />}>Load {node}</Button>)})}
+                        <Button key={index} sx={{ color: '#c0c0c0', fontFamily: 'monospace' }}
+                            onClick={() => { setTitle(node); setOpen(true); }}
+                            startIcon={<AddCircleRounded fontSize="small" />}>Load {node}</Button>)
+                })}
             </div>
             <UploadModal title={title} modalOpen={open} modalClose={handleClose} />
         </>

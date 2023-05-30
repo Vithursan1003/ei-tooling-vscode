@@ -2,7 +2,6 @@ import { AbstractReactFactory, GenerateWidgetEvent } from '@projectstorm/react-c
 import { DiagramEngine } from '@projectstorm/react-diagrams';
 import { DataMapperLabelModel } from './DataMapperLabelModel';
 import { DataMapperLabelWidget } from './DataMapperLabelWidget';
-import { DataMapperLinkModel } from './../Link/Model/DataMapperLinkModel';
 
 export class DataMapperLabelFactory extends AbstractReactFactory<DataMapperLabelModel, DiagramEngine> {
 	constructor() {
@@ -16,6 +15,5 @@ export class DataMapperLabelFactory extends AbstractReactFactory<DataMapperLabel
 	generateReactWidget(event: GenerateWidgetEvent<DataMapperLabelModel>): JSX.Element {
 		return <DataMapperLabelWidget model={event.model} engine={this.engine} />;
 	}
-
 }
 
