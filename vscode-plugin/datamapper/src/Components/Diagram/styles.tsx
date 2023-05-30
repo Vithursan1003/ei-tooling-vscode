@@ -2,7 +2,7 @@ import { createStyles, makeStyles } from "@mui/styles";
 
 export const DiagramStyles = makeStyles(() => createStyles({
 	canvas: {
-		height: '500px',
+		height: '1000px',
 		width: '100%',
 		textAlign: 'center',
 	},

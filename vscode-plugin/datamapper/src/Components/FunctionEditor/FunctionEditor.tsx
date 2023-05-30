@@ -22,7 +22,7 @@ export interface FunctionEditorProps {
 const FunctionEditor: React.FunctionComponent<FunctionEditorProps> = (props) => {
   const { onClose, link } = props;
   const classes = FunctionStyles();
-  const { setAddedNode } = React.useContext(FileContext);
+  const { addedNode,setAddedNode } = React.useContext(FileContext);
   const IntermediateNodes: CustomNodeModel[] = [];
 
   var firstPoint, lastPoint, midX: number, midY: number;
@@ -89,9 +89,11 @@ const FunctionEditor: React.FunctionComponent<FunctionEditorProps> = (props) => 
     }
 
     link?.remove();
+    console.log("node in function")
     commonNode.setPosition(midX, midY);
     IntermediateNodes.push(commonNode);
     setAddedNode(IntermediateNodes);
+    console.log(addedNode);
   }
 
   return (

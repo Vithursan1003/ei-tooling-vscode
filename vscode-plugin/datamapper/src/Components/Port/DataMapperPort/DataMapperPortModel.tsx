@@ -60,18 +60,18 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
         return ((this.portType !== port.portType) && !this.isLinkedTo(port) &&  (port instanceof IntermediatePortModel || (!port.isDisabled())) );
     }
 
-    // serialize() {
-    //     return {
-    //         ...super.serialize(),
-    //         portName : this.portName,
-    //         portType : this.portType
-    //     };
-    // }
+    serialize() {
+        return {
+            ...super.serialize(),
+            portName : this.portName,
+            portType : this.portType,
+        };
+    }
 
-    // deserialize(event: DeserializeEvent<this>) {
-    //     super.deserialize(event);
-    //     this.portName = event.data.portName;
-    //     this.portType = event.data.portType;
-    // }
+    deserialize(event: DeserializeEvent<this>) {
+        super.deserialize(event);
+        this.portName = event.data.portName;
+        this.portType = event.data.portType;
+    }
 
 }

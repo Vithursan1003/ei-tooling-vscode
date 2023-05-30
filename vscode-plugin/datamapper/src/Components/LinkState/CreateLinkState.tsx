@@ -64,7 +64,7 @@ export class CreateLinkState extends State<DiagramEngine> {
                                 element.fireEvent({}, "mappingFinishedTo");
                                 if (this.sourcePort.canLinkToPort(element)) {
                                     this.link.setTargetPort(element);
-                                    this.link.addLabel(new DataMapperLabelModel({ value: 'link1', link: this.link }));
+                                    this.link.addLabel(new DataMapperLabelModel());
                                     this.engine.getModel().addAll(this.link);
                                     console.log("link added to diagram: ", this.engine.getModel().getLinks());
                                     if (this.sourcePort instanceof DataMapperPortModel) {
@@ -97,7 +97,7 @@ export class CreateLinkState extends State<DiagramEngine> {
                                 element.fireEvent({}, "mappingFinishedTo");
                                 if (this.sourcePort.canLinkToPort(element)) {
                                     this.link.setTargetPort(element);
-                                    this.link.addLabel(new DataMapperLabelModel({ value: 'link2', link: this.link }));
+                                    this.link.addLabel(new DataMapperLabelModel());
                                     this.engine.getModel().addAll(this.link);
                                     if (this.sourcePort instanceof IntermediatePortModel) {
                                         this.sourcePort.linkedPorts.forEach((linkedPort) => {

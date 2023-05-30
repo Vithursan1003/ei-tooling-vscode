@@ -1,7 +1,8 @@
 import { AbstractReactFactory, GenerateWidgetEvent } from '@projectstorm/react-canvas-core';
 import { DiagramEngine } from '@projectstorm/react-diagrams';
 import { DataMapperLabelModel } from './DataMapperLabelModel';
-import { DataMapperLabelWidget } from './DataMapperlabelWidget';
+import { DataMapperLabelWidget } from './DataMapperLabelWidget';
+import { DataMapperLinkModel } from './../Link/Model/DataMapperLinkModel';
 
 export class DataMapperLabelFactory extends AbstractReactFactory<DataMapperLabelModel, DiagramEngine> {
 	constructor() {

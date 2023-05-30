@@ -5,6 +5,7 @@ import { LabelStyles } from './styles';
 import FunctionEditor from '../FunctionEditor/FunctionEditor';
 import { Tooltip } from '@mui/material';
 import { DiagramEngine } from '@projectstorm/react-diagrams';
+import { DataMapperLinkModel } from '../Link/Model/DataMapperLinkModel';
 
 interface vscode {
     postMessage(message: any): void;
@@ -25,16 +26,26 @@ export enum LinkState {
 
 export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidgetProps> = (props) => {
     const classes = LabelStyles();
-    const { model,engine } = props;
+    const { model, engine } = props;
     const [linkStatus, setLinkStatus] = React.useState<LinkState>(LinkState.LinkNotSelected);
     const [deleteInProgress, setDeleteInProgress] = React.useState(false);
     const [editorOpen, setEditorOpen] = React.useState(false);
-    var firstPoint, lastPoint, midX: number =0, midY: number=0;
+    var firstPoint, lastPoint, midX: number = 0, midY: number = 0;
 
-    if(model?.link){
-        firstPoint = model?.link.getFirstPoint();
-        lastPoint = model?.link.getLastPoint();
-        midX = (firstPoint.getX() + lastPoint.getX()) / 2-300;
+    const labelId = model.getID();
+    console.log("label id : ",labelId);
+    const link = engine
+        .getModel()
+        .getLinks()
+        .find((link) => link.getLabels().some((label) => label.getID() === labelId));
+
+    const dataMapperLink: DataMapperLinkModel = link as DataMapperLinkModel;
+    console.log("realavent link : ",link)
+
+    if (link) {
+        firstPoint = link.getFirstPoint();
+        lastPoint = link.getLastPoint();
+        midX = (firstPoint.getX() + lastPoint.getX()) / 2;
         midY = (firstPoint.getY() + lastPoint.getY()) / 2;
     }
 
@@ -46,7 +57,7 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
         }
         try {
             setDeleteInProgress(true);
-            model?.link?.remove();
+            link?.remove();
             vscode.postMessage({ command: 'success_alert', text: 'Link removed successfully' });
         } catch (e) {
             vscode.postMessage({ command: 'fail_alert', text: 'Error, Cant remove link' });
@@ -59,8 +70,7 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
     };
 
     React.useEffect(() => {
-        if (model?.link) {
-            const link = model.link;
+        if (link) {
             link.registerListener({
                 selectionChanged: () => {
                     setLinkStatus(link.isSelected() ? LinkState.LinkSelected : LinkState.LinkNotSelected);
@@ -72,13 +82,12 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
         }
     }, [model]);
 
+
     const elements: React.ReactNode[] = [
         (
-            <>
-                <div
-                    className={classes.container}
-                    data-testid={`DataMapper-label-for-${props.model?.link?.getSourcePort()?.getName()}-to-${props.model?.link?.getTargetPort()?.getName()}`}>
-                    <div className={classes.element} onClick={onEdit} data-testid={`DataMapper-label-edit`}>
+            <div key="configure">
+                <div className={classes.container}>
+                    <div className={classes.element} onClick={onEdit}>
                         <div className={classes.iconWrapper}>
                             <Tooltip title="Configure">
                                 <CodeOutlined className={classes.IconButton} />
@@ -88,7 +97,7 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
                     <div className={classes.separator} />
                     {deleteInProgress ? (
                         <></>) : (
-                        <div className={classes.element} onClick={onDelete} data-testid={`DataMapper-label-delete`}>
+                        <div className={classes.element} onClick={onDelete}>
                             <div className={classes.iconWrapper}>
                                 <Tooltip title="Delete">
                                     <Delete className={classes.IconButton} />
@@ -97,12 +106,12 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
                         </div>
                     )}
                 </div>
-            </>
+            </div>
         ),
-        editorOpen && <FunctionEditor onClose={() => setEditorOpen(false)} engine={engine} link={model?.link}/>
+        editorOpen && <FunctionEditor key="functionEditor" onClose={() => setEditorOpen(false)} engine={engine} link={dataMapperLink} />
     ];
 
-    return linkStatus === LinkState.LinkSelected ? (
+    return (linkStatus === LinkState.LinkSelected) ? (
         <>
             {elements}
         </>

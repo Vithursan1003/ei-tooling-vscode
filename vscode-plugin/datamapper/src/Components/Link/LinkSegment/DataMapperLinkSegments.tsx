@@ -42,9 +42,8 @@ export class DefaultLinkSegmentWidget extends React.Component<DefaultLinkSegment
             ref: null,
             "data-linkid": this.props.link.getID(),
             "data-testid": `link-from-${sourcePortName}-to-${targetPortName}`,
-            //"data-diagnostics": !!(this.props.link as DataMapperLinkModel)?.diagnostics?.length,
             strokeOpacity: isSelected ? 0.1 : 0,
-            strokeWidth: 10, // Note: Original strokeWidth was 20
+            strokeWidth: 10, 
             onContextMenu: () => {
                 if (!this.props.link.isLocked()) {
                     this.props.link.remove();

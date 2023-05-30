@@ -1,6 +1,6 @@
-import { readFile,readdirSync } from "fs";
-import { join,dirname } from "path";
-import { Disposable, WebviewPanel, window, ViewColumn, Uri } from "vscode";
+import { readFile, readdirSync } from "fs";
+import { join, dirname } from "path";
+import { Disposable, WebviewPanel, window, ViewColumn, Uri,workspace} from "vscode";
 import * as vscode from 'vscode';
 import DMCFile from "./DMC_test";
 import datamapperFileUpload from "./datamapperFileUpload";
@@ -148,6 +148,23 @@ export default class dataMapper {
                         DMCFile.fileCreation(message.linkData);
                         break;
                     }
+                    case "deserializing": {
+                        var currentFolder = workspace.workspaceFolders?.[0];
+                        if(currentFolder){
+                            var filePath = join(currentFolder.uri.fsPath, "data.json");
+                            readFile(filePath, 'utf8', (err, data) => {
+                                if (err) {
+                                    window.showErrorMessage(`Unable to read file: ${err.message}`);
+                                    console.log("error mesg passed")
+                                    return;
+                                }
+    
+                                const message = { command: 'serialized', data: data };
+                                console.log("mesg passed")
+                                this._panel.webview.postMessage(message);
+                            });
+                        }
+                    }
                         return;
                 }
             },
@@ -155,18 +172,7 @@ export default class dataMapper {
             this._disposables
         );
 
-        const filePath = join(dirname(__filename), 'data.json');
-       
-        readFile(filePath, 'utf8', (err, data) => {
-            if (err) {
-                window.showErrorMessage(`Unable to read file: ${err.message}`);
-                return;
-            }
 
-            const message = { command: 'serialized', data: data };
-            console.log("mesg passed")
-            this._panel.webview.postMessage(message);
-        });
 
     }
 }

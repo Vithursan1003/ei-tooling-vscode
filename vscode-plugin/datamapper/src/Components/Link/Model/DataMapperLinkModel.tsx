@@ -1,6 +1,7 @@
 import { BezierCurve } from '@projectstorm/geometry';
 import { DefaultLinkModel } from '@projectstorm/react-diagrams';
 import { DataMapperLabelModel } from '../../LinkLabel/DataMapperLabelModel';
+import { DeserializeEvent } from '@projectstorm/react-canvas-core';
 
 export class DataMapperLinkModel extends DefaultLinkModel {
 
@@ -18,12 +19,12 @@ export class DataMapperLinkModel extends DefaultLinkModel {
 		this.labels.push(label);
 	}
 
-	removeLabel(label: DataMapperLabelModel) {
-		const index = this.labels.indexOf(label);
-		if (index !== -1) {
-			this.labels.splice(index, 1);
-		}
-	}
+	// removeLabel(label: DataMapperLabelModel) {
+	// 	const index = this.labels.indexOf(label);
+	// 	if (index !== -1) {
+	// 		this.labels.splice(index, 1);
+	// 	}
+	// }
 
 	getSVGPath(): string {
 		if (this.points.length === 2) {
@@ -49,5 +50,15 @@ export class DataMapperLinkModel extends DefaultLinkModel {
 		}
 		return "";
 	}
+
+	serialize() {
+        return {
+            ...super.serialize(),
+        };
+    }
+
+    deserialize(event: DeserializeEvent<this>) {
+        super.deserialize(event);
+    }
 }
 

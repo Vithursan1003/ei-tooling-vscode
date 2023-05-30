@@ -40,17 +40,19 @@ export default class datamapperFileUpload {
 
   public static serializingDiagram(fileContent: string){
 
-    const currentFile = __filename;
-    const currentFolder =dirname(currentFile);
-    const filePath = join(currentFolder, 'data.json');
-  
-    writeFile(filePath, fileContent, (err) => {
-      if (err) {
-        window.showErrorMessage('Unable to save serialized data file.');
-      } else {
-        window.showInformationMessage('Serialized data file created.',filePath);
-      }
-    });
+    var currentFolder = workspace.workspaceFolders?.[0];
+    if(currentFolder){
+      var filePath = join(currentFolder.uri.fsPath, "data.json");
+      writeFile(filePath, fileContent, (err) => {
+        if (err) {
+          window.showErrorMessage('Unable to save serialized data file.');
+        } else {
+          window.showInformationMessage('Serialized data file created.',filePath);
+        }
+      });
+    }else{
+      console.log("no serialized data stored");
+    }
   }
 
 }
