@@ -1,6 +1,5 @@
 import { BaseModelOptions, DeserializeEvent } from '@projectstorm/react-canvas-core';
 import { LabelModel } from '@projectstorm/react-diagrams';
-import { DataMapperLinkModel } from '../Link/Model/DataMapperLinkModel';
 
 export interface DataMapperLabelOptions extends BaseModelOptions {
 	editorLabel?: string;

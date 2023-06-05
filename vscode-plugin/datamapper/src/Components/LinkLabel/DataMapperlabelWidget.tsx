@@ -10,7 +10,6 @@ import { DataMapperLinkModel } from '../Link/Model/DataMapperLinkModel';
 interface vscode {
     postMessage(message: any): void;
 }
-
 declare const vscode: vscode;
 
 export interface DataMapperLabelWidgetProps {
@@ -33,14 +32,12 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
     var firstPoint, lastPoint, midX: number = 0, midY: number = 0;
 
     const labelId = model.getID();
-    console.log("label id : ",labelId);
     const link = engine
         .getModel()
         .getLinks()
         .find((link) => link.getLabels().some((label) => label.getID() === labelId));
 
     const dataMapperLink: DataMapperLinkModel = link as DataMapperLinkModel;
-    console.log("realavent link : ",link)
 
     if (link) {
         firstPoint = link.getFirstPoint();
@@ -50,7 +47,6 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
     }
 
     const onDelete = (e?: React.MouseEvent<HTMLDivElement>) => {
-        console.log('link removed');
         if (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -65,7 +61,6 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
     };
 
     const onEdit = (e?: React.MouseEvent<HTMLDivElement>) => {
-        console.log('Edit link');
         setEditorOpen(true);
     };
 
@@ -74,7 +69,6 @@ export const DataMapperLabelWidget: React.FunctionComponent<DataMapperLabelWidge
             link.registerListener({
                 selectionChanged: () => {
                     setLinkStatus(link.isSelected() ? LinkState.LinkSelected : LinkState.LinkNotSelected);
-                    console.log('link is selected : ', link.isSelected());
                 }
             });
         } else {

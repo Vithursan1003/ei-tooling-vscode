@@ -43,7 +43,6 @@ export class JoinNodeModel extends CustomNodeModel {
     deserialize(event: DeserializeEvent<this>) {
         super.deserialize(event);
         this.name = event.data.name;
-        // this.initPorts();
     }
 
 }

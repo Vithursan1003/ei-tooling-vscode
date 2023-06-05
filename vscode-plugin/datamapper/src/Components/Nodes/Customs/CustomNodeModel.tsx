@@ -1,4 +1,3 @@
-import { DeserializeEvent } from '@projectstorm/react-canvas-core';
 import { DiagramModel, NodeModel, NodeModelGenerics } from '@projectstorm/react-diagrams';
 
 export abstract class CustomNodeModel extends NodeModel<NodeModelGenerics>{
@@ -21,17 +20,6 @@ export abstract class CustomNodeModel extends NodeModel<NodeModelGenerics>{
     public getName() {
         return this.name;
     }
-
-    // serialize() {
-    //     return {
-    //         ...super.serialize(),
-            
-    //     };
-    // }
-
-    // deserialize(event: DeserializeEvent<this>) {
-    //     super.deserialize(event);
-    // }
 
     abstract initPorts(): void;
     abstract initLinks(): void;

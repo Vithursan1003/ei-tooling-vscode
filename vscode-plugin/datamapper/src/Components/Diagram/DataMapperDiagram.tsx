@@ -18,7 +18,6 @@ const defaultModelOptions = { zoom: 90 };
 interface vscode {
     postMessage(message: any): void;
 }
-
 declare const vscode: vscode;
 
 const DataMapperDiagram = () => {
@@ -37,7 +36,6 @@ const DataMapperDiagram = () => {
 
     const handleSerialization = ()=>{
         setTimeout(() => {
-            console.log("serializing");
             const serialized = JSON.stringify(modelRef.current.serialize());
             vscode.postMessage({
                 command: 'serializing',
@@ -112,7 +110,6 @@ const DataMapperDiagram = () => {
             if (allNodes.length > 0) {
                 const newModel = model.clone();
                 newModel.addAll(...allNodes);
-                console.log("nodes added : ", newModel);
                 for (const node of allNodes) {
                     try {
                         node.setModel(newModel);
@@ -147,6 +144,13 @@ const DataMapperDiagram = () => {
     const clearDiagram = () => {
         const clearModel = new DiagramModel();
         setNewModel(clearModel);
+        setTimeout(() => {
+            const serialized = JSON.stringify(clearModel.serialize());
+            vscode.postMessage({
+                command: 'serializing',
+                fileContent: serialized
+            });
+        }, 1000);
     }
 
     engine.setModel(model);

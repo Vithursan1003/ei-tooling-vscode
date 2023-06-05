@@ -4,7 +4,6 @@ import { DataMapperLabelModel } from '../../LinkLabel/DataMapperLabelModel';
 import { DeserializeEvent } from '@projectstorm/react-canvas-core';
 
 export class DataMapperLinkModel extends DefaultLinkModel {
-
 	constructor() {
 		super({
 			type: 'DataMapper-link',
@@ -18,13 +17,6 @@ export class DataMapperLinkModel extends DefaultLinkModel {
 	addLabel(label: DataMapperLabelModel) {
 		this.labels.push(label);
 	}
-
-	// removeLabel(label: DataMapperLabelModel) {
-	// 	const index = this.labels.indexOf(label);
-	// 	if (index !== -1) {
-	// 		this.labels.splice(index, 1);
-	// 	}
-	// }
 
 	getSVGPath(): string {
 		if (this.points.length === 2) {

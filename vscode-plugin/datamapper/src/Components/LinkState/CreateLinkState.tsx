@@ -143,29 +143,6 @@ export class CreateLinkState extends State<DiagramEngine> {
                 }
             })
         );
-
-        // this.registerAction(
-        //     new Action({
-        //         type: InputType.MOUSE_MOVE,
-        //         fire: () => {
-        //             if (!this.link) return;
-        //             this.engine.repaintCanvas();
-        //         }
-        //     })
-        // );
-
-        // this.registerAction(
-        //     new Action({
-        //         type: InputType.MOUSE_DOWN,
-        //         fire: (event: ActionEvent<MouseEvent>) => {
-        //             const element = this.engine.getActionEventBus().getModelForEvent(event);
-        //             if (element instanceof DataMapperLinkModel) {
-        //                 element.setSelected(!element.isSelected());
-        //                 console.log("link selection logic");
-        //             }
-        //         }
-        //     })
-        // );
     }
 
     clearState() {

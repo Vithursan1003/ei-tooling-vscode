@@ -16,11 +16,9 @@ export const InputsNodeWidget: React.FC<InputsNodeProps> = ({ node, engine }) =>
     const classes = nodeStyles();
     const { setRemovedNode } = React.useContext(FileContext);
 
-
     const onClickDelete = () => {
         const nodeId = node.getID();
         setRemovedNode(node);
-        console.log("delete intermediate nodes");
     };
 
     return (

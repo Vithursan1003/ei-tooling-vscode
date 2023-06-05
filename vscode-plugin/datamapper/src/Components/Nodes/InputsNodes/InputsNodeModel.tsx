@@ -1,4 +1,3 @@
-import { DefaultPortModel } from '@projectstorm/react-diagrams';
 import { IntermediatePortModel } from '../../Port/IntermediatePort/IntermediatePortModel';
 import { CustomNodeModel } from '../Customs/CustomNodeModel';
 import { DeserializeEvent } from '@projectstorm/react-canvas-core';
@@ -23,9 +22,7 @@ export class InputsNodeModel extends CustomNodeModel {
         this.addPort(this.outPort);
     }
 
-    initLinks(): void {
-        throw new Error('Method not implemented.');
-    }
+    initLinks(): void {}
 
     serialize() {
         return {
@@ -37,8 +34,5 @@ export class InputsNodeModel extends CustomNodeModel {
     deserialize(event: DeserializeEvent<this>) {
         super.deserialize(event);
         this.name = event.data.name;
-        // this.initPorts();
     }
-
-
 }

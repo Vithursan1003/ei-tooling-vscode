@@ -37,7 +37,6 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
     addLinkedPort(port: DataMapperPortModel): void {
         this.linkedPorts.push(port);
         port.linkedPorts.push(this);
-        console.log("linked ports array updated");
     }
 
     setDescendantHasValue(): void {
@@ -52,7 +51,6 @@ export default class DataMapperPortModel extends PortModel<PortModelGenerics & D
     }
 
     isLinkedTo(port: DataMapperPortModel): boolean {
-        console.log("Linked ports in port model: ",this.linkedPorts);
         return this.linkedPorts.some((linkedPort) => linkedPort.getID() === port.getID());
     }
 

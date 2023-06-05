@@ -1,7 +1,7 @@
 import React from "react";
 import { DiagramEngine, PortWidget } from "@projectstorm/react-diagrams-core";
 import { IntermediatePortModel } from "./IntermediatePortModel";
-import { Brightness1, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
+import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { portStyles } from "../styles";
 
 export interface IntermediatePortWidgetProps {
@@ -21,7 +21,6 @@ export const IntermediatePortWidget: React.FC<IntermediatePortWidgetProps> = (pr
         port.registerListener({
             selectionChanged: () => {
                 setActive(port.isSelected());
-                console.log("Intermediaate port selected: ", port.portType);
             }
         })
     }, []);

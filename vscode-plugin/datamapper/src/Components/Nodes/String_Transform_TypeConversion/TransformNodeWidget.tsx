@@ -16,10 +16,6 @@ export const TransformNodeWidget: React.FC<TransformNodeWidgetProps> = ({ node, 
     const classes = nodeStyles();
     const { setRemovedNode } = React.useContext(FileContext);
 
-    const onClickEdit = () => {
-        console.log("Edit Transform nodes");
-    };
-
     const onClickDelete = () => {
         const nodeId = node.getID();
         setRemovedNode(node);

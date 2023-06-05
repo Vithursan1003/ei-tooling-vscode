@@ -4,7 +4,7 @@ import { JoinNodeModel } from './JoinNodeModel';
 import { nodeStyles } from '../styles';
 import { IntermediatePortWidget } from '../../Port/IntermediatePort/IntermediatePortWidget';
 import { FileContext } from '../../ContextProvider/FileContext';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete} from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 
 export interface JoinNodeWidgetProps {
@@ -16,14 +16,9 @@ export const JoinNodeWidget: React.FC<JoinNodeWidgetProps> = ({ node, engine }) 
     const classes = nodeStyles();
     const { setRemovedNode } = React.useContext(FileContext);
 
-    const onClickEdit = () => {
-        console.log("Edit Join nodes");
-    };
-
     const onClickDelete = () => {
         const nodeId = node.getID();
         setRemovedNode(node);
-        console.log("delete intermediate nodes");
     };
 
     return (
@@ -46,6 +41,5 @@ export const JoinNodeWidget: React.FC<JoinNodeWidgetProps> = ({ node, engine }) 
                 </div>
             </div>
         </>
-
     );
 }

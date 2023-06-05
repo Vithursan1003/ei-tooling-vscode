@@ -1,7 +1,7 @@
 import { DeserializeEvent } from '@projectstorm/react-canvas-core';
 import DataMapperPortModel from '../../Port/DataMapperPort/DataMapperPortModel';
 import { CustomNodeModel } from '../Customs/CustomNodeModel';
-import { DefaultPortModel, DiagramEngine } from '@projectstorm/react-diagrams';
+import { DiagramEngine } from '@projectstorm/react-diagrams';
 
 interface SchemaProperty {
     [key: string]: {
@@ -15,7 +15,6 @@ export class DataMapperNodeModel extends CustomNodeModel {
     name: string;
     schema: SchemaProperty;
     engine!: DiagramEngine;
-    
 
     constructor(schema: SchemaProperty, options: any = {}) {
         super('my-datamapper-node', options.name);
